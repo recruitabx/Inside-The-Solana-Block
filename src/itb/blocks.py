@@ -38,9 +38,9 @@ def block_info(rpc: Rpc, slot: int, commitment: str = "confirmed") -> dict[str, 
             "block_time": b.get("blockTime"), "block_height": b.get("blockHeight")}
 
 
-def block_full(rpc: Rpc, slot: int, commitment: str = "confirmed") -> dict[str, Any] | None:
+def block_full(rpc: Rpc, slot: int, commitment: str = "confirmed", rewards: bool = False) -> dict[str, Any] | None:
     try:
-        return rpc.call("getBlock", [slot, {"encoding": "json", "transactionDetails": "full", "rewards": False,
+        return rpc.call("getBlock", [slot, {"encoding": "json", "transactionDetails": "full", "rewards": rewards,
                                               "maxSupportedTransactionVersion": MAX_SUPPORTED_TX_VERSION,
                                               "commitment": commitment}])
     except RpcError as e:
@@ -58,3 +58,25 @@ def is_vote_tx(tx: dict[str, Any]) -> bool:
 
 def slot_leader(rpc: Rpc, slot: int) -> str:
     return rpc.call("getSlotLeaders", [slot, 1])[0]
+
+
+_B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+_B58_INDEX = {c: i for i, c in enumerate(_B58)}
+
+
+def b58decode(s: str) -> bytes:
+    """Base58 (Bitcoin alphabet) decoding of instruction data as returned by getBlock encoding "json"."""
+    n = 0
+    for c in s:
+        n = n * 58 + _B58_INDEX[c]
+    body = n.to_bytes((n.bit_length() + 7) // 8, "big")
+    return b"\x00" * (len(s) - len(s.lstrip("1"))) + body
+
+
+def b58encode(b: bytes) -> str:
+    n = int.from_bytes(b, "big")
+    out = ""
+    while n:
+        n, r = divmod(n, 58)
+        out = _B58[r] + out
+    return "1" * (len(b) - len(b.lstrip(b"\x00"))) + out

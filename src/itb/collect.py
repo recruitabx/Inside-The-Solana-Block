@@ -50,8 +50,9 @@ def tx_meta(rpc: Rpc, sig: str) -> dict[str, Any] | None:
 
 
 def landed_records(rpc: Rpc, sent: Iterable[dict], clients: dict | None = None,
-                   cache: BlockCache | None = None) -> list[dict]:
-    """sent: dicts with at least signature and probe_id. clients: client snapshot nodes map."""
+                   cache: BlockCache | None = None, clients_end: dict | None = None) -> list[dict]:
+    """sent: dicts with at least signature and probe_id. clients: client snapshot nodes map (run start);
+    clients_end: the same at run end, to flag a producer whose claim changed during the run."""
     sent = list(sent)
     cache = cache or BlockCache(rpc)
     st = signature_statuses(rpc, [s["signature"] for s in sent])
@@ -74,9 +75,14 @@ def landed_records(rpc: Rpc, sent: Iterable[dict], clients: dict | None = None,
         leader = cache.leader(slot)
         meta = tx_meta(rpc, sig) or {}
         c = (clients or {}).get(leader, {})
+        extra = {}
+        if clients_end is not None:
+            ce = clients_end.get(leader, {})
+            extra = {"leader_client_id_end": ce.get("clientId"), "leader_version_end": ce.get("version"),
+                     "leader_claim_changed_in_run": (ce.get("clientId"), ce.get("version")) != (c.get("clientId"), c.get("version"))}
         out.append({"record": "landed", "signature": sig, "probe_id": s.get("probe_id"), "slot": slot,
                     "tx_index": sigs.index(sig), "block_tx_count": len(sigs), "leader": leader,
                     "leader_source": "block Fee reward",
                     "leader_client_id": c.get("clientId"), "leader_version": c.get("version"),
-                    "confirmation_status": v.get("confirmationStatus"), "status_err": v.get("err"), **meta})
+                    "confirmation_status": v.get("confirmationStatus"), "status_err": v.get("err"), **extra, **meta})
     return out

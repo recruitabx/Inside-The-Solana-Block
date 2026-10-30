@@ -13,6 +13,7 @@ COMMANDS = {
     "drain": "itb.funds:drain",   # return payer balances to the wallet (live only)
     "anchor": "itb.funds:anchor", # memo anchor of a sha256 (live only)
     "audit": "itb.audit",         # prove every fee-paying tx of our accounts is in the ledger
+    "pilot-report": "itb.pilot_report",  # operational pilot metrics and the tau0 choice (never ordering outcomes)
 }
 
 

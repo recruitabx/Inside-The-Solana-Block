@@ -80,22 +80,40 @@ def client_snapshot(rpc: Rpc) -> dict:
 
 class SlotClock:
     """Estimates the current slot from periodic getSlot samples and a measured slot rate, so
-    the scheduler does not have to poll the RPC every few hundred milliseconds."""
+    the scheduler does not have to poll the RPC every few hundred milliseconds.
+
+    The slot time starts at 0.2143 s (mainnet after Alpenglow, 213 to 214 ms realized) and is
+    refitted from the oldest and newest samples once they span at least `MIN_FIT_SPAN_S` seconds.
+    `sync()` never issues more than about one RPC call per second: a call made less than
+    `MIN_SYNC_INTERVAL_S` after the previous one returns the extrapolated slot instead."""
+
+    INITIAL_SLOT_S = 0.2143
+    MIN_FIT_SPAN_S = 5.0
+    MIN_SYNC_INTERVAL_S = 0.95
 
     def __init__(self, rpc: Rpc, commitment: str = "processed"):
         self.rpc, self.commitment = rpc, commitment
         self.samples: list[tuple[float, int]] = []
-        self.slot_s = 0.4
+        self.slot_s = self.INITIAL_SLOT_S
+        self.last_call_t = 0.0      # start time of the last getSlot call (0.0: none yet)
+        self.n_calls = 0
+
+    def since_sync(self) -> float:
+        return time.time() - self.last_call_t
 
     def sync(self) -> int:
+        if self.samples and self.since_sync() < self.MIN_SYNC_INTERVAL_S:
+            return int(self.now())
         t0 = time.time()
+        self.last_call_t = t0
+        self.n_calls += 1
         s = self.rpc.call("getSlot", [{"commitment": self.commitment}])
         t = (t0 + time.time()) / 2
         self.samples.append((t, s))
         self.samples = self.samples[-50:]
         if len(self.samples) >= 2:
             (ta, sa), (tb, sb) = self.samples[0], self.samples[-1]
-            if sb > sa and tb - ta > 5:
+            if sb > sa and tb - ta >= self.MIN_FIT_SPAN_S:
                 self.slot_s = (tb - ta) / (sb - sa)
         return s
 

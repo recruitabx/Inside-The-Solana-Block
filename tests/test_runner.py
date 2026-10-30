@@ -118,3 +118,116 @@ def test_cap_above_ceiling_refused(env, monkeypatch):
     monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", str(50_000_001))
     with pytest.raises(SystemExit):
         runner.main(["--live", "--minutes", "0.05"])
+
+
+def _probes(tmp):
+    return [r for r in _records(tmp) if r["record"] == "probe"]
+
+
+def test_probe_randomness_comes_from_window_key(env):
+    """The arm and the assignments are a pure function of (seed, window first slot, target)."""
+    import random
+
+    from itb import design
+    runner.main(["--minutes", "0.12", "--max-probes", "3"])
+    probes = _probes(env)
+    assert probes
+    for r in probes:
+        key = f"{PLAN['seed']}:{r['window_first_slot']}:{r['target_leader']}"
+        assert r["rng_key"] == key
+        spec = design.make_probe(random.Random(key), PLAN, PLAN["targets"][0])
+        assert (r["arm"], r["hi_idx"], r["send_order"]) == (spec["arm"], spec["hi_idx"], spec["order"])
+        assert r["s_low_first"] == spec["s_low_first"]
+        assert r["target_client_id"] == "Agave" and r["target_version"] == "4.3.2"
+    end = [x for x in _records(env) if x["record"] == "run_end"][0]
+    assert end["snapshot_end"].startswith("data/snapshots/clients_") and os.path.exists(env / end["snapshot_end"])
+    assert end["targets_client_end"] == {TARGET: "Agave"} and end["targets_version_end"] == {TARGET: "4.3.2"}
+    assert end["claim_changed"] == {TARGET: False}
+    # the start snapshot is not overwritten by the end snapshot
+    start = [x for x in _records(env) if x["record"] == "run_start"][0]
+    assert start["snapshot"] != end["snapshot_end"]
+
+
+def test_end_snapshot_detects_claim_change(env, monkeypatch):
+    state = {"version": "4.3.2"}
+    orig = FakeRpc.call
+
+    def call(self, method, params=None):
+        if method == "getClusterNodes":
+            return [{"pubkey": TARGET, "clientId": "Agave", "version": state["version"]}]
+        return orig(self, method, params)
+
+    monkeypatch.setattr(FakeRpc, "call", call)
+    orig_main = runner.client_snapshot
+    n = {"k": 0}
+
+    def snap(rpc):
+        n["k"] += 1
+        if n["k"] == 2:           # the second snapshot is the end-of-run one
+            state["version"] = "4.4.0"
+        return orig_main(rpc)
+
+    monkeypatch.setattr(runner, "client_snapshot", snap)
+    runner.main(["--minutes", "0.05", "--max-probes", "1"])
+    end = [x for x in _records(env) if x["record"] == "run_end"][0]
+    assert end["claim_changed"] == {TARGET: True} and end["targets_version_end"] == {TARGET: "4.4.0"}
+
+
+def test_pilot_phase_mix_and_tau_cycle(env):
+    plan = dict(PLAN, pilot_per_target=2, pilot_s_per_target=1, tau0_grid_ms=[-270, -170, -70])
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    runner.main(["--phase", "pilot", "--minutes", "0.3", "--max-probes", "3"])
+    probes = _probes(env)
+    assert [r["arm"] for r in probes] == ["P", "P", "S"]
+    assert [r["tau0_ms"] for r in probes[:2]] == [-270, -170]       # P probes cycle the grid
+    s = probes[2]
+    assert s["gap_s"] == 0.2 and s["s_low_first"] in (True, False) and len(s["send_order"]) == 2
+    assert all(r["phase"] == "pilot" for r in probes)
+
+
+def test_pilot_arm_sequence():
+    from itb import design
+    plan = {"pilot_per_target": 12, "pilot_s_per_target": 2}
+    arms = [design.pilot_arm(i, plan) for i in range(14)]
+    assert arms.count("S") == 2 and arms.count("P") == 12 and arms[6] == "S" and arms[13] == "S"
+    assert design.pilot_arm(0, {"pilot_per_target": 12, "pilot_s_per_target": 0}) == "P"
+
+
+class VirtualTime:
+    def __init__(self):
+        self.t = 1_000_000.0
+
+    def time(self):
+        return self.t
+
+    def sleep(self, d):
+        self.t += d
+
+
+def test_wait_until_syncs_every_two_seconds_but_not_faster_than_one_per_second(monkeypatch):
+    import itb.leaders as leaders
+    vt = VirtualTime()
+    t0 = vt.t
+    monkeypatch.setattr(runner, "time", vt)
+    monkeypatch.setattr(leaders, "time", vt)
+    calls = []
+
+    class R:
+        def call(self, method, params=None):
+            assert method == "getSlot"
+            calls.append(vt.t)
+            vt.t += 0.05                      # round trip
+            return 470_000_000 + int((vt.t - t0) / 0.2143)
+
+    clock = leaders.SlotClock(R())
+    clock.sync()
+    for _ in range(5):                        # hammering sync() inside one second costs one call only
+        clock.sync()
+    assert len(calls) == 1
+    target = t0 + 31.0
+    runner.wait_until(clock, lambda: target)
+    assert vt.t >= target and vt.t - target < 0.3
+    gaps = [b - a for a, b in zip(calls, calls[1:])]
+    assert max(gaps) <= 2.4 and min(gaps) >= 0.95, gaps
+    assert calls[-1] < target - 0.4           # no call in the last half second before the send
+    assert abs(clock.slot_s - 0.2143) < 0.002  # refit from samples spanning more than 5 s

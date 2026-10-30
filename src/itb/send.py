@@ -28,7 +28,8 @@ def send_signed(rpc: Rpc, ledger: SpendLedger, txs: list[SignedTx], *, tag: str,
     Raises SpendCapExceeded before anything is sent if the cap would be exceeded."""
     order = list(range(len(txs))) if order is None else list(order)
     ledger.reserve([(t.signature, t.max_fee) for t in txs], tag=tag)
-    opts = {"encoding": "base64", "skipPreflight": skip_preflight, "maxRetries": max_retries}
+    opts = {"encoding": "base64", "skipPreflight": skip_preflight, "preflightCommitment": "processed",
+            "maxRetries": max_retries}
     calls = [("sendTransaction", [txs[i].wire_b64, opts]) for i in order]
     res: list = []
     times: list[tuple[float, float]] = []

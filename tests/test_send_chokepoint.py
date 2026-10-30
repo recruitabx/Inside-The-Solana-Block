@@ -47,3 +47,20 @@ def test_spaced_send_uses_separate_requests(tmp_path):
     with SpendLedger(str(tmp_path / "l.jsonl"), 100_000) as led:
         r = send_signed(R(), led, [SignedTx("a", "AA==", 5000), SignedTx("b", "AA==", 5000)], tag="t", gap_s=0.05)
     assert calls == [1, 1] and r["send_times"][1][0] - r["send_times"][0][0] >= 0.05
+
+
+def test_send_options_include_preflight_commitment_processed(tmp_path):
+    from itb.send import SignedTx, send_signed
+    from itb.spend import SpendLedger
+    seen = []
+
+    class R:
+        host = "fake"
+
+        def batch(self, c, retry=True):
+            seen.extend(p[1] for _, p in c)
+            return [{"result": "x"} for _ in c]
+
+    with SpendLedger(str(tmp_path / "l.jsonl"), 100_000) as led:
+        send_signed(R(), led, [SignedTx("a", "AA==", 5000)], tag="t", max_retries=2)
+    assert seen == [{"encoding": "base64", "skipPreflight": True, "preflightCommitment": "processed", "maxRetries": 2}]

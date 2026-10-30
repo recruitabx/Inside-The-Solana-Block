@@ -53,7 +53,12 @@ def test_design_arms_randomization_independent():
     both = sum(s["hi_pos"] == 0 and s["hi_idx"] == 0 for s in P) / len(P)
     assert 0.21 < both < 0.29
     S = [s for s in specs if s["arm"] == "S"]
-    assert all(s["hi_pos"] == 1 and s["gap_s"] == 0.2 for s in S)  # low first, high 200 ms later
+    assert all(s["gap_s"] == 0.2 for s in S)  # two requests 200 ms apart
+    # arm S direction is randomized 50/50: the first-sent transaction is the high one in half of the probes
+    assert 0.44 < sum(s["hi_pos"] == 0 for s in S) / len(S) < 0.56
+    assert all(s["s_low_first"] == (s["hi_pos"] == 1) for s in S)
+    assert all(s["s_low_first"] is None for s in specs if s["arm"] != "S")
+    assert all(s["order"][0] != s["hi_idx"] for s in S if s["s_low_first"])
     E = [s for s in specs if s["arm"] == "E"]
     assert all(t["cu_price"] == 1000 for s in E for t in s["txs"])
     D = [s for s in specs if s["arm"] == "D"]

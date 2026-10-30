@@ -29,9 +29,24 @@ def load_jsonl(pattern: str) -> list[dict]:
     return out
 
 
+def run_claims(raw_dir: str) -> dict[str, dict]:
+    """Gossip claims of every target at the start and at the end of each run, from the send logs:
+    {run_id: {"start": {target: (clientId, version)}, "end": {target: (clientId, version)} | None}}."""
+    out: dict[str, dict] = {}
+    for r in load_jsonl(os.path.join(raw_dir, "*.sent.jsonl")):
+        if r.get("record") == "run_start":
+            c, v = r.get("targets_client_now") or {}, r.get("targets_version_now") or {}
+            out.setdefault(r["run_id"], {"start": None, "end": None})["start"] = {k: (c.get(k), v.get(k)) for k in c}
+        elif r.get("record") == "run_end" and r.get("targets_client_end") is not None:
+            c, v = r["targets_client_end"], r.get("targets_version_end") or {}
+            out.setdefault(r["run_id"], {"start": None, "end": None})["end"] = {k: (c.get(k), v.get(k)) for k in c}
+    return out
+
+
 def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
     sent = [r for r in load_jsonl(os.path.join(raw_dir, "*.sent.jsonl")) if r["record"] == "probe" and r.get("mode") == "live"]
     landed = {r["signature"]: r for r in load_jsonl(os.path.join(raw_dir, "*.landed.jsonl"))}
+    claims = run_claims(raw_dir)
     rows = []
     for p in sent:
         txs = []
@@ -40,19 +55,34 @@ def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
             txs.append({**t, "landed": L.get("record") == "landed", "slot": L.get("slot"), "tx_index": L.get("tx_index"),
                         "leader": L.get("leader"), "client_id": L.get("leader_client_id"), "version": L.get("leader_version"),
                         "fee": L.get("fee"), "cost_units": L.get("cost_units"), "err": L.get("err"),
-                        "block_tx_count": L.get("block_tx_count")})
+                        "status_err": L.get("status_err"), "block_tx_count": L.get("block_tx_count")})
         all_landed = all(t["landed"] for t in txs)
         same_slot = all_landed and len({t["slot"] for t in txs}) == 1
-        row = {"probe_id": p["probe_id"], "run_id": p["run_id"], "phase": p.get("phase"), "condition": p.get("condition"),
-               "target_leader": p["target_leader"], "target_role": p.get("target_role"),
-               "window_first_slot": p["window_first_slot"], "planned_send_slot": p["planned_send_slot"],
+        tgt, rc = p["target_leader"], claims.get(p["run_id"], {})
+        start = (rc.get("start") or {}).get(tgt, (None, None))
+        claim = (p["target_client_id"], p.get("target_version")) if "target_client_id" in p else start
+        end = (rc.get("end") or {}).get(tgt)
+        row = {"probe_id": p["probe_id"], "run_id": p["run_id"], "phase": p.get("phase"), "synthetic": bool(p.get("synthetic")),
+               "condition": p.get("condition"), "arm": p.get("arm") or p.get("condition"),
+               "target_leader": tgt, "target_role": p.get("target_role"),
+               "claim_client_id": claim[0], "claim_version": claim[1],
+               "claim_changed_in_run": end is not None and tuple(end) != tuple(claim),
+               "claim_end_unknown": end is None,
+               "window_first_slot": p["window_first_slot"],
+               "window_last_slot": p.get("window_last_slot", p["window_first_slot"] + 3),
+               "planned_send_slot": p.get("planned_send_slot"), "tau0_ms": p.get("tau0_ms"),
+               "observed_slot_after_send": p.get("observed_slot_after_send"), "s_low_first": p.get("s_low_first"),
                "t_send_start": p.get("t_send_start"), "send_results": p.get("send_results"),
                "n_tx": len(txs), "all_landed": all_landed, "same_slot": same_slot, "txs": txs}
+        if all_landed and not same_slot and len(txs) == 2:
+            # order by (slot, index): the transaction that landed in the earlier slot is first
+            row["first_landed_any"] = min(range(2), key=lambda i: (txs[i]["slot"], txs[i]["tx_index"]))
         if same_slot:
             row["slot"] = txs[0]["slot"]
             row["leader"] = txs[0]["leader"]
             row["client_id"], row["version"] = txs[0]["client_id"], txs[0]["version"]
-            row["target_hit"] = row["leader"] == p["target_leader"]
+            row["target_hit"] = row["leader"] == tgt
+            row["in_window"] = row["window_first_slot"] <= row["slot"] <= row["window_last_slot"]
             row["slot_in_window"] = row["slot"] - p["window_first_slot"] if row["target_hit"] else None
             order = sorted(range(len(txs)), key=lambda i: txs[i]["tx_index"])
             row["landing_order"] = order  # tx positions (in the probe's tx list) from earliest to latest
@@ -61,3 +91,8 @@ def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
             row["index_gap"] = abs(txs[0]["tx_index"] - txs[1]["tx_index"]) if len(txs) == 2 else None
         rows.append(row)
     return rows
+
+
+def load_block_summaries(raw_dir: str = "data/raw") -> dict[int, dict]:
+    """Block summaries written by the collector (data/raw/<run>.blocks.jsonl), by slot."""
+    return {r["slot"]: r for r in load_jsonl(os.path.join(raw_dir, "*.blocks.jsonl")) if r.get("record") == "block"}

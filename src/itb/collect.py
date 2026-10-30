@@ -45,7 +45,7 @@ def tx_meta(rpc: Rpc, sig: str) -> dict[str, Any] | None:
     if t is None:
         return None
     m = t["meta"]
-    return {"fee": m.get("fee"), "cu_consumed": m.get("computeUnitsConsumed"), "err": m.get("err"),
+    return {"fee": m.get("fee"), "cu_consumed": m.get("computeUnitsConsumed"), "cost_units": m.get("costUnits"), "err": m.get("err"),
             "block_time": t.get("blockTime"), "slot": t.get("slot")}
 
 

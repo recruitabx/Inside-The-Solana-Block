@@ -166,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--minutes", type=float, default=15.0, help="run length (max 20)")
     ap.add_argument("--max-probes", type=int, default=10_000)
     ap.add_argument("--run-id", default=None)
-    ap.add_argument("--phase", default="main", choices=["pilot", "main"],
+    ap.add_argument("--phase", default="main", choices=["pilot", "repilot", "main"],
                     help="pilot: per role pilot_per_target arm-P probes cycling tau0 over the grid plus pilot_s_per_target arm-S probes")
     ap.add_argument("--no-anchor", action="store_true", help="skip the per-run config anchor (live)")
     a = ap.parse_args(argv)
@@ -177,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
     if a.phase == "main" and plan.get("tau0_ms") is None:
         raise SystemExit("plan has no tau0_ms: choose it from the pilot (itb pilot-report) and rerun scripts/make_plan.py --tau0-ms")
     run_id = a.run_id or (time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + "-" + ("live" if live else "dry") + "-"
-                          + ("pilot-" if a.phase == "pilot" else "") + uuid.uuid4().hex[:6])
+                          + (f"{a.phase}-" if a.phase in ("pilot", "repilot") else "") + uuid.uuid4().hex[:6])
     out = JsonlWriter(f"data/{'raw' if live else 'dryrun'}/{run_id}.sent.jsonl")
 
     # Reads go to a separate endpoint (public RPC by default) so they never eat the send rate limit.
@@ -209,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
     for role, asg in assignment.items():
         if asg["identity"] is None:
             print(f"role {role} skipped in this run: {asg['skipped']} ({len(asg['rejected'])} candidates rejected)", file=sys.stderr)
-    if a.phase == "pilot":
+    if a.phase in ("pilot", "repilot"):
         quota = {r: int(t.get("pilot_per_target", plan["pilot_per_target"])) + int(plan.get("pilot_s_per_target", 2))
                  for r, t in roles.items()}
     else:
@@ -265,7 +265,7 @@ def main(argv: list[str] | None = None) -> int:
             # Arm and send offset that do not come from the random draw: in the pilot, the arm follows the
             # probe count of the role and tau0 cycles over the grid; in the main phase tau0 is the plan constant.
             pilot_arm = None
-            if a.phase == "pilot":
+            if a.phase in ("pilot", "repilot"):
                 arms_done = done_arm.setdefault(role, {})
                 pilot_arm = design.pilot_arm(done.get(role, 0), plan)
                 if pilot_arm == "S":
@@ -327,7 +327,7 @@ def main(argv: list[str] | None = None) -> int:
                     # pilot reservations are tagged "pilot:<probe id>" so that itb.spend.settled_total(path, "pilot:")
                     # gives the settled pilot spend that scripts/make_plan.py subtracts from the fee room
                     r = send_signed(send, ledger, [SignedTx(b.signature, b.wire_b64, b.max_fee) for b in built],
-                                    tag=(f"pilot:{probe_id}" if a.phase == "pilot" else probe_id), order=spec["order"],
+                                    tag=(f"{a.phase}:{probe_id}" if a.phase in ("pilot", "repilot") else probe_id), order=spec["order"],
                                     gap_s=spec["gap_s"], max_retries=int(plan.get("max_retries", 0)))
                 except SpendCapExceeded as e:
                     rec["record"] = "probe_aborted_cap"; rec["error"] = str(e); out.write(rec)

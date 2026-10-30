@@ -55,11 +55,11 @@ def _requests(probe: dict) -> list[tuple[str, list]]:
     return [("batch", list(res))]
 
 
-def load_pilot(sent_glob: str) -> tuple[list[dict], dict[str, dict]]:
+def load_pilot(sent_glob: str, phase: str = "pilot") -> tuple[list[dict], dict[str, dict]]:
     probes, landed = [], {}
     for path in sorted(glob.glob(sent_glob)):
         probes += [r for r in load_jsonl(path) if r.get("record") == "probe" and r.get("mode") == "live"
-                   and r.get("phase") == "pilot" and r.get("send_results")]
+                   and r.get("phase") == phase and r.get("send_results")]
         lp = path.replace(".sent.jsonl", ".landed.jsonl")
         if os.path.exists(lp):
             landed.update({r["signature"]: r for r in load_jsonl(lp)})
@@ -138,8 +138,8 @@ def reconcile_ledger(ledger_path: str, probes: list[dict], landed: dict[str, dic
             "open_reservations_ledger": len(open_all)}
 
 
-def build_report(sent_glob: str, ledger_path: str) -> dict:
-    probes, landed = load_pilot(sent_glob)
+def build_report(sent_glob: str, ledger_path: str, phase: str = "pilot") -> dict:
+    probes, landed = load_pilot(sent_glob, phase)
     st = [(p, probe_status(p, landed)) for p in probes]
     label = lambda p: f"{p.get('target_role') or '?'} {p['target_leader'][:6]}"
     per_target = {}
@@ -226,13 +226,14 @@ def simulate_check(rpc_url: str, payer: str | None = None, plan_path: str = "dat
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="itb pilot-report", description="operational pilot metrics (never ordering outcomes)")
     ap.add_argument("--sent", default="data/raw/*pilot*.sent.jsonl", help="glob of pilot send logs")
+    ap.add_argument("--phase", default="pilot", choices=["pilot", "repilot"], help="which pilot round to report")
     ap.add_argument("--ledger", default="data/ledger/spend.jsonl")
     ap.add_argument("--json", action="store_true", help="print the report as JSON")
     ap.add_argument("--no-simulate", action="store_true", help="skip the simulateTransaction check of the probe templates")
     ap.add_argument("--payer", default=None, help="payer public key for the template simulation (default: the funding wallet's)")
     ap.add_argument("--rpc", default=os.environ.get("ITB_READ_RPC_URL", PUBLIC_RPC), help="read endpoint for the simulation")
     a = ap.parse_args(argv)
-    rep = build_report(a.sent, a.ledger)
+    rep = build_report(a.sent, a.ledger, a.phase)
     if rep["n_probes"] == 0:
         print(f"no live pilot probes found in {a.sent}")
         return 1

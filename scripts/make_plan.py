@@ -79,7 +79,7 @@ def scale_quotas(targets: list, fee_room: int, pilot_spent: int) -> float:
 
 
 def build_plan(validators: dict, seed: int, tau0_ms, u_pilot, all85: bool, fee_room: int, pilot_spent: int,
-               scale_to_room: bool = False) -> tuple[dict, dict]:
+               scale_to_room: bool = False, max_retries: int = 0) -> tuple[dict, dict]:
     u = DEFAULT_U if u_pilot is None else u_pilot
     targets = []
     for t in validators["targets"]:
@@ -101,7 +101,7 @@ def build_plan(validators: dict, seed: int, tau0_ms, u_pilot, all85: bool, fee_r
     plan = {"seed": seed, "targets": targets, "n_payers": N_PAYERS,
             "price_high": PRICE_HIGH, "price_low": PRICE_LOW, "cu_limit": CU_LIMIT, "loaded_limit": 4_096, "gap_ms": 200,
             "tau0_grid_ms": [-270, -170, -70], "tau0_ms": tau0_ms, "pilot_per_target": PILOT_P, "pilot_s_per_target": PILOT_S,
-            "min_request_interval_s": 2.0, "send_rate_per_s": 1.0, "send_burst": 2, "max_retries": 0,
+            "min_request_interval_s": 2.0, "send_rate_per_s": 1.0, "send_burst": 2, "max_retries": max_retries,
             "observe_slot_after_send": True, "u_pilot": u_pilot, "shares_all_85": all85, "planned_fees": report}
     return plan, report
 
@@ -116,6 +116,7 @@ def main(argv=None) -> int:
                     help="lamports settled for the pilot: an integer, or 'ledger' to read it from the spend ledger (tag prefix 'pilot:')")
     ap.add_argument("--ledger", default=LEDGER_PATH, help="spend ledger read by --pilot-spent ledger")
     ap.add_argument("--tau0-ms", type=int, default=None, help="fixed send offset chosen in the pilot")
+    ap.add_argument("--max-retries", type=int, default=0, help="sendTransaction maxRetries (preregistered fallback: 2 if pilot landing < 80%%)")
     ap.add_argument("--u-pilot", type=float, default=None, help=f"pooled usable fraction u from the pilot (default {DEFAULT_U})")
     ap.add_argument("--shares-all-85", action="store_true", help="fallback for u < 0.48: shares 85/5/5/5 for every role")
     ap.add_argument("--scale-to-room", action="store_true",
@@ -129,7 +130,7 @@ def main(argv=None) -> int:
     if pilot_spent < 0:
         raise SystemExit("--pilot-spent must not be negative")
     plan, rep = build_plan(json.load(open(a.validators)), a.seed, a.tau0_ms, a.u_pilot, a.shares_all_85, a.fee_room, pilot_spent,
-                           a.scale_to_room)
+                           a.scale_to_room, max_retries=a.max_retries)
     print("quotas:", {t["role"]: t["quota_per_target"] for t in plan["targets"]})
     print(f"planned fee total = {rep['planned_fee_total']:,} lamports (pilot spent {rep['pilot_spent']:,} + main run "
           f"{rep['main_run_fees']:,} + operations {rep['operations']:,}), fee room {rep['fee_room']:,}")

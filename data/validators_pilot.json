@@ -1,0 +1,433 @@
+{
+ "rule": "per clientId with an eligible identity, the eligible identity with the most windows in the ranking epoch's schedule; eligible: >= 400 windows, the same clientId in every one of >= 4 snapshots spanning >= 18 h (version is a covariate, reported at freeze), not operated by the RPC provider (HEL1US)",
+ "provisional": true,
+ "epoch": 1073,
+ "min_windows": 400,
+ "snapshots": [
+  {
+   "file": "clients_20261030T142322Z.json",
+   "slot": null,
+   "taken_at_unix": 1793370202.6158137
+  },
+  {
+   "file": "clients_20261030T145213Z.json",
+   "slot": 463325582,
+   "taken_at_unix": 1793371933.8555758
+  },
+  {
+   "file": "clients_20261030T152536Z.json",
+   "slot": 463334946,
+   "taken_at_unix": 1793373936.91708
+  },
+  {
+   "file": "clients_20261030T154511Z.json",
+   "slot": 463340450,
+   "taken_at_unix": 1793375111.886369
+  }
+ ],
+ "snapshot_span_hours": 1.3636862653493882,
+ "snapshot_slot": 463340450,
+ "schedule_sha256": "6b8b0e36c9789ef24f0969870648d1c31e9bdf49385e1b7eff8623f8c195e80b",
+ "targets": [
+  {
+   "role": "HarmonicAgave-1",
+   "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+   "clientId": "HarmonicAgave",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 3992,
+   "stake_share": 0.038969057748220425,
+   "replacements": [
+    {
+     "identity": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+     "clientId": "HarmonicAgave",
+     "version": "4.3.2",
+     "windows_epoch": 2319,
+     "stake_share": 0.02176041771952596
+    },
+    {
+     "identity": "BtsmiEEvnSuUnKxqXj2PZRYpPJAc7C34mGz8gtJ1DAaH",
+     "clientId": "HarmonicAgave",
+     "version": "4.3.2",
+     "windows_epoch": 1032,
+     "stake_share": 0.009334353909785513
+    },
+    {
+     "identity": "FBKFWadXZJahGtFitAsBvbqh5968gLY7dMBBJUoUjeNi",
+     "clientId": "HarmonicAgave",
+     "version": "4.3.2",
+     "windows_epoch": 1017,
+     "stake_share": 0.009332362735251728
+    }
+   ]
+  },
+  {
+   "role": "AgaveBam-1",
+   "identity": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+   "clientId": "AgaveBam",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 3196,
+   "stake_share": 0.02967605252105672,
+   "replacements": [
+    {
+     "identity": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+     "clientId": "AgaveBam",
+     "version": "4.3.2",
+     "windows_epoch": 1362,
+     "stake_share": 0.013146634191039598
+    },
+    {
+     "identity": "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
+     "clientId": "AgaveBam",
+     "version": "4.3.2",
+     "windows_epoch": 1085,
+     "stake_share": 0.010331455069304359
+    },
+    {
+     "identity": "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC",
+     "clientId": "AgaveBam",
+     "version": "4.3.2",
+     "windows_epoch": 898,
+     "stake_share": 0.008264496259741098
+    }
+   ]
+  },
+  {
+   "role": "JitoLabs-1",
+   "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+   "clientId": "JitoLabs",
+   "version": "4.3.2",
+   "windows_epoch": 2580,
+   "stake_share": 0.024123252592836146,
+   "replacements": [
+    {
+     "identity": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
+     "clientId": "JitoLabs",
+     "version": "4.4.0",
+     "windows_epoch": 2253,
+     "stake_share": 0.021183542593023904
+    },
+    {
+     "identity": "5pPRHniefFjkiaArbGX3Y8NUysJmQ9tMZg3FrFGwHzSm",
+     "clientId": "JitoLabs",
+     "version": "4.3.2",
+     "windows_epoch": 1459,
+     "stake_share": 0.013678452575877565
+    },
+    {
+     "identity": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+     "clientId": "JitoLabs",
+     "version": "4.3.2",
+     "windows_epoch": 1121,
+     "stake_share": 0.010839134503826734
+    }
+   ]
+  },
+  {
+   "role": "HarmonicFiredancer-1",
+   "identity": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+   "clientId": "HarmonicFiredancer",
+   "version": "26.10.5",
+   "windows_epoch": 2385,
+   "stake_share": 0.022188475793427954,
+   "replacements": [
+    {
+     "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+     "clientId": "HarmonicFiredancer",
+     "version": "26.10.5",
+     "windows_epoch": 1715,
+     "stake_share": 0.016082213281140224
+    },
+    {
+     "identity": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+     "clientId": "HarmonicFiredancer",
+     "version": "26.10.4",
+     "windows_epoch": 951,
+     "stake_share": 0.008782671795340652
+    },
+    {
+     "identity": "CQdLgwkmmHF8DE6t4sguXMTXWDxq3oLh3xfekDTmow12",
+     "clientId": "HarmonicFiredancer",
+     "version": "26.10.4",
+     "windows_epoch": 544,
+     "stake_share": 0.004901432174918962
+    }
+   ]
+  },
+  {
+   "role": "Firedancer-1",
+   "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+   "clientId": "Firedancer",
+   "version": "26.10.5",
+   "windows_epoch": 1707,
+   "stake_share": 0.01618246188610608,
+   "replacements": [
+    {
+     "identity": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+     "clientId": "Firedancer",
+     "version": "26.10.5",
+     "windows_epoch": 1622,
+     "stake_share": 0.015168404653521294
+    },
+    {
+     "identity": "DNVZMSqeRH18Xa4MCTrb1MndNf3Npg4MEwqswo23eWkf",
+     "clientId": "Firedancer",
+     "version": "26.10.5",
+     "windows_epoch": 504,
+     "stake_share": 0.004414375815637468
+    },
+    {
+     "identity": "FBbqKvwLfKGZrKrfSbPJz4ymQ7zMarhRyZtu1RBkSe89",
+     "clientId": "Firedancer",
+     "version": "0.1.1",
+     "windows_epoch": 474,
+     "stake_share": 0.004408630180368822
+    }
+   ]
+  },
+  {
+   "role": "FireBAM-1",
+   "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+   "clientId": "FireBAM",
+   "version": "26.10.5",
+   "windows_epoch": 1096,
+   "stake_share": 0.010284270219154954,
+   "replacements": []
+  },
+  {
+   "role": "Rakurai-1",
+   "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+   "clientId": "Rakurai",
+   "version": "4.3.2",
+   "windows_epoch": 612,
+   "stake_share": 0.005667969599458846,
+   "replacements": []
+  },
+  {
+   "role": "Agave-1",
+   "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+   "clientId": "Agave",
+   "version": "4.3.2",
+   "windows_epoch": 461,
+   "stake_share": 0.004306813838489747,
+   "replacements": []
+  }
+ ],
+ "ineligible_top": [
+  {
+   "identity": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+   "clientId": "Agave",
+   "version": "4.3.2",
+   "windows_epoch": 293,
+   "stake_share": 0.0027746885118349685,
+   "reason": "293 windows < 400"
+  },
+  {
+   "identity": "mds4GEuiSgQRqveGyktWpETBFCb4AS2wDnhqwLHcT6Z",
+   "clientId": "Agave",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 88,
+   "stake_share": 0.0007864439451961944,
+   "reason": "88 windows < 400"
+  },
+  {
+   "identity": "9hQqNe3DQTiwhspatewA8EXhz12e6sq5UJVJ2qNRwnTf",
+   "clientId": "Agave",
+   "version": "4.3.2",
+   "windows_epoch": 27,
+   "stake_share": 0.00027485610357287117,
+   "reason": "27 windows < 400"
+  },
+  {
+   "identity": "HSDTxfgrqY8ZK88Q5Fx2DdX7zxMDqXgxJKgErTBSLoQJ",
+   "clientId": "AgaveBam",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 383,
+   "stake_share": 0.003519240914987627,
+   "reason": "383 windows < 400"
+  },
+  {
+   "identity": "jzDsimGW1g8esbD1Kr2oRvr9X573XS2zQd7AsYJ1to5",
+   "clientId": "AgaveBam",
+   "version": "4.4.0",
+   "windows_epoch": 370,
+   "stake_share": 0.003379891101327936,
+   "reason": "370 windows < 400"
+  },
+  {
+   "identity": "CMPSSdrTnRQBiBGTyFpdCc3VMNuLWYWaSkE8Zh5z6gbd",
+   "clientId": "AgaveBam",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 361,
+   "stake_share": 0.003265969690559807,
+   "reason": "361 windows < 400"
+  },
+  {
+   "identity": "LA1NEzryoih6CQW3gwQqJQffK2mKgnXcjSQZSRpM3wc",
+   "clientId": "FireBAM",
+   "version": "26.10.5",
+   "windows_epoch": 116,
+   "stake_share": 0.0009578400267338985,
+   "reason": "116 windows < 400"
+  },
+  {
+   "identity": "A4hyMd3FyvUJSRafDUSwtLLaQcxRP4r1BRC9w2AJ1to2",
+   "clientId": "FireBAM",
+   "version": "26.10.5",
+   "windows_epoch": 78,
+   "stake_share": 0.0008142463845074646,
+   "reason": "78 windows < 400"
+  },
+  {
+   "identity": "SSmBEooM7RkmyuXxuKgAhTvhQZ36Z3G2WsmLGJKoQLY",
+   "clientId": "FireBAM",
+   "version": "26.10.5",
+   "windows_epoch": 74,
+   "stake_share": 0.0006982399690332707,
+   "reason": "74 windows < 400"
+  },
+  {
+   "identity": "BFmqBsaGjeYA7gHpReKmnVkRyhqiMmHoR9ttv1crWmzy",
+   "clientId": "Firedancer",
+   "version": "26.10.5",
+   "windows_epoch": 217,
+   "stake_share": 0.0019122200170109233,
+   "reason": "217 windows < 400"
+  },
+  {
+   "identity": "HW4zorvt6xDwhU36RqjcWNwU8YMj9tiqnAafBKW4cqV",
+   "clientId": "Firedancer",
+   "version": "26.10.4",
+   "windows_epoch": 129,
+   "stake_share": 0.001195917333145588,
+   "reason": "129 windows < 400"
+  },
+  {
+   "identity": "4VRs6A9zBRXz6MLcmQGsBiSoWE2JjHrmw7LintC3T4Nv",
+   "clientId": "Firedancer",
+   "version": "26.10.5",
+   "windows_epoch": 126,
+   "stake_share": 0.001191914908032361,
+   "reason": "126 windows < 400"
+  },
+  {
+   "identity": "GYx8kpp7SsRwtQEEsGQjAxb4hFMMmT91kFJuDeky3YGQ",
+   "clientId": "HarmonicAgave",
+   "version": "4.3.2",
+   "windows_epoch": 358,
+   "stake_share": 0.003316509814027566,
+   "reason": "358 windows < 400"
+  },
+  {
+   "identity": "AMukCLCr52XxsEjXoDxKKxjNg4FpnsReXNaQx8aR6DJF",
+   "clientId": "HarmonicAgave",
+   "version": "4.4.0-rc.1",
+   "windows_epoch": 349,
+   "stake_share": 0.003283803434374304,
+   "reason": "349 windows < 400"
+  },
+  {
+   "identity": "9W3QTgBhkU4Bwg6cwnDJo6eGZ9BtZafSdu1Lo9JmWws7",
+   "clientId": "HarmonicAgave",
+   "version": "4.3.2",
+   "windows_epoch": 333,
+   "stake_share": 0.0033964047245179847,
+   "reason": "333 windows < 400"
+  },
+  {
+   "identity": "DrifTrN923QaouP89UxkQzFGbumKPCnfkNYQRwmZxatz",
+   "clientId": "HarmonicFiredancer",
+   "version": "26.10.5",
+   "windows_epoch": 699,
+   "stake_share": 0.006478086089334026,
+   "reason": "clientId changed across snapshots: HarmonicAgave | HarmonicFiredancer"
+  },
+  {
+   "identity": "6ptuwW4rg5A3wP9hNKxeymG3QhSagugPd3grnMTGJwWG",
+   "clientId": "HarmonicFiredancer",
+   "version": "26.10.5",
+   "windows_epoch": 311,
+   "stake_share": 0.0029068671408224163,
+   "reason": "311 windows < 400"
+  },
+  {
+   "identity": "6yFGGAgYpBxgYPuHW4rv7hJmhKrUiXKyHkpVGaYtKrwE",
+   "clientId": "HarmonicFiredancer",
+   "version": "26.10.5",
+   "windows_epoch": 309,
+   "stake_share": 0.0028884273999627316,
+   "reason": "309 windows < 400"
+  },
+  {
+   "identity": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
+   "clientId": "JitoLabs",
+   "version": "4.3.2",
+   "windows_epoch": 4023,
+   "stake_share": 0.0383087822166313,
+   "reason": "operated by our RPC provider (HEL1US prefix)"
+  },
+  {
+   "identity": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+   "clientId": "JitoLabs",
+   "version": "4.3.2",
+   "windows_epoch": 1897,
+   "stake_share": 0.01787070973934615,
+   "reason": "clientId changed across snapshots: Firedancer | JitoLabs"
+  },
+  {
+   "identity": "EUcJwf7jXskRE6NZBtFPVH2EedNvNYko8LL2WT62XctB",
+   "clientId": "JitoLabs",
+   "version": "4.4.0",
+   "windows_epoch": 375,
+   "stake_share": 0.003537346957752976,
+   "reason": "375 windows < 400"
+  },
+  {
+   "identity": "Frog1Fks1AVN8ywFH3HTFeYojq6LQqoEPzgQFx2Kz5Ch",
+   "clientId": null,
+   "version": null,
+   "windows_epoch": 155,
+   "stake_share": 0.0,
+   "reason": "155 windows < 400; absent from 4 of 4 snapshots"
+  },
+  {
+   "identity": "9xcXe4WRAfbVoVgQmFD5xgFHioL9dD7c74pQZ7PeczT",
+   "clientId": "Raiku",
+   "version": "4.4.0",
+   "windows_epoch": 104,
+   "stake_share": 0.0008090845461993382,
+   "reason": "104 windows < 400"
+  },
+  {
+   "identity": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+   "clientId": "Rakurai",
+   "version": "4.3.2",
+   "windows_epoch": 211,
+   "stake_share": 0.0020401965092654304,
+   "reason": "211 windows < 400"
+  },
+  {
+   "identity": "7PdKhpKz7T39vZHFL1UfcYNDsLvay6hp4KPQq1aUckFf",
+   "clientId": "Rakurai",
+   "version": "4.3.2",
+   "windows_epoch": 184,
+   "stake_share": 0.001770031164773512,
+   "reason": "184 windows < 400"
+  },
+  {
+   "identity": "gUvo3g5LfH4Pd8qnG7T6MPEFa5bPr8LhDdxDahwYqis",
+   "clientId": "Rakurai",
+   "version": "4.3.2",
+   "windows_epoch": 82,
+   "stake_share": 0.0007094266215343176,
+   "reason": "82 windows < 400"
+  },
+  {
+   "identity": "Diman2GphWLwECE3swjrAEAJniezpYLxK1edUydiDZau",
+   "clientId": "Unknown(4541)",
+   "version": "4.4.0",
+   "windows_epoch": 75,
+   "stake_share": 0.000788395467795432,
+   "reason": "75 windows < 400; clientId changed across snapshots: Unknown(38009) | Unknown(4541) | Unknown(52323) | Unknown(59747)"
+  }
+ ]
+}

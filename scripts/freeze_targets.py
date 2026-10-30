@@ -103,6 +103,8 @@ def main(argv=None):
     ap.add_argument("--min-windows", type=int, default=400)
     ap.add_argument("--snapshot-now", action="store_true", help="take one more gossip snapshot into the snapshots directory first")
     ap.add_argument("--refresh-schedule", action="store_true", help="fetch the schedule again even if cached")
+    ap.add_argument("--provisional", action="store_true",
+                    help="pilot-only selection: snapshot stability over whatever snapshots exist (no 18 h span); output marked provisional")
     a = ap.parse_args(argv)
     snap_dir = os.path.join(a.selection_dir, "snapshots")
     os.makedirs(snap_dir, exist_ok=True)
@@ -121,9 +123,10 @@ def main(argv=None):
             json.dump(rpc.call("getLeaderSchedule", [a.epoch * SLOTS_PER_EPOCH, {}]), f, sort_keys=True)
     sched = json.load(open(sched_path))
     snaps = load_snapshots(snap_dir)
-    rows = evaluate(sched, snaps, a.min_windows)
+    min_snaps, min_span = (1, 0.0) if a.provisional else (MIN_SNAPSHOTS, MIN_SPAN_HOURS)
+    rows = evaluate(sched, snaps, a.min_windows, min_snaps, min_span)
     targets, ineligible = select_targets(rows, a.min_windows)
-    snaps_ok, span_h = snapshot_check(snaps)
+    snaps_ok, span_h = snapshot_check(snaps, min_snaps, min_span)
     clients, versions = {t["clientId"] for t in targets}, {t["version"] for t in targets}
     print(f"epoch {a.epoch}: {len(sched)} scheduled identities; {len(snaps)} snapshots spanning {span_h:.1f} h "
           f"({'enough' if snaps_ok else 'NOT enough: need >= 4 spanning >= 18 h'}); {sum(r['eligible'] for r in rows)} eligible identities")
@@ -139,6 +142,7 @@ def main(argv=None):
     out = {"rule": "per clientId with an eligible identity, the eligible identity with the most windows in the ranking epoch's schedule; "
                    f"eligible: >= {a.min_windows} windows, the same clientId in every one of >= 4 snapshots spanning >= 18 h "
                    "(version is a covariate, reported at freeze), not operated by the RPC provider (HEL1US)",
+           "provisional": bool(a.provisional),
            "epoch": a.epoch, "min_windows": a.min_windows,
            "snapshots": [{"file": s["_file"], "slot": s["slot"], "taken_at_unix": s["taken_at_unix"]} for s in snaps],
            "snapshot_span_hours": span_h, "snapshot_slot": snaps[-1]["slot"],

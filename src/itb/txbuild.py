@@ -43,12 +43,26 @@ def fresh_address(seed: str, probe_no: int | str, k: int = 0) -> Pubkey:
     return Pubkey(hashlib.sha256(f"itb-W:{seed}:{probe_no}:{k}".encode()).digest())
 
 
+def probe_instructions(payer: Pubkey, *, cu_limit: int, cu_price: int, shared: Pubkey, loaded_limit: int = 4096) -> list:
+    return [set_compute_unit_limit(cu_limit), set_compute_unit_price(cu_price),
+            set_loaded_accounts_data_size_limit(loaded_limit),
+            transfer(TransferParams(from_pubkey=payer, to_pubkey=shared, lamports=0))]
+
+
 def build_probe_tx(payer: Keypair, blockhash: str, *, cu_limit: int, cu_price: int, shared: Pubkey,
                    loaded_limit: int = 4096) -> BuiltTx:
-    ixs = [set_compute_unit_limit(cu_limit), set_compute_unit_price(cu_price),
-           set_loaded_accounts_data_size_limit(loaded_limit),
-           transfer(TransferParams(from_pubkey=payer.pubkey(), to_pubkey=shared, lamports=0))]
+    ixs = probe_instructions(payer.pubkey(), cu_limit=cu_limit, cu_price=cu_price, shared=shared, loaded_limit=loaded_limit)
     tx = Transaction([payer], Message(ixs, payer.pubkey()), Hash.from_string(blockhash))
     return BuiltTx(signature=str(tx.signatures[0]), payer=str(payer.pubkey()), cu_limit=cu_limit, cu_price=cu_price,
                    loaded_limit=loaded_limit, shared_account=str(shared),
                    max_fee=max_fee_lamports(1, cu_price, cu_limit), wire_b64=base64.b64encode(bytes(tx)).decode())
+
+
+def build_probe_unsigned_b64(payer: Pubkey, *, cu_limit: int, cu_price: int, shared: Pubkey, loaded_limit: int = 4096,
+                             blockhash: str = "11111111111111111111111111111111") -> str:
+    """The same template as build_probe_tx for a PUBLIC key, as an UNSIGNED wire transaction (base64): for
+    simulateTransaction with sigVerify false and replaceRecentBlockhash true. No secret key is involved and
+    the result cannot be sent (its signature is all zeros)."""
+    ixs = probe_instructions(payer, cu_limit=cu_limit, cu_price=cu_price, shared=shared, loaded_limit=loaded_limit)
+    tx = Transaction.new_unsigned(Message.new_with_blockhash(ixs, payer, Hash.from_string(blockhash)))
+    return base64.b64encode(bytes(tx)).decode()

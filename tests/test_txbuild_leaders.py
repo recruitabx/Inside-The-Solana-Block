@@ -4,7 +4,7 @@ from solders.keypair import Keypair
 from solders.transaction import Transaction
 
 from itb.leaders import windows_from_leaders
-from itb.txbuild import build_probe_tx, fresh_address
+from itb.txbuild import build_probe_tx, build_probe_unsigned_b64, fresh_address
 
 BH = "11111111111111111111111111111111"
 
@@ -63,3 +63,13 @@ def test_design_arms_randomization_independent():
     assert all(t["cu_price"] == 1000 for s in E for t in s["txs"])
     D = [s for s in specs if s["arm"] == "D"]
     assert all({t["w_index"] for t in s["txs"]} == {0, 1} for s in D)
+
+
+def test_unsigned_template_matches_the_signed_one_except_for_the_signature():
+    kp = Keypair()
+    w = fresh_address("seed", 9)
+    signed = Transaction.from_bytes(base64.b64decode(build_probe_tx(kp, BH, cu_limit=1000, cu_price=5_500_000, shared=w).wire_b64))
+    unsigned = Transaction.from_bytes(base64.b64decode(
+        build_probe_unsigned_b64(kp.pubkey(), cu_limit=1000, cu_price=5_500_000, shared=w, blockhash=BH)))
+    assert bytes(unsigned.message) == bytes(signed.message)
+    assert all(str(s) == "1" * 64 for s in unsigned.signatures) and str(signed.signatures[0]) != "1" * 64

@@ -8,6 +8,9 @@ spend ledger with the on-chain fees. It prints the preregistered tau0 choice (do
 section 6): the earliest (most negative) tau0 whose pooled u is at least 0.40, else the tau0 with the
 highest u.
 
+It also simulates both probe templates (simulateTransaction, unsigned, funding wallet public key as payer;
+itb.simulate) and requires unitsConsumed <= 700 and loadedAccountsDataSize <= 4096 (`--no-simulate` skips it).
+
 It never reads or prints the order of transactions inside a block (no block index, no "which landed
 first"), so looking at it is not an interim look at ordering outcomes.
 
@@ -31,6 +34,7 @@ import os
 from collections import defaultdict
 
 from .pairs import load_jsonl
+from .simulate import PUBLIC_RPC, funding_pubkey, render as render_simulation, simulate_templates, template_params
 
 U_THRESHOLD = 0.40           # tau0 rule
 LANDING_MIN = 0.80           # pilot acceptance criteria (section 10)
@@ -203,8 +207,20 @@ def render(rep: dict) -> str:
               f"({lg['open_reservations_pilot_max_fee']} lamports at worst case), whole ledger {lg['open_reservations_ledger']}"]
     else:
         L.append("ledger reconciliation: ledger file not found")
+    if "templates_simulation" in rep:
+        L += ["", render_simulation(rep["templates_simulation"])] if rep["templates_simulation"]["templates"] else \
+            ["", "simulateTransaction check of the probe templates: FAIL (" + str(rep["templates_simulation"].get("error")) + ")"]
     L += ["", "acceptance criteria (section 10, operational ones only): " + ", ".join(f"{k} = {v}" for k, v in rep["criteria"].items())]
     return "\n".join(L)
+
+
+def simulate_check(rpc_url: str, payer: str | None = None, plan_path: str = "data/plan.json") -> dict:
+    """simulateTransaction check of both templates; a missing public key or an RPC failure is reported, not raised."""
+    from .rpc import Rpc
+    payer = payer or funding_pubkey()
+    if not payer:
+        return {"ok": False, "payer": None, "templates": {}, "error": "no funding wallet public key (data/accounts.json, ~/ops/wallet.pub or --payer)"}
+    return simulate_templates(Rpc(rpc_url, rate_per_s=2.0, burst=2.0, timeout=30), payer, template_params(plan_path))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -212,10 +228,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sent", default="data/raw/*pilot*.sent.jsonl", help="glob of pilot send logs")
     ap.add_argument("--ledger", default="data/ledger/spend.jsonl")
     ap.add_argument("--json", action="store_true", help="print the report as JSON")
+    ap.add_argument("--no-simulate", action="store_true", help="skip the simulateTransaction check of the probe templates")
+    ap.add_argument("--payer", default=None, help="payer public key for the template simulation (default: the funding wallet's)")
+    ap.add_argument("--rpc", default=os.environ.get("ITB_READ_RPC_URL", PUBLIC_RPC), help="read endpoint for the simulation")
     a = ap.parse_args(argv)
     rep = build_report(a.sent, a.ledger)
     if rep["n_probes"] == 0:
         print(f"no live pilot probes found in {a.sent}")
         return 1
+    if not a.no_simulate:
+        sim = simulate_check(a.rpc, a.payer)
+        rep["templates_simulation"] = sim
+        rep["criteria"]["templates_simulate_units_le_700_loaded_le_4096"] = sim["ok"]
     print(json.dumps(rep, indent=1, sort_keys=True, default=str) if a.json else render(rep))
     return 0

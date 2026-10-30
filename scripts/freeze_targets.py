@@ -3,15 +3,17 @@
 
 Eligibility of an identity, all three required:
   1. at least --min-windows (default 400) leader windows in the ranking epoch's schedule (default epoch 1074);
-  2. the same (clientId, version) claim in EVERY gossip snapshot of data/selection/snapshots/, where there
-     must be at least 4 snapshots spanning at least 18 hours (taken_at_unix);
+  2. the same clientId in EVERY gossip snapshot of data/selection/snapshots/, where there must be at least
+     4 snapshots spanning at least 18 hours (taken_at_unix). The version string may change (it is a covariate,
+     not part of the unit of analysis); the version at freeze (newest snapshot) is reported;
   3. not operated by our RPC provider (identity starting HEL1US, a channel confound).
 Selection: no clientId is hard-coded. Every clientId that has an eligible identity gets one target (role
 <clientId>-1), the eligible identity with the most windows (ties: identity string); targets are ranked by
 windows. Replacements: the next 3 eligible identities of the same clientId by windows (the version of the
-original only breaks ties). The output also lists the ineligible top identities with the reason.
-Exit status 1 (nothing written) if the selection has fewer than 3 clientIds or fewer than 3 distinct
-version strings; the preregistered fallback is to rerun with --min-windows 300.
+original only breaks ties); they are the ordered candidate list of the role. The output also lists the
+ineligible top identities with the reason.
+Exit status 1 (nothing written) if the selection has fewer than 6 targets, fewer than 3 clientIds or fewer
+than 3 distinct version strings (at freeze); the preregistered fallback is to rerun with --min-windows 300.
 The schedule is cached in data/selection/ next to the snapshots so the selection can be re-derived offline.
 """
 import argparse, glob, hashlib, json, os, sys, time
@@ -21,6 +23,7 @@ EXCLUDE_PREFIXES = ("HEL1US",)  # validator operated by the RPC provider used fo
 SLOTS_PER_EPOCH = 432_000
 MIN_SNAPSHOTS, MIN_SPAN_HOURS = 4, 18.0
 REPLACEMENTS = 3
+MIN_TARGETS, MIN_CLIENT_IDS, MIN_VERSIONS = 6, 3, 3
 
 
 def windows(idx):
@@ -59,11 +62,12 @@ def evaluate(sched, snaps, min_windows=400, min_snaps=MIN_SNAPSHOTS, min_span_h=
         if not snaps_ok:
             why.append(f"snapshots insufficient: {len(snaps)} spanning {span_h:.1f} h (need >= {min_snaps} spanning >= {min_span_h:g} h)")
         else:
-            claims = [(s["nodes"][ident].get("clientId"), s["nodes"][ident].get("version")) if ident in s["nodes"] else None for s in snaps]
-            if any(c is None for c in claims):
-                why.append(f"absent from {sum(c is None for c in claims)} of {len(snaps)} snapshots")
+            claims = [s["nodes"][ident].get("clientId") if ident in s["nodes"] else None for s in snaps]
+            absent = sum(1 for s in snaps if ident not in s["nodes"])
+            if absent:
+                why.append(f"absent from {absent} of {len(snaps)} snapshots")
             elif len(set(claims)) > 1:
-                why.append("claim changed across snapshots: " + " | ".join(f"{c} {v}" for c, v in sorted({(str(a), str(b)) for a, b in claims})))
+                why.append("clientId changed across snapshots: " + " | ".join(sorted({str(c) for c in claims})))
         rows.append({"identity": ident, "clientId": n.get("clientId"), "version": n.get("version"), "windows_epoch": w,
                      "stake_share": n.get("stake", 0) / last["total_stake"], "eligible": not why, "reason": "; ".join(why) or None})
     return rows
@@ -127,14 +131,14 @@ def main(argv=None):
         print(f"{t['role']:22s} {t['identity'][:8]} {str(t['version']):12s} windows={t['windows_epoch']} replacements={len(t['replacements'])}")
     for r in ineligible[:12]:
         print(f"  ineligible {str(r['clientId']):20s} {r['identity'][:8]} windows={r['windows_epoch']}: {r['reason']}")
-    print("distinct clientIds:", len(clients), "distinct versions:", len(versions))
-    if len(clients) < 3 or len(versions) < 3:
-        print(f"FAILED: fewer than 3 clientIds or 3 version strings; {a.out} not written "
-              f"(preregistered fallback: rerun with --min-windows 300)", file=sys.stderr)
+    print("targets:", len(targets), "distinct clientIds:", len(clients), "distinct versions at freeze:", len(versions))
+    if len(targets) < MIN_TARGETS or len(clients) < MIN_CLIENT_IDS or len(versions) < MIN_VERSIONS:
+        print(f"FAILED: need >= {MIN_TARGETS} targets, >= {MIN_CLIENT_IDS} clientIds and >= {MIN_VERSIONS} version strings at freeze; "
+              f"{a.out} not written (preregistered fallback: rerun with --min-windows 300)", file=sys.stderr)
         return 1
     out = {"rule": "per clientId with an eligible identity, the eligible identity with the most windows in the ranking epoch's schedule; "
-                   f"eligible: >= {a.min_windows} windows, the same (clientId, version) in every one of >= 4 snapshots spanning >= 18 h, "
-                   "not operated by the RPC provider (HEL1US)",
+                   f"eligible: >= {a.min_windows} windows, the same clientId in every one of >= 4 snapshots spanning >= 18 h "
+                   "(version is a covariate, reported at freeze), not operated by the RPC provider (HEL1US)",
            "epoch": a.epoch, "min_windows": a.min_windows,
            "snapshots": [{"file": s["_file"], "slot": s["slot"], "taken_at_unix": s["taken_at_unix"]} for s in snaps],
            "snapshot_span_hours": span_h, "snapshot_slot": snaps[-1]["slot"],

@@ -21,10 +21,22 @@ class SignedTx:
     max_fee: int
 
 
+def _sleep_until(t: float) -> None:
+    """Return at the first moment time.time() >= t."""
+    while True:
+        rem = t - time.time()
+        if rem <= 0:
+            return
+        time.sleep(rem)
+
+
 def send_signed(rpc: Rpc, ledger: SpendLedger, txs: list[SignedTx], *, tag: str, order: list[int] | None = None,
                 gap_s: float = 0.0, max_retries: int = 0, skip_preflight: bool = True) -> dict:
     """Reserve, then send. All transactions go in ONE JSON-RPC batch (one HTTP request) unless
-    gap_s > 0, in which case they are sent one per request, gap_s seconds apart, in `order`.
+    gap_s > 0, in which case they are sent one per request, in `order`; request k leaves at
+    (START time of request 0) + k x gap_s, NOT gap_s after the previous response, so the spacing
+    does not include the first request's round trip (a late request leaves at once and the actual
+    start times are recorded in `send_times`).
     Raises SpendCapExceeded before anything is sent if the cap would be exceeded."""
     order = list(range(len(txs))) if order is None else list(order)
     ledger.reserve([(t.signature, t.max_fee) for t in txs], tag=tag)
@@ -34,10 +46,13 @@ def send_signed(rpc: Rpc, ledger: SpendLedger, txs: list[SignedTx], *, tag: str,
     res: list = []
     times: list[tuple[float, float]] = []
     chunks = [calls] if gap_s <= 0 else [[c] for c in calls]
+    t_first = None
     for k, chunk in enumerate(chunks):
         if k and gap_s > 0:
-            time.sleep(gap_s)
+            _sleep_until(t_first + k * gap_s)
         t0 = time.time()
+        if t_first is None:
+            t_first = t0
         try:
             resp = rpc.batch(chunk, retry=False)
             res += [("ok" if "result" in r else r.get("error")) for r in resp]

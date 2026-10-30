@@ -155,3 +155,23 @@ class SpendLedger:
             st[e.state] += 1
         return {"cap": self.cap, "committed": self.committed(), "remaining": self.remaining(),
                 "settled_actual": sum(e.actual for e in self.entries.values() if e.state == "settled"), **st}
+
+
+def settled_total(path: str, tag_prefix: str | None = None) -> int:
+    """Sum of the actual fees (lamports) of the settled reservations in a ledger file.
+    With `tag_prefix` only reservations whose tag starts with it count (pilot probes are tagged "pilot:<probe id>").
+    A missing file is zero. Read-only: it does not take the ledger lock, so it is safe next to a running ledger."""
+    if not os.path.exists(path):
+        return 0
+    tags: dict[str, str] = {}
+    actual: dict[str, int] = {}
+    with open(path) as f:
+        for line in f:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if rec["kind"] == "reserve":
+                tags[rec["sig"]] = rec.get("tag", "")
+            elif rec["kind"] == "settle":
+                actual[rec["sig"]] = int(rec["actual_fee"])
+    return sum(v for s, v in actual.items() if tag_prefix is None or tags.get(s, "").startswith(tag_prefix))

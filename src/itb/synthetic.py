@@ -1,5 +1,6 @@
 """Synthetic raw data with a KNOWN ordering rule, in exactly the on-disk format of real runs
-(phase "main", flagged `"synthetic": true`, so that `itb analyze` accepts it without --final).
+(phase "main", flagged `"synthetic": true` and written to files named `synthetic-*`).
+`itb analyze` without --final analyses ONLY such data; with --final they are excluded.
 Used to show that `itb analyze` recovers planted rules and stays silent on random order
 (pilot acceptance criterion 1 in docs/PREREGISTRATION.md) and to test every secondary table."""
 from __future__ import annotations
@@ -21,9 +22,10 @@ def _cells(v: dict, arm: str) -> list[dict]:
     return [{"arm": arm, "n": v["n"], **{k: v[k] for k in ("p_fee", "p_send") if k in v}}]
 
 
-def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, arm: str = "P") -> None:
+def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, arm: str = "P", end_snapshot: bool = True) -> None:
     """validators: {identity: {"n": pairs, "p_fee": P(high fee first), "p_send": P(first-sent first),
-    "client_id": str, "version": str, "role": str, "claim_end_version": str, "cells": [...]}}.
+    "client_id": str, "version": str, "role": str, "claim_end_version": str, "claim_end_client_id": str, "cells": [...]}}.
+    end_snapshot=False writes no run_end record (probes then count as claim_end_unknown).
     A cell may also carry: p_miss, p_one (landing outcomes), p_diff_slot, p_other_leader, p_err (per pair),
     p_copresent (share of pairs whose provider slot was before the window), p_fee_co (p_fee for those
     pairs when they land in the first slot), strategy (Harmonic memo label of the window's first block).
@@ -38,7 +40,7 @@ def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, ar
     sent.write(json.dumps({"record": "run_start", "run_id": run, "mode": "live", "phase": "main",
                            "targets_client_now": {i: v.get("client_id") for i, v in validators.items()},
                            "targets_version_now": {i: v.get("version") for i, v in validators.items()}}) + "\n")
-    slot = 470_000_000
+    slot = 470_000_000 + 1_000_000 * seed     # several seeds can share one directory (several runs of one target)
     k = 0
     for ident, v in validators.items():
         role = v.get("role", ident)
@@ -82,7 +84,7 @@ def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, ar
                 if carm == "S":
                     s_low_first = send_first != hi    # the first-sent transaction is the low one
                 err_tx = rng.randrange(2) if rng.random() < cell.get("p_err", 0.0) else None
-                txs = [{"signature": f"S{k}x{i}", "payer": f"P{i}", "cu_limit": 1000, "cu_price": prices[i],
+                txs = [{"signature": f"S{seed}-{k}x{i}", "payer": f"P{i}", "cu_limit": 1000, "cu_price": prices[i],
                         "max_fee": HIGH_FEE if prices[i] == HIGH_PRICE else LOW_FEE, "label": labels[i],
                         "send_pos": 0 if i == send_first else 1} for i in range(2)]
                 sent.write(json.dumps({"record": "probe", "mode": "live", "run_id": run, "probe_id": f"{run}:{k}",
@@ -100,7 +102,7 @@ def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, ar
                 for i in range(2):
                     gone = outcome == "miss" or (outcome == "one" and i != send_first)
                     if gone:
-                        landed.write(json.dumps({"record": "not_landed", "signature": f"S{k}x{i}", "probe_id": f"{run}:{k}",
+                        landed.write(json.dumps({"record": "not_landed", "signature": f"S{seed}-{k}x{i}", "probe_id": f"{run}:{k}",
                                                  "reason": "unknown to cluster at collection time"}) + "\n")
                         continue
                     idx = 10 if i == first else 11
@@ -109,12 +111,14 @@ def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, ar
                         sl, idx = land_slot + (0 if i == first else 1), 10
                     elif where == "other":
                         leader, cid, ver = other, "Agave", "4.3.2"
-                    landed.write(json.dumps({"record": "landed", "signature": f"S{k}x{i}", "probe_id": f"{run}:{k}",
+                    landed.write(json.dumps({"record": "landed", "signature": f"S{seed}-{k}x{i}", "probe_id": f"{run}:{k}",
                                              "slot": sl, "tx_index": idx, "block_tx_count": 400, "leader": leader,
                                              "leader_client_id": cid, "leader_version": ver,
                                              "fee": HIGH_FEE if prices[i] == HIGH_PRICE else LOW_FEE, "cost_units": 2000,
                                              "err": ({"InstructionError": [0, "Custom"]} if err_tx == i else None)}) + "\n")
     ends = {i: v.get("claim_end_version", v.get("version")) for i, v in validators.items()}
-    sent.write(json.dumps({"record": "run_end", "run_id": run, "targets_client_end": {i: v.get("client_id") for i, v in validators.items()},
-                           "targets_version_end": ends}) + "\n")
+    if end_snapshot:
+        sent.write(json.dumps({"record": "run_end", "run_id": run,
+                               "targets_client_end": {i: v.get("claim_end_client_id", v.get("client_id")) for i, v in validators.items()},
+                               "targets_version_end": ends}) + "\n")
     sent.close(); landed.close(); blocks.close()

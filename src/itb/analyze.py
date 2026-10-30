@@ -1,17 +1,25 @@
 """`itb analyze`: every table, verdict and figure of the report, from data/raw only.
 
 Confirmatory part (docs/PREREGISTRATION.md sections 7 to 9). Estimands per unit
-(target_role, identity, clientId, version), taken from the primary cell:
+(target_role, identity, clientId); the version string is a covariate (descriptive split, no tests), taken from
+the primary cell:
   p  = P(the transaction with the higher reward per cost unit lands first)
   q  = P(the transaction that was sent first lands first)
   pi = 2p - 1, read as "share of pairs decided by fee".
 Primary cell: main-phase arm-P probes with both transactions in ONE block whose producer (the Fee
 reward pubkey of the block) is the target, in a slot of the targeted window, from a run in which
-the target's (clientId, version) claim did not change between the start and the end snapshot.
+the target's clientId claim did not change between the start and the end snapshot (a changed version
+string stays in the cell and is reported in the version split; a run without end snapshot stays and is
+counted as claim_end_unknown).
 Fee contrast and request position are randomized independently, so p and q come from the same pairs.
 
-`itb analyze` refuses to read main-phase data unless run with --final (run once, after the last
-main run). Without it only pilot and synthetic data are analysed (never confirmatory).
+FIFO clause: the per-unit "no rule detected" verdict says "arrival order (FIFO) not excluded" unless the
+90% Clopper-Pearson interval of the arm-S q_S, pooled over ALL targets (main phase, same slot, target hit,
+window), lies inside [0.35, 0.65]. q_S per clientId is output descriptively.
+
+Modes. `itb analyze --final` (run once, after the last main run) analyses phase "main" only; pilot data and
+anything marked synthetic are excluded. Without --final only SYNTHETIC data are analysed (the self-test of
+the pipeline); pilot and main data of real runs are refused entirely.
 """
 from __future__ import annotations
 
@@ -30,7 +38,8 @@ from .stats import binom_two_sided_p, clopper_pearson, holm
 
 # Sections 8 and 9 of docs/PREREGISTRATION.md
 DEFAULTS = {"primary_arm": "P", "alpha": 0.05, "equiv_lo": 0.35, "equiv_hi": 0.65, "strict_lb": 0.90,
-            "strong_lb": 0.75, "min_n": 100, "min_n_s": 30}
+            "strong_lb": 0.75, "min_n": 100}
+SECONDARY_LABEL = "secondary, descriptive"
 
 NO_RULE = "no fee or request-position rule detected (|pi| <= 0.30)"
 FIFO_NOTE = "; arrival order (FIFO) not excluded"
@@ -38,14 +47,20 @@ FIFO_NOTE = "; arrival order (FIFO) not excluded"
 
 # ---- selection of rows ----------------------------------------------------------------------------
 
-def select_rows(rows: list[dict], final: bool) -> tuple[list[dict], int]:
-    """Rows to analyse and the number of main-phase rows refused.
-    final: only phase == "main". Not final: only pilot and synthetic data; real main-phase rows are refused."""
+def select_rows(rows: list[dict], final: bool) -> tuple[list[dict], dict]:
+    """Rows to analyse and the number of rows refused or excluded, by kind.
+    final: phase "main" only; pilot rows and rows marked synthetic are excluded (counted).
+    Not final: SYNTHETIC rows only; every real row (pilot or main) is refused (counted)."""
     if final:
-        return [r for r in rows if r.get("phase") == "main"], 0
-    keep = [r for r in rows if r.get("synthetic") or r.get("phase") == "pilot"]
-    refused = sum(1 for r in rows if r.get("phase") == "main" and not r.get("synthetic"))
-    return keep, refused
+        keep = [r for r in rows if r.get("phase") == "main" and not r.get("synthetic")]
+        return keep, {"pilot": sum(1 for r in rows if r.get("phase") == "pilot" and not r.get("synthetic")),
+                      "synthetic": sum(1 for r in rows if r.get("synthetic")),
+                      "other_phase": sum(1 for r in rows if r.get("phase") not in ("main", "pilot") and not r.get("synthetic"))}
+    keep = [r for r in rows if r.get("synthetic")]
+    real = [r for r in rows if not r.get("synthetic")]
+    return keep, {"pilot": sum(1 for r in real if r.get("phase") == "pilot"),
+                  "main": sum(1 for r in real if r.get("phase") == "main"),
+                  "other_phase": sum(1 for r in real if r.get("phase") not in ("main", "pilot"))}
 
 
 # ---- per-pair outcomes ----------------------------------------------------------------------------
@@ -62,7 +77,7 @@ def high_index(row: dict) -> int | None:
 
 
 def in_cell(row: dict, arm: str) -> bool:
-    """Both transactions in one block produced by the target, in the targeted window, claim unchanged."""
+    """Both transactions in one block produced by the target, in the targeted window, clientId unchanged."""
     return (row.get("arm") == arm and row["n_tx"] == 2 and row["same_slot"] and row.get("target_hit") is True
             and row.get("in_window") is True and not row["claim_changed_in_run"])
 
@@ -78,7 +93,14 @@ def outcomes(row: dict) -> dict:
 
 
 def unit_key(row: dict) -> tuple:
-    return (row.get("target_role"), row["target_leader"], row.get("claim_client_id"), row.get("claim_version"))
+    """Unit of analysis: (target_role, identity, clientId). The version is a covariate, never part of the key."""
+    return (row.get("target_role"), row["target_leader"], row.get("claim_client_id"))
+
+
+def version_label(row: dict) -> str:
+    """Version string of the probe's target; a version that changed within the run reads "start>end"."""
+    v = str(row.get("claim_version"))
+    return f"{v}>{row.get('claim_version_end')}" if row.get("version_changed_in_run") else v
 
 
 # ---- estimates and verdicts -----------------------------------------------------------------------
@@ -110,8 +132,9 @@ def inside_equivalence(est: dict | None, cfg: dict) -> bool:
 
 
 def verdict(fee: dict, send: dict, cfg: dict, s_pooled: dict | None = None) -> str:
-    """Decision rules of PREREGISTRATION.md section 9 for one unit (primary cell).
-    s_pooled: estimate of the pooled arm-S q_S of the unit's clientId (for the FIFO remark)."""
+    """Decision rules of PREREGISTRATION.md section 9 for one unit (primary cell). cfg["min_n"] is the N rule
+    (0 for the calibration controls, which are exempt).
+    s_pooled: estimate of the arm-S q_S pooled over ALL targets (for the FIFO clause)."""
     n = fee.get("n", 0)
     if n < cfg["min_n"]:
         return f"insufficient data (n={n})"
@@ -120,14 +143,14 @@ def verdict(fee: dict, send: dict, cfg: dict, s_pooled: dict | None = None) -> s
     def label(base: str, s: tuple[str, bool]) -> str:
         return ("reverse " if s[1] else "") + base
     if sf and ss:
-        return f"mixed: {label('fee rule', sf)} {sf[0]} and {label('send-order rule', ss)} {ss[0]}"
+        return f"mixed: {label('fee rule', sf)} {sf[0]} and {label('request-position rule', ss)} {ss[0]}"
     if sf:
         return f"{label('fee rule', sf)} holds, {sf[0]}"
     if ss:
-        return f"{label('send-order rule', ss)} holds, {ss[0]}"
+        return f"{label('request-position rule', ss)} holds, {ss[0]}"
     if inside_equivalence(fee, cfg) and inside_equivalence(send, cfg):
-        fifo_open = s_pooled is None or s_pooled.get("n", 0) < cfg["min_n_s"] or not inside_equivalence(s_pooled, cfg)
-        return NO_RULE + (FIFO_NOTE if fifo_open else "")
+        # FIFO is excluded only if the 90% Clopper-Pearson interval of the pooled q_S lies inside [equiv_lo, equiv_hi]
+        return NO_RULE + ("" if inside_equivalence(s_pooled, cfg) else FIFO_NOTE)
     return f"insufficient data (n={n})"
 
 
@@ -226,6 +249,33 @@ def fisher(k1: int, n1: int, k2: int, n2: int) -> dict:
 
 # ---- the analysis ---------------------------------------------------------------------------------
 
+def cell_estimates(cell: list[dict]) -> tuple[dict, dict]:
+    """(fee estimate p, request-position estimate q) of a unit's primary cell."""
+    outs = [outcomes(r) for r in cell]
+    return (estimate(sum(o.get("y_fee", 0) for o in outs), sum("y_fee" in o for o in outs)),
+            estimate(sum(o["y_send"] for o in outs), len(outs)))
+
+
+def decide(units: list[dict], cfg: dict, s_pooled: dict | None) -> int:
+    """ONE Holm family over all p and q tests (units' "fee" and "send" estimates) and then the verdict of every
+    unit (sets "p_holm" on the estimates and "pi", "verdict" on the unit). Returns the family size."""
+    tests = [(u, w) for u in units for w in ("fee", "send") if u[w].get("n", 0) > 0]
+    for (u, w), pa in zip(tests, holm([u[w]["p_value"] for u, w in tests]) if tests else []):
+        u[w]["p_holm"] = pa
+    for u in units:
+        u["pi"] = 2 * u["fee"]["p"] - 1 if u["fee"].get("n") else None
+        u["verdict"] = verdict(u["fee"], u["send"], cfg, s_pooled)
+    return len(tests)
+
+
+def describe(k: int, n: int) -> dict:
+    """Descriptive estimate (proportion and exact 95% interval); no test, no verdict."""
+    if n == 0:
+        return {"n": 0}
+    lo, hi = clopper_pearson(k, n, 0.95)
+    return {"n": n, "k": k, "p": k / n, "ci95": [lo, hi]}
+
+
 def analyze_rows(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
     arm_p = cfg["primary_arm"]
     by_unit: dict[tuple, list[dict]] = defaultdict(list)
@@ -257,34 +307,60 @@ def analyze_rows(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
             excl["claim_end_unknown"] += int(r["claim_end_unknown"])
         for r in cell:
             excl["primary_with_execution_error"] += int(any(t.get("err") or t.get("status_err") for t in r["txs"]))
-        kf = sum(outcomes(r).get("y_fee", 0) for r in cell)
-        ks = sum(outcomes(r)["y_send"] for r in cell)
-        nf = sum("y_fee" in outcomes(r) for r in cell)
-        units.append({"target_role": key[0], "identity": key[1], "client_id": key[2], "version": key[3],
+        fee_est, send_est = cell_estimates(cell)
+        # version is a covariate: descriptive split of the primary cell and of arm P by version string, no tests
+        split = []
+        for v in sorted({version_label(r) for r in prow}):
+            vp = [r for r in prow if version_label(r) == v]
+            vc = [r for r in vp if in_cell(r, arm_p)]
+            split.append({"version": v, "n_probes_arm_P": len(vp), "n_primary": len(vc),
+                          "fee": describe(sum(outcomes(r).get("y_fee", 0) for r in vc), sum("y_fee" in outcomes(r) for r in vc)),
+                          "send": describe(sum(outcomes(r)["y_send"] for r in vc), len(vc))})
+        units.append({"target_role": key[0], "identity": key[1], "client_id": key[2],
+                      "versions_seen": sorted({version_label(r) for r in urows}),
                       "n_probes_arm_P": len(prow), "n_probes_all_arms": len(urows), "exclusions": excl,
-                      "n_primary": len(cell), "fee": estimate(kf, nf), "send": estimate(ks, len(cell)),
-                      "table_2x2": table_2x2(cell), "logit": unit_logit(cell)})
-    # one Holm family over all p and q tests of all units
-    tests = [(u, w) for u in units for w in ("fee", "send") if u[w].get("n", 0) > 0]
-    for (u, w), pa in zip(tests, holm([u[w]["p_value"] for u, w in tests]) if tests else []):
-        u[w]["p_holm"] = pa
-    # pooled arm-S q_S per clientId, for the FIFO remark
+                      "n_primary": len(cell), "fee": fee_est, "send": send_est,
+                      "table_2x2": table_2x2(cell), "logit": unit_logit(cell),
+                      "version_split": {"label": "descriptive, no tests or verdicts", "by_version": split}})
+    # FIFO clause: arm-S q_S pooled over ALL targets; q_S per clientId is descriptive only
+    s_pooled = _pooled(rows, "S")["send"]
     s_by_client = {}
     for c in sorted({str(r.get("claim_client_id")) for r in rows}):
         s_by_client[c] = _pooled([r for r in rows if str(r.get("claim_client_id")) == c], "S")["send"]
+    family = decide(units, cfg, s_pooled)        # one Holm family over all p and q tests of all units
+    fifo = {"rule": f"arrival order (FIFO) is excluded only if the 90% Clopper-Pearson interval of the arm-S q_S pooled over all "
+                    f"targets lies inside [{cfg['equiv_lo']}, {cfg['equiv_hi']}]",
+            "pooled_q_S": s_pooled, "excluded": inside_equivalence(s_pooled, cfg),
+            "q_S_by_client_id": {"label": "descriptive", "values": s_by_client}}
+    # probes whose run has no end snapshot: kept, flagged, counted
+    cleu = []
     for u in units:
-        u["pi"] = 2 * u["fee"]["p"] - 1 if u["fee"].get("n") else None
-        u["verdict"] = verdict(u["fee"], u["send"], cfg, s_by_client.get(str(u["client_id"])))
-    return {"units": units, "holm_family_size": len(tests), "secondary": secondary(rows, blocks, cfg, s_by_client)}
+        urows = by_unit[(u["target_role"], u["identity"], u["client_id"])]
+        cleu.append({"target_role": u["target_role"], "identity": u["identity"], "client_id": u["client_id"],
+                     "n_probes_all_arms": len(urows),
+                     "n_claim_end_unknown_all_arms": sum(int(r["claim_end_unknown"]) for r in urows),
+                     "n_claim_end_unknown_arm_P": u["exclusions"]["claim_end_unknown"],
+                     "n_primary_with_claim_end_unknown": sum(int(r["claim_end_unknown"]) for r in urows if in_cell(r, arm_p))})
+    claim_end_unknown = {"label": "probes of runs without an end snapshot are kept and flagged claim_end_unknown",
+                         "total_all_arms": sum(c["n_claim_end_unknown_all_arms"] for c in cleu),
+                         "total_primary": sum(c["n_primary_with_claim_end_unknown"] for c in cleu), "by_unit": cleu}
+    return {"units": units, "holm_family_size": family, "fifo": fifo, "claim_end_unknown": claim_end_unknown,
+            "secondary": secondary(rows, blocks, cfg)}
 
 
-def secondary(rows: list[dict], blocks: dict[int, dict], cfg: dict, s_by_client: dict) -> dict:
-    """Pooled-by-clientId secondary results (descriptive; arm D vs P and the Harmonic strategy are exploratory)."""
+def secondary(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
+    """Pooled-by-clientId secondary results. Every table is "secondary, descriptive": Holm within each table
+    (separate from the confirmatory family), no N rule, no equivalence rule. Arm D vs P and the Harmonic
+    strategy are in addition exploratory."""
     arm_p = cfg["primary_arm"]
     clients = sorted({str(r.get("claim_client_id")) for r in rows})
     groups = {c: [r for r in rows if str(r.get("claim_client_id")) == c] for c in clients}
     groups["ALL"] = rows
-    out: dict = {"note": "pooled by the target's clientId claim; confirmatory family is separate; Holm below is within each table",
+    tables = ["arm_E", "arm_S", "arm_D_vs_P", "copresence_p_co", "harmonic_strategy", "different_slot_pairs",
+              "untargeted_landings", "execution_errors"]
+    out: dict = {"note": "pooled by the target's clientId claim; confirmatory family is separate; Holm below is within each table; "
+                         "no N rule and no equivalence rule apply",
+                 "table_labels": {t: SECONDARY_LABEL for t in tables},
                  "arm_E": {}, "arm_S": {}, "arm_D_vs_P": {}, "copresence_p_co": {}, "harmonic_strategy": {}}
     for name, arm in (("arm_E", "E"), ("arm_S", "S")):
         ests = []
@@ -295,7 +371,7 @@ def secondary(rows: list[dict], blocks: dict[int, dict], cfg: dict, s_by_client:
             ests += [pl["send"], pl["fee"]]
         _secondary_holm(ests)
         for row in out[name].values():
-            row["q_rule"] = _strength_label(row["q"], cfg, "send-order rule")
+            row["q_rule"] = _strength_label(row["q"], cfg, "request-position rule")
             row["p_rule"] = _strength_label(row["p"], cfg, "fee rule")
     for c, g in groups.items():
         d, pp = _pooled(g, "D")["fee"], _pooled(g, arm_p)["fee"]
@@ -356,7 +432,6 @@ def secondary(rows: list[dict], blocks: dict[int, dict], cfg: dict, s_by_client:
                     errs["by_target"][r["target_leader"]] += 1
     errs["by_arm"], errs["by_target"] = dict(errs["by_arm"]), dict(errs["by_target"])
     out["execution_errors"] = errs
-    out["arm_S_pooled_q_for_fifo_remark"] = s_by_client
     return out
 
 
@@ -369,14 +444,30 @@ def write_outputs(res: dict, out_dir: str, meta: dict) -> None:
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "verdicts.json"), "w") as f:
         json.dump({**meta, **res}, f, indent=1, sort_keys=True, default=str)
-    ident = ["target_role", "identity", "client_id", "version"]
+    ident = ["target_role", "identity", "client_id"]
     with open(os.path.join(out_dir, "verdicts.csv"), "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(ident + ["n_probes_arm_P", "n_primary", "k_fee_first", "p_fee_first", "p_ci95_lo", "p_ci95_hi", "p_value", "p_holm",
-                            "k_sent_first", "q_sent_first", "q_ci95_lo", "q_ci95_hi", "q_value", "q_holm", "pi", "verdict"])
+        w.writerow(ident + ["versions_seen", "n_probes_arm_P", "n_primary", "k_fee_first", "p_fee_first", "p_ci95_lo", "p_ci95_hi", "p_value",
+                            "p_holm", "k_sent_first", "q_sent_first", "q_ci95_lo", "q_ci95_hi", "q_value", "q_holm", "pi", "verdict"])
         for u in res["units"]:
-            w.writerow([u[c] for c in ident] + [u["n_probes_arm_P"], u["n_primary"], *_flat(u["fee"]),
+            w.writerow([u[c] for c in ident] + [";".join(u["versions_seen"]), u["n_probes_arm_P"], u["n_primary"], *_flat(u["fee"]),
                                                  *_flat(u["send"]), u["pi"], u["verdict"]])
+    with open(os.path.join(out_dir, "version_split.csv"), "w", newline="") as f:
+        w = csv.writer(f)    # descriptive: no p-values, no Holm, no verdict
+        w.writerow(ident + ["version", "n_probes_arm_P", "n_primary", "k_fee_first", "p_fee_first", "p_ci95_lo", "p_ci95_hi",
+                            "k_sent_first", "q_sent_first", "q_ci95_lo", "q_ci95_hi"])
+        for u in res["units"]:
+            for v in u["version_split"]["by_version"]:
+                fe, se = v["fee"], v["send"]
+                w.writerow([u[c] for c in ident] + [v["version"], v["n_probes_arm_P"], v["n_primary"],
+                                                     fe.get("k"), fe.get("p"), *(fe.get("ci95") or [None, None]),
+                                                     se.get("k"), se.get("p"), *(se.get("ci95") or [None, None])])
+    with open(os.path.join(out_dir, "claim_end_unknown.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        keys = ["n_probes_all_arms", "n_claim_end_unknown_all_arms", "n_claim_end_unknown_arm_P", "n_primary_with_claim_end_unknown"]
+        w.writerow(ident + keys)
+        for c in res["claim_end_unknown"]["by_unit"]:
+            w.writerow([c[k] for k in ident + keys])
     with open(os.path.join(out_dir, "table_2x2.csv"), "w", newline="") as f:
         w = csv.writer(f)
         keys = ["sent_first_landed_first", "sent_first_landed_second", "sent_second_landed_first", "sent_second_landed_second"]
@@ -398,11 +489,15 @@ def analyze(raw_dir: str, out_dir: str, cfg: dict, final: bool = False) -> dict:
     all_rows = probe_rows(raw_dir)
     rows, refused = select_rows(all_rows, final)
     res = analyze_rows(rows, load_block_summaries(raw_dir), cfg)
-    meta = {"config": cfg, "final": final, "confirmatory": final, "n_rows_read": len(all_rows), "n_rows_analysed": len(rows),
-            "n_main_rows_refused": refused}
+    meta = {"config": cfg, "final": final, "confirmatory": final,
+            "mode": "final: phase main only, real data" if final else "synthetic data only (self-test); not confirmatory",
+            "n_rows_read": len(all_rows), "n_rows_analysed": len(rows),
+            ("n_rows_excluded" if final else "n_rows_refused"): refused}
     write_outputs(res, out_dir, meta)
-    return {"final": final, "n_rows": len(all_rows), "n_rows_analysed": len(rows), "n_main_rows_refused": refused,
-            "units": len(res["units"])}
+    return {"final": final, "n_rows": len(all_rows), "n_rows_analysed": len(rows),
+            ("n_rows_excluded" if final else "n_rows_refused"): refused, "units": len(res["units"]),
+            "claim_end_unknown_probes": res["claim_end_unknown"]["total_all_arms"],
+            "fifo_excluded": res["fifo"]["excluded"]}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -410,14 +505,20 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--raw", default="data/raw")
     ap.add_argument("--out", default="results")
     ap.add_argument("--final", action="store_true",
-                    help="analyse the confirmatory main-phase data (run once, after the last main run); "
-                         "without it main-phase data is refused and only pilot and synthetic data are analysed")
+                    help="confirmatory analysis of the main-phase data (run once, after the last main run); pilot data and synthetic "
+                         "data are excluded. Without it only synthetic data are analysed and every real probe is refused")
     a = ap.parse_args(argv)
     summary = analyze(a.raw, a.out, dict(DEFAULTS), final=a.final)
-    if summary["n_main_rows_refused"]:
-        print(f"refusing to include {summary['n_main_rows_refused']} main-phase probes without --final "
-              f"(confirmatory data are analysed once, after the last main run); analysed pilot/synthetic data only")
-    if not a.final:
-        print("NOT FINAL: results are not confirmatory")
+    if a.final:
+        ex = summary["n_rows_excluded"]
+        print(f"FINAL: main-phase data only; excluded {ex['pilot']} pilot, {ex['synthetic']} synthetic and {ex['other_phase']} other-phase probes")
+    else:
+        rf = summary["n_rows_refused"]
+        n = sum(rf.values())
+        if n:
+            print(f"refusing {n} real probes ({rf['pilot']} pilot, {rf['main']} main, {rf['other_phase']} other): without --final only "
+                  f"synthetic data are analysed. Pilot data are operational (see `itb pilot-report`) and never enter an ordering "
+                  f"analysis; main-phase data are confirmatory and are analysed once, with --final, after the last main run")
+        print("NOT FINAL: synthetic self-test only, results are not confirmatory")
     print(json.dumps(summary))
     return 0

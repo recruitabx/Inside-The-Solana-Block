@@ -63,18 +63,21 @@ def epoch_schedule_windows(rpc: Rpc, identities: set[str] | None = None) -> tupl
 
 
 def client_snapshot(rpc: Rpc) -> dict:
-    """Self-reported client id and version of every staked node, with stake, at this moment."""
+    """Self-reported client id and version of every staked node, with stake, at this moment.
+    `delinquent` is True unless the node has a vote account in getVoteAccounts "current" with stake."""
     nodes = rpc.call("getClusterNodes")
     va = rpc.call("getVoteAccounts")
     stake: dict[str, int] = {}
     for a in va["current"] + va["delinquent"]:
         stake[a["nodePubkey"]] = stake.get(a["nodePubkey"], 0) + int(a["activatedStake"])
+    current = {a["nodePubkey"] for a in va["current"] if int(a["activatedStake"]) > 0}
     slot = rpc.call("getSlot", [{"commitment": "confirmed"}])
     out = {"taken_at_unix": time.time(), "slot": slot, "total_stake": sum(stake.values()), "nodes": {}}
     for n in nodes:
         if stake.get(n["pubkey"], 0) > 0:
             out["nodes"][n["pubkey"]] = {"clientId": n.get("clientId"), "version": n.get("version"),
-                                         "featureSet": n.get("featureSet"), "stake": stake[n["pubkey"]]}
+                                         "featureSet": n.get("featureSet"), "stake": stake[n["pubkey"]],
+                                         "delinquent": n["pubkey"] not in current}
     return out
 
 

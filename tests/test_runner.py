@@ -12,8 +12,13 @@ TARGET = str(Keypair().pubkey())
 OTHER = str(Keypair().pubkey())
 
 
+PRIMARY = str(Keypair().pubkey())      # a role's primary identity in the replacement tests
+
+
 class FakeRpc:
     calls: list = []
+    nodes: list | None = None          # getClusterNodes answer; default: TARGET runs Agave 4.3.2
+    delinquent: set = set()            # node pubkeys reported as delinquent by getVoteAccounts
 
     def __init__(self, *a, **k):
         self.host = "fake"
@@ -26,9 +31,12 @@ class FakeRpc:
         if method == "getSlot":
             return self._slot()
         if method == "getClusterNodes":
-            return [{"pubkey": TARGET, "clientId": "Agave", "version": "4.3.2"}]
+            return FakeRpc.nodes or [{"pubkey": TARGET, "clientId": "Agave", "version": "4.3.2"}]
         if method == "getVoteAccounts":
-            return {"current": [{"nodePubkey": TARGET, "activatedStake": 10}], "delinquent": []}
+            keys = [n["pubkey"] for n in (FakeRpc.nodes or [{"pubkey": TARGET}])]
+            mk = lambda ks: [{"nodePubkey": k, "activatedStake": 10} for k in ks]
+            return {"current": mk(k for k in keys if k not in FakeRpc.delinquent),
+                    "delinquent": mk(k for k in keys if k in FakeRpc.delinquent)}
         if method == "getSlotLeaders":
             start, n = params
             return [TARGET if ((start + i) // 4) % 2 == 0 else OTHER for i in range(n)]
@@ -43,7 +51,7 @@ class FakeRpc:
         return [{"result": "sig"} for _ in calls]
 
 
-PLAN = {"seed": 1, "n_payers": 10, "targets": [{"identity": TARGET, "role": "X-1"}],
+PLAN = {"seed": 1, "n_payers": 10, "targets": [{"role": "X-1", "clientId": "Agave", "identity": TARGET, "candidates": [TARGET]}],
         "shares": {"P": 0.7, "E": 0.1, "D": 0.1, "S": 0.1}, "price_high": 5_500_000, "price_low": 1_000,
         "cu_limit": 1000, "loaded_limit": 4096, "gap_ms": 200, "tau0_ms": -170, "tau0_grid_ms": [-270, -170, -70],
         "min_request_interval_s": 0.5, "quota_per_target": 300, "pilot_per_target": 12}
@@ -58,6 +66,7 @@ def env(tmp_path, monkeypatch):
     (tmp_path / "data").mkdir()
     (tmp_path / "data" / "plan.json").write_text(json.dumps(PLAN))
     FakeRpc.calls = []
+    FakeRpc.nodes, FakeRpc.delinquent = None, set()
     return tmp_path
 
 
@@ -142,7 +151,9 @@ def test_probe_randomness_comes_from_window_key(env):
     end = [x for x in _records(env) if x["record"] == "run_end"][0]
     assert end["snapshot_end"].startswith("data/snapshots/clients_") and os.path.exists(env / end["snapshot_end"])
     assert end["targets_client_end"] == {TARGET: "Agave"} and end["targets_version_end"] == {TARGET: "4.3.2"}
-    assert end["claim_changed"] == {TARGET: False}
+    assert end["claim_changed"] == {TARGET: False} and end["client_changed"] == {TARGET: False}
+    assert end["sent_per_role"] == {"X-1": len(probes)} and "error" not in end
+    assert all(r["target_role"] == "X-1" and r["target_leader"] == TARGET for r in probes)
     # the start snapshot is not overwritten by the end snapshot
     start = [x for x in _records(env) if x["record"] == "run_start"][0]
     assert start["snapshot"] != end["snapshot_end"]
@@ -171,6 +182,7 @@ def test_end_snapshot_detects_claim_change(env, monkeypatch):
     runner.main(["--minutes", "0.05", "--max-probes", "1"])
     end = [x for x in _records(env) if x["record"] == "run_end"][0]
     assert end["claim_changed"] == {TARGET: True} and end["targets_version_end"] == {TARGET: "4.4.0"}
+    assert end["client_changed"] == {TARGET: False}                      # only the version string changed
 
 
 def test_pilot_phase_mix_and_tau_cycle(env):
@@ -231,3 +243,122 @@ def test_wait_until_syncs_every_two_seconds_but_not_faster_than_one_per_second(m
     assert max(gaps) <= 2.4 and min(gaps) >= 0.95, gaps
     assert calls[-1] < target - 0.4           # no call in the last half second before the send
     assert abs(clock.slot_s - 0.2143) < 0.002  # refit from samples spanning more than 5 s
+
+
+def _run_start(tmp):
+    return [x for x in _records(tmp) if x["record"] == "run_start"][0]
+
+
+def test_role_assignment_picks_first_valid_candidate_and_logs_it(env):
+    """PRIMARY switched its clientId, so the role goes to the next candidate; the choice is logged in run_start."""
+    plan = dict(PLAN, targets=[{"role": "X-1", "clientId": "Agave", "identity": PRIMARY, "candidates": [PRIMARY, TARGET]}])
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    FakeRpc.nodes = [{"pubkey": PRIMARY, "clientId": "Firedancer", "version": "26.10.4"},
+                     {"pubkey": TARGET, "clientId": "Agave", "version": "4.3.2"}]
+    runner.main(["--minutes", "0.08", "--max-probes", "1"])
+    asg = _run_start(env)["role_assignment"]["X-1"]
+    assert asg["identity"] == TARGET and asg["candidate_index"] == 1 and asg["skipped"] is None
+    assert asg["rejected"] == [{"identity": PRIMARY, "reason": "clientId Firedancer differs from the role's Agave"}]
+    probes = _probes(env)
+    assert probes and all(r["target_leader"] == TARGET and r["target_role"] == "X-1" for r in probes)
+    assert _run_start(env)["targets_client_now"] == {TARGET: "Agave"} and _run_start(env)["quota"] == {"X-1": 300}
+
+
+def test_delinquent_or_absent_candidates_are_skipped(env):
+    third = str(Keypair().pubkey())
+    plan = dict(PLAN, targets=[{"role": "X-1", "clientId": "Agave", "identity": PRIMARY, "candidates": [PRIMARY, third, TARGET]}])
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    FakeRpc.nodes = [{"pubkey": PRIMARY, "clientId": "Agave", "version": "4.3.2"}, {"pubkey": TARGET, "clientId": "Agave", "version": "4.3.2"}]
+    FakeRpc.delinquent = {PRIMARY}
+    runner.main(["--minutes", "0.05", "--max-probes", "1"])
+    asg = _run_start(env)["role_assignment"]["X-1"]
+    assert asg["identity"] == TARGET and asg["candidate_index"] == 2
+    assert [r["reason"][:9] for r in asg["rejected"]] == ["delinquen", "not a sta"]
+
+
+def test_role_without_valid_candidate_is_skipped_and_logged(env, capsys):
+    plan = dict(PLAN, targets=[{"role": "X-1", "clientId": "Agave", "identity": TARGET, "candidates": [TARGET]},
+                               {"role": "Y-1", "clientId": "Jito", "identity": PRIMARY, "candidates": [PRIMARY]}])
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    FakeRpc.nodes = [{"pubkey": TARGET, "clientId": "Agave", "version": "4.3.2"}, {"pubkey": PRIMARY, "clientId": "Agave", "version": "4.3.2"}]
+    runner.main(["--minutes", "0.08", "--max-probes", "2"])
+    asg = _run_start(env)["role_assignment"]
+    assert asg["Y-1"]["identity"] is None and asg["Y-1"]["skipped"] == "no valid candidate" and asg["X-1"]["identity"] == TARGET
+    assert "role Y-1 skipped" in capsys.readouterr().err
+    assert {r["target_role"] for r in _probes(env)} == {"X-1"}
+
+
+def test_run_end_is_written_after_an_exception_with_the_error(env, monkeypatch):
+    def boom(*a, **k):
+        raise RuntimeError("boom")
+    monkeypatch.setattr(runner, "upcoming_windows", boom)
+    with pytest.raises(RuntimeError):
+        runner.main(["--minutes", "0.05"])
+    end = [x for x in _records(env) if x["record"] == "run_end"]
+    assert len(end) == 1 and end[0]["error"] == "RuntimeError: boom" and end[0]["probes"] == 0
+    assert end[0]["snapshot_end"].startswith("data/snapshots/clients_")
+
+
+def _seed_sent(path, recs):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(json.dumps(r) + "\n" for r in recs))
+
+
+def _probe(role, ident="OLD", phase="main", arm="P", **kw):
+    return {"record": "probe", "mode": "live", "phase": phase, "arm": arm, "target_role": role, "target_leader": ident,
+            "send_results": ["ok", "ok"], **kw}
+
+
+def test_count_existing_is_per_role_from_phase_matching_live_logs_only(env):
+    raw = env / "data" / "raw"
+    _seed_sent(raw / "20261101T000000Z-live-aaaaaa.sent.jsonl",
+               [_probe("X-1", "ID1")] * 3 + [_probe("X-1", "ID2", arm="S")] * 2 + [_probe("Y-1", "ID3")] * 4          # identities share the role
+               + [_probe("X-1", phase="pilot")] * 5                                                                     # other phase
+               + [_probe("X-1", synthetic=True)] * 7                                                                    # flagged record
+               + [{**_probe("X-1"), "send_results": None}, {**_probe("X-1"), "mode": "dry"}, {**_probe(None)},         # not sent / not live / no role
+                  {"record": "run_end"}])
+    _seed_sent(raw / "synthetic-live-1.sent.jsonl", [_probe("X-1")] * 11)                                              # synthetic file
+    _seed_sent(raw / "20261101T000000Z-live-pilot-bbbbbb.sent.jsonl", [_probe("X-1", phase="pilot")] * 2)
+    assert runner.count_existing_arms("main") == {"X-1": {"P": 3, "S": 2}, "Y-1": {"P": 4}}
+    assert runner.count_existing("main") == {"X-1": 5, "Y-1": 4}
+    assert runner.count_existing("pilot") == {"X-1": 7}
+
+
+def test_replacement_inherits_the_roles_remaining_quota(env, monkeypatch):
+    """The quota counts probes of the ROLE across identities: a role whose quota was used up by its former identity sends nothing."""
+    w = env / "w.json"
+    w.write_text(json.dumps(list(bytes(Keypair()))))
+    os.chmod(w, 0o600)
+    monkeypatch.setenv("ITB_LIVE", "1")
+    monkeypatch.setenv("ITB_WALLET", str(w))
+    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "36000")
+    plan = dict(PLAN, quota_per_target=4)
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    _seed_sent(env / "data" / "raw" / "20261101T000000Z-live-aaaaaa.sent.jsonl", [_probe("X-1", "FORMER")] * 4)
+    runner.main(["--live", "--minutes", "0.08", "--no-anchor"])
+    assert _run_start(env)["already_sent"] == {"X-1": 4}
+    assert not [r for r in _records(env) if r["record"] == "probe" and r.get("run_id")]       # quota used up: nothing sent
+    _seed_sent(env / "data" / "raw" / "20261101T000000Z-live-aaaaaa.sent.jsonl", [_probe("X-1", "FORMER")] * 3)
+    runner.main(["--live", "--minutes", "0.1", "--no-anchor", "--run-id", "second-live-run"])
+    probes = [r for r in _records(env) if r["record"] == "probe" and r.get("run_id") == "second-live-run"]
+    assert len(probes) == 1 and probes[0]["target_leader"] == TARGET and probes[0]["target_role"] == "X-1"
+
+
+def test_pilot_reservations_are_tagged_for_settled_total(env, monkeypatch):
+    from itb.spend import settled_total
+    w = env / "w.json"
+    w.write_text(json.dumps(list(bytes(Keypair()))))
+    os.chmod(w, 0o600)
+    monkeypatch.setenv("ITB_LIVE", "1")
+    monkeypatch.setenv("ITB_WALLET", str(w))
+    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "36000")
+    plan = dict(PLAN, pilot_per_target=2, pilot_s_per_target=1)
+    (env / "data" / "plan.json").write_text(json.dumps(plan))
+    runner.main(["--live", "--phase", "pilot", "--minutes", "0.1", "--max-probes", "1", "--no-anchor"])
+    path = env / "data" / "ledger" / "spend.jsonl"
+    led = [json.loads(x) for x in path.read_text().splitlines()]
+    assert led and all(r["tag"].startswith("pilot:") for r in led)
+    with open(path, "a") as f:
+        for r in led:
+            f.write(json.dumps({"kind": "settle", "sig": r["sig"], "actual_fee": 7}) + "\n")
+    assert settled_total(str(path), "pilot:") == 7 * len(led) and settled_total(str(path), "other:") == 0

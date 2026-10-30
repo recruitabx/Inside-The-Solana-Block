@@ -126,7 +126,63 @@ def test_cli_registered_and_main_runs(tmp_path, capsys):
     from itb.cli import COMMANDS, main
     assert COMMANDS["pilot-report"] == "itb.pilot_report"
     sent, led = _write(tmp_path, [_p(-170, "usable"), _p(-70, "usable")])
+    assert main(["pilot-report", "--sent", sent, "--ledger", led, "--no-simulate"]) == 0
+    out = capsys.readouterr().out
+    assert "tau0 CHOICE" in out and "operational metrics only" in out and "simulateTransaction" not in out
+    assert main(["pilot-report", "--sent", str(tmp_path / "none*.sent.jsonl"), "--no-simulate"]) == 1
+
+
+class FakeSimRpc:
+    """simulateTransaction answers: units and loaded size per cu price (high 5,500,000 / low 1,000)."""
+    answers = {"high": {"err": None, "unitsConsumed": 600, "loadedAccountsDataSize": 235},
+               "low": {"err": None, "unitsConsumed": 600, "loadedAccountsDataSize": 235}}
+    seen: list = []
+
+    def __init__(self, *a, **k):
+        pass
+
+    def call(self, method, params=None):
+        import base64
+
+        from solders.transaction import Transaction
+        assert method == "simulateTransaction"
+        FakeSimRpc.seen.append(params)
+        tx = Transaction.from_bytes(base64.b64decode(params[0]))
+        assert all(str(sig) == "1" * 64 for sig in tx.signatures)            # unsigned: all-zero signature
+        price = [i for i in tx.message.instructions if tx.message.account_keys[i.program_id_index].__str__().startswith("Compute")]
+        high = any(int.from_bytes(bytes(i.data)[1:9], "little") == 5_500_000 for i in price if bytes(i.data)[0] == 3)
+        return {"value": FakeSimRpc.answers["high" if high else "low"]}
+
+
+def test_pilot_report_simulates_both_templates_with_the_public_key(tmp_path, capsys, monkeypatch):
+    import itb.pilot_report as prmod
+    from itb.cli import main
+    monkeypatch.setattr("itb.rpc.Rpc", FakeSimRpc)
+    FakeSimRpc.seen = []
+    payer = "B9Gj7heYv3KLxH2ojmhWAJTH2pv2tPYFqANqTZj7AUrG"
+    sent, led = _write(tmp_path, [_p(-170, "usable")])
+    assert main(["pilot-report", "--sent", sent, "--ledger", led, "--payer", payer]) == 0
+    out = capsys.readouterr().out
+    assert "simulateTransaction of the probe templates" in out and "high price 5500000: PASS" in out and "low  price 1000: PASS" in out
+    assert "templates_simulate_units_le_700_loaded_le_4096 = True" in out
+    assert len(FakeSimRpc.seen) == 2 and all(p[1]["sigVerify"] is False and p[1]["replaceRecentBlockhash"] is True for p in FakeSimRpc.seen)
+    # too many units: the criterion is False
+    FakeSimRpc.answers = {**FakeSimRpc.answers, "high": {"err": None, "unitsConsumed": 701, "loadedAccountsDataSize": 235}}
+    try:
+        assert main(["pilot-report", "--sent", sent, "--ledger", led, "--payer", payer]) == 0
+        out = capsys.readouterr().out
+        assert "high price 5500000: FAIL" in out and "templates_simulate_units_le_700_loaded_le_4096 = False" in out
+    finally:
+        FakeSimRpc.answers = {"high": {"err": None, "unitsConsumed": 600, "loadedAccountsDataSize": 235},
+                              "low": {"err": None, "unitsConsumed": 600, "loadedAccountsDataSize": 235}}
+
+
+def test_pilot_report_simulation_without_public_key_or_network_fails_cleanly(tmp_path, capsys, monkeypatch):
+    from itb.cli import main
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("HOME", str(tmp_path))                      # no data/accounts.json, no ~/ops/wallet.pub
+    sent, led = _write(tmp_path, [_p(-170, "usable")])
     assert main(["pilot-report", "--sent", sent, "--ledger", led]) == 0
     out = capsys.readouterr().out
-    assert "tau0 CHOICE" in out and "operational metrics only" in out
-    assert main(["pilot-report", "--sent", str(tmp_path / "none*.sent.jsonl")]) == 1
+    assert "simulateTransaction check of the probe templates: FAIL (no funding wallet public key" in out
+    assert "templates_simulate_units_le_700_loaded_le_4096 = False" in out

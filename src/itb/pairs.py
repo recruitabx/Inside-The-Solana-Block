@@ -43,8 +43,29 @@ def run_claims(raw_dir: str) -> dict[str, dict]:
     return out
 
 
+def sent_probes(raw_dir: str) -> list[dict]:
+    """Live probe records of the send logs. A probe is marked `synthetic` if the record says so or if
+    its file name starts with "synthetic" (synthetic data are never confirmatory)."""
+    sent = []
+    for path in sorted(glob.glob(os.path.join(raw_dir, "*.sent.jsonl"))):
+        synthetic_file = os.path.basename(path).startswith("synthetic")
+        with open(path) as f:
+            for x in f:
+                if not x.strip():
+                    continue
+                r = json.loads(x)
+                if r.get("record") == "probe" and r.get("mode") == "live":
+                    r["synthetic"] = bool(r.get("synthetic")) or synthetic_file
+                    sent.append(r)
+    return sent
+
+
 def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
-    sent = [r for r in load_jsonl(os.path.join(raw_dir, "*.sent.jsonl")) if r["record"] == "probe" and r.get("mode") == "live"]
+    """One row per live probe. The unit of analysis is (target_role, identity, clientId); the version is a covariate.
+    claim_changed_in_run: the target's clientId differs between the start and the end snapshot (the probe leaves the
+    primary cell). version_changed_in_run: only the version string differs (kept; reported in the descriptive split).
+    claim_end_unknown: the run has no end snapshot (kept and counted)."""
+    sent = sent_probes(raw_dir)
     landed = {r["signature"]: r for r in load_jsonl(os.path.join(raw_dir, "*.landed.jsonl"))}
     claims = run_claims(raw_dir)
     rows = []
@@ -66,7 +87,9 @@ def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
                "condition": p.get("condition"), "arm": p.get("arm") or p.get("condition"),
                "target_leader": tgt, "target_role": p.get("target_role"),
                "claim_client_id": claim[0], "claim_version": claim[1],
-               "claim_changed_in_run": end is not None and tuple(end) != tuple(claim),
+               "claim_version_end": end[1] if end is not None else None,
+               "claim_changed_in_run": end is not None and end[0] != claim[0],
+               "version_changed_in_run": end is not None and end[0] == claim[0] and end[1] != claim[1],
                "claim_end_unknown": end is None,
                "window_first_slot": p["window_first_slot"],
                "window_last_slot": p.get("window_last_slot", p["window_first_slot"] + 3),

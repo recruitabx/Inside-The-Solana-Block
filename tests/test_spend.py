@@ -73,3 +73,20 @@ def test_ledger_lines_are_json(tmp_path):
         led.reserve([("a", 5000)], tag="probe-1")
     rec = json.loads(p.read_text().splitlines()[0])
     assert rec["kind"] == "reserve" and rec["tag"] == "probe-1"
+
+
+def test_settled_total_sums_settled_fees_optionally_by_tag_prefix(tmp_path):
+    from itb.spend import SpendLedger, settled_total
+    path = str(tmp_path / "l.jsonl")
+    assert settled_total(path) == 0                        # missing file
+    with SpendLedger(path, 50_000_000) as led:
+        led.reserve([("a", 10_500), ("b", 5_001)], tag="pilot:r:0")
+        led.reserve([("c", 5_000)], tag="anchor:r")
+        led.reserve([("d", 10_500)], tag="r:1")
+        led.reserve([("e", 5_000)], tag="pilot:r:2")        # stays open
+        led.settle("a", 10_400); led.settle("b", 5_001); led.settle("c", 5_000); led.settle("d", 10_500)
+        led.release("e", "expired")
+        # read-only: works while the ledger is open (lock held)
+        assert settled_total(path) == 10_400 + 5_001 + 5_000 + 10_500
+        assert settled_total(path, "pilot:") == 15_401
+        assert settled_total(path, "anchor:") == 5_000 and settled_total(path, "nothing") == 0

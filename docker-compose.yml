@@ -16,7 +16,10 @@ services:
     command: ["verify", "-n", "20"]
   analyze:
     <<: *base
-    command: ["analyze"]
+    command: ["analyze", "--final"]
+  acceptance:
+    <<: *base
+    entrypoint: ["python", "scripts/acceptance.py"]
   audit:
     <<: *base
     command: ["audit"]

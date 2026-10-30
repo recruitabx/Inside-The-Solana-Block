@@ -11,7 +11,7 @@ fail=0
 ok(){ echo "PASS $1"; }
 ko(){ echo "FAIL $1"; fail=1; }
 
-SECRET_RE='(api[-_]?key=[A-Za-z0-9-]{8,}|Bearer [A-Za-z0-9._-]{20,}|BEGIN [A-Z ]*PRIVATE KEY|\[([0-9]{1,3}, ?){63}[0-9]{1,3}\]|Claude""-Session|claude\.ai/code/session|ghp_[A-Za-z0-9]{20,}|xox[bp]-[A-Za-z0-9-]{10,})'
+SECRET_RE='(api[-_]?key=[A-Za-z0-9-]{8,}|Bearer [A-Za-z0-9._-]{20,}|BEGIN [A-Z ]*PRIVATE KEY|\[([0-9]{1,3}, ?){63}[0-9]{1,3}\]|Claude.?-Session|claude\.ai/code/session|ghp_[A-Za-z0-9]{20,}|xox[bp]-[A-Za-z0-9-]{10,})'
 
 # 1a working tree (tracked files)
 if git ls-files -z | xargs -0 grep -IlE "$SECRET_RE" 2>/dev/null | grep -q .; then

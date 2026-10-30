@@ -15,7 +15,7 @@ Fee contrast and request position are randomized independently, so p and q come 
 
 FIFO clause: the per-unit "no rule detected" verdict says "arrival order (FIFO) not excluded" unless the
 90% Clopper-Pearson interval of the arm-S q_S, pooled over ALL targets (main phase, same slot, target hit,
-window), lies inside [0.35, 0.65]. q_S per clientId is output descriptively.
+window), lies inside [0.35, 0.65] AND the q_S of the unit's own clientId does not reject 0.5 (exact test, 0.05).
 
 Modes. `itb analyze --final` (run once, after the last main run) analyses phase "main" only; pilot data and
 anything marked synthetic are excluded. Without --final only SYNTHETIC data are analysed (the self-test of
@@ -131,10 +131,22 @@ def inside_equivalence(est: dict | None, cfg: dict) -> bool:
     return cfg["equiv_lo"] <= lo and hi <= cfg["equiv_hi"]
 
 
-def verdict(fee: dict, send: dict, cfg: dict, s_pooled: dict | None = None) -> str:
+def fifo_excluded(s_pooled: dict | None, s_client: dict | None, cfg: dict) -> bool:
+    """Arrival order (FIFO) counts as excluded only if the 90% interval of the arm-S q_S pooled over all
+    targets lies inside the equivalence margin AND the unit's own clientId q_S does not reject 0.5
+    (exact two-sided test at 0.05). The second condition keeps one FIFO client from being hidden by pooling."""
+    if not s_pooled or s_pooled.get("n", 0) == 0 or not inside_equivalence(s_pooled, cfg):
+        return False
+    if s_client and s_client.get("n", 0) > 0 and binom_two_sided_p(s_client["k"], s_client["n"]) < 0.05:
+        return False
+    return True
+
+
+def verdict(fee: dict, send: dict, cfg: dict, s_pooled: dict | None = None, s_client: dict | None = None) -> str:
     """Decision rules of PREREGISTRATION.md section 9 for one unit (primary cell). cfg["min_n"] is the N rule
     (0 for the calibration controls, which are exempt).
-    s_pooled: estimate of the arm-S q_S pooled over ALL targets (for the FIFO clause)."""
+    s_pooled: estimate of the arm-S q_S pooled over ALL targets; s_client: arm-S q_S of the unit's clientId
+    (both for the FIFO clause, see fifo_excluded)."""
     n = fee.get("n", 0)
     if n < cfg["min_n"]:
         return f"insufficient data (n={n})"
@@ -150,7 +162,7 @@ def verdict(fee: dict, send: dict, cfg: dict, s_pooled: dict | None = None) -> s
         return f"{label('request-position rule', ss)} holds, {ss[0]}"
     if inside_equivalence(fee, cfg) and inside_equivalence(send, cfg):
         # FIFO is excluded only if the 90% Clopper-Pearson interval of the pooled q_S lies inside [equiv_lo, equiv_hi]
-        return NO_RULE + ("" if inside_equivalence(s_pooled, cfg) else FIFO_NOTE)
+        return NO_RULE + ("" if fifo_excluded(s_pooled, s_client, cfg) else FIFO_NOTE)
     return f"insufficient data (n={n})"
 
 
@@ -256,7 +268,7 @@ def cell_estimates(cell: list[dict]) -> tuple[dict, dict]:
             estimate(sum(o["y_send"] for o in outs), len(outs)))
 
 
-def decide(units: list[dict], cfg: dict, s_pooled: dict | None) -> int:
+def decide(units: list[dict], cfg: dict, s_pooled: dict | None, s_by_client: dict | None = None) -> int:
     """ONE Holm family over all p and q tests (units' "fee" and "send" estimates) and then the verdict of every
     unit (sets "p_holm" on the estimates and "pi", "verdict" on the unit). Returns the family size."""
     tests = [(u, w) for u in units for w in ("fee", "send") if u[w].get("n", 0) > 0]
@@ -264,7 +276,7 @@ def decide(units: list[dict], cfg: dict, s_pooled: dict | None) -> int:
         u[w]["p_holm"] = pa
     for u in units:
         u["pi"] = 2 * u["fee"]["p"] - 1 if u["fee"].get("n") else None
-        u["verdict"] = verdict(u["fee"], u["send"], cfg, s_pooled)
+        u["verdict"] = verdict(u["fee"], u["send"], cfg, s_pooled, (s_by_client or {}).get(str(u.get("client_id"))))
     return len(tests)
 
 
@@ -327,9 +339,10 @@ def analyze_rows(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
     s_by_client = {}
     for c in sorted({str(r.get("claim_client_id")) for r in rows}):
         s_by_client[c] = _pooled([r for r in rows if str(r.get("claim_client_id")) == c], "S")["send"]
-    family = decide(units, cfg, s_pooled)        # one Holm family over all p and q tests of all units
-    fifo = {"rule": f"arrival order (FIFO) is excluded only if the 90% Clopper-Pearson interval of the arm-S q_S pooled over all "
-                    f"targets lies inside [{cfg['equiv_lo']}, {cfg['equiv_hi']}]",
+    family = decide(units, cfg, s_pooled, s_by_client)  # one Holm family over all p and q tests of all units
+    fifo = {"rule": f"arrival order (FIFO) is excluded for a unit only if the 90% Clopper-Pearson interval of the arm-S q_S pooled "
+                    f"over all targets lies inside [{cfg['equiv_lo']}, {cfg['equiv_hi']}] and the q_S of the unit's clientId does not "
+                    "reject 0.5 (exact two-sided test at 0.05)",
             "pooled_q_S": s_pooled, "excluded": inside_equivalence(s_pooled, cfg),
             "q_S_by_client_id": {"label": "descriptive", "values": s_by_client}}
     # probes whose run has no end snapshot: kept, flagged, counted

@@ -289,3 +289,13 @@ def test_execution_errors_counted(tmp_path):
     _, doc, _ = _run(tmp_path, _ids(A={"cells": [{"arm": "P", "n": 100, "p_err": 0.3}]}))
     e = doc["secondary"]["execution_errors"]
     assert e["n_tx_with_error"] > 10 and e["by_arm"]["P"] == e["n_tx_with_error"]
+
+
+def test_fifo_clause_not_hidden_by_pooling():
+    from itb.analyze import DEFAULTS, fifo_excluded
+    cfg = dict(DEFAULTS)
+    pooled_null = {"n": 112, "k": 56, "ci90": [0.42, 0.58]}
+    assert fifo_excluded(pooled_null, {"n": 14, "k": 7}, cfg) is True
+    assert fifo_excluded(pooled_null, {"n": 7, "k": 7}, cfg) is False      # own client 7/7 rejects 0.5 (p = 0.016)
+    assert fifo_excluded({"n": 112, "k": 90, "ci90": [0.74, 0.86]}, {"n": 14, "k": 7}, cfg) is False
+    assert fifo_excluded({"n": 0}, None, cfg) is False

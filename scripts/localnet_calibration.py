@@ -187,16 +187,43 @@ def format_summary(rows: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def format_markdown(rows: list[dict[str, Any]]) -> str:
-    def cell(k: int, n: int, ci: tuple[float, float], p: float) -> str:
-        return "n/a" if n == 0 else f"{k}/{n} ({k / n:.3f}) [{ci[0]:.3f}, {ci[1]:.3f}] p={p:.1e}"
-    out = ["| group | pairs | landed | same-slot | first-sent-first | higher-fee-first (C: label-1-first) |",
-           "|---|---|---|---|---|---|"]
-    for r in rows:
-        out.append(f"| {r['group']} | {r['n_pairs']} | {r['n_landed']} | {r['n_same_slot']} | "
-                   f"{cell(r['k_first_sent'], r['n_same_slot'], r['ci_first_sent'], r['p_first_sent'])} | "
-                   f"{cell(r['k_hi'], r['n_same_slot'], r['ci_hi'], r['p_hi'])} |")
+def _md_cell(k: int, n: int, ci: tuple[float, float], p: float | None = None) -> str:
+    if n == 0:
+        return "n/a"
+    out = f"{k}/{n} = {k / n:.3f} [{ci[0]:.3f}, {ci[1]:.3f}]"
+    return out if p is None else out + f" p={p:.1e}"
+
+
+def format_tables(rows: list[dict[str, Any]]) -> str:
+    """Two fixed-width tables: the final conditions (Wilson 95% CI and exact p) and the B sweep (k/n per configuration)."""
+    final = [r for r in rows if r["condition"] != "B-sweep"]
+    sweep = [r for r in rows if r["condition"] == "B-sweep"]
+    out = []
+    if final:
+        out.append(f"{'cond':<5}{'same-slot':<11}{'first-sent-first':<48}higher-fee-first (C: label-1-first)")
+        for r in final:
+            n = r["n_same_slot"]
+            out.append(f"{r['condition']:<5}{str(n) + '/' + str(r['n_pairs']):<11}"
+                       f"{_md_cell(r['k_first_sent'], n, r['ci_first_sent'], r['p_first_sent']):<48}"
+                       f"{_md_cell(r['k_hi'], n, r['ci_hi'], r['p_hi'])}")
+    if sweep:
+        out += ["", f"{'K':<4}{'pairCU':<8}{'fillerCU':<10}{'ed25519':<9}{'leadms':<7}{'same-slot':<10}{'higher-fee-first':<17}first-sent-first"]
+        for r in sweep:
+            c = cfg_from_dict(r["cfg"])
+            n = r["n_same_slot"]
+            out.append(f"{c.k:<4}{c.cu_limit:<8}{(c.filler_cu_limit or c.cu_limit) if c.k else '-':<10}"
+                       f"{c.filler_sigs if c.k else '-':<9}{c.lead_ms:<7g}{str(n) + '/' + str(r['n_pairs']):<10}"
+                       f"{str(r['k_hi']) + '/' + str(n):<17}{r['k_first_sent']}/{n}")
     return "\n".join(out)
+
+
+def render_report(rows: list[dict[str, Any]]) -> str:
+    sweep_rows = [r for r in rows if r["condition"] == "B-sweep"]
+    final_rows = [r for r in rows if r["condition"] != "B-sweep"]
+    parts = ["=== B configuration sweep (every configuration tried) ===",
+             format_summary(sweep_rows) if sweep_rows else "(no sweep records)",
+             "", "=== Final conditions ===", format_summary(final_rows), "", format_tables(rows)]
+    return "\n".join(parts)
 
 
 def pick_best_sweep(rows: list[dict[str, Any]], min_same_frac: float = 0.5) -> dict[str, Any] | None:
@@ -645,17 +672,11 @@ async def amain(args) -> int:
         await tpu.close()
 
     rows = summarize(all_recs)
-    sweep_rows = [r for r in rows if r["condition"] == "B-sweep"]
-    final_rows = [r for r in rows if r["condition"] != "B-sweep"]
-    print("\n=== B configuration sweep (every configuration tried) ===")
-    print(format_summary(sweep_rows) if sweep_rows else "(sweep skipped)")
     if sweep_note:
-        print(sweep_note)
-    print("\n=== Final conditions ===")
-    print(format_summary(final_rows))
+        print("\n" + sweep_note)
+    print("\n" + render_report(rows))
     print("\nA configuration:", a_cfg.key(), "| B configuration:", b_cfg.key(),
           "| C configuration:", (b_cfg if b_reliable else a_cfg).key())
-    print("\n" + format_markdown(rows))
     errs = [r for r in all_recs if r.get("send_error")]
     unl = sum(1 for r in all_recs for t in r["txs"] if t["slot"] is None)
     fails = sum(1 for r in all_recs for t in r["txs"] if t["err"])
@@ -668,7 +689,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Localnet calibration of the ordering analysis (local test validator only).")
     ap.add_argument("--rpc", default="http://127.0.0.1:8899")
     ap.add_argument("--tpu", default=None, help="TPU QUIC HOST:PORT (default: tpuQuic from getClusterNodes)")
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", help="JSONL file to write (required unless --summarize)")
+    ap.add_argument("--summarize", metavar="JSONL", help="only print the summary of an existing JSONL file (no network)")
     ap.add_argument("--pairs", type=int, default=60, help="pairs per final condition")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--conditions", default="A,B,C")
@@ -689,6 +711,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--payer-lamports", type=int, default=5_000_000)
     ap.add_argument("--settle-s", type=float, default=20.0, help="max wait for a pair to be confirmed")
     args = ap.parse_args(argv)
+    if args.summarize:
+        print(render_report(summarize(load_records(args.summarize))))
+        return 0
+    if not args.out:
+        ap.error("--out is required")
     return asyncio.run(amain(args))
 
 

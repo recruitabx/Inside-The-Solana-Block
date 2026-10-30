@@ -19,7 +19,7 @@ for t in v["targets"]:
     targets.append({"role": t["role"], "identity": t["identity"], "clientId": t["clientId"], "version": t["version"],
                     "shares": {"P": 0.85, "E": 0.05, "D": 0.05, "S": 0.05} if low else {"P": 0.70, "E": 0.10, "D": 0.10, "S": 0.10},
                     "quota_per_target": 10_000 if low else 300})
-plan = {"seed": a.seed, "targets": targets, "n_payers": 10,
+plan = {"seed": a.seed, "targets": targets, "n_payers": 10, "n_payers_pilot": 6,
         "price_high": 5_500_000, "price_low": 1_000, "cu_limit": 1_000, "loaded_limit": 4_096, "gap_ms": 200,
         "tau0_grid_ms": [-270, -170, -70], "tau0_ms": a.tau0_ms, "pilot_per_target": 12,
         "min_request_interval_s": 2.0, "send_rate_per_s": 1.0, "send_burst": 2, "max_retries": 0,

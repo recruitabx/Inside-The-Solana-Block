@@ -134,13 +134,14 @@ def main(argv: list[str] | None = None) -> int:
 
     ledger = None
     master = None
+    n_payers = int(plan.get(f"n_payers_{a.phase}", plan["n_payers"]))  # the pilot may use fewer funded payers
     if live:
         from .wallet import derive_payers, load_wallet
         ledger = SpendLedger(LEDGER_PATH, cap_from_env())
         master = load_wallet()
-        payers = derive_payers(master, int(plan["n_payers"]))
+        payers = derive_payers(master, n_payers)
     else:
-        payers = [Keypair() for _ in range(int(plan["n_payers"]))]
+        payers = [Keypair() for _ in range(n_payers)]
     pool = PayerPool(payers, read)
 
     snap = client_snapshot(read)

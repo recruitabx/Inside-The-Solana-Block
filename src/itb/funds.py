@@ -67,6 +67,7 @@ def main_for(cmd: str, argv: list[str] | None = None) -> int:
     ap.add_argument("--lamports-each", type=int, default=0)
     ap.add_argument("--sha256", default="")
     ap.add_argument("--label", default="")
+    ap.add_argument("--n-payers", type=int, default=None, help="fund only the first N derived payers")
     a = ap.parse_args(argv)
     if not live_gate(a):
         raise SystemExit(f"`itb {cmd}` moves SOL: it needs --live and ITB_LIVE=1")
@@ -74,7 +75,7 @@ def main_for(cmd: str, argv: list[str] | None = None) -> int:
     send = Rpc(rate_per_s=1.0, burst=2.0, retries=0)
     read = Rpc(os.environ.get("ITB_READ_RPC_URL", PUBLIC_RPC), rate_per_s=3.0, burst=3.0)
     master = load_wallet()
-    payers = derive_payers(master, int(plan["n_payers"]))
+    payers = derive_payers(master, int(a.n_payers or plan["n_payers"]))
     log = []
     with SpendLedger(LEDGER_PATH, cap_from_env()) as ledger:
         bh = read.call("getLatestBlockhash", [{"commitment": "confirmed"}])["value"]["blockhash"]

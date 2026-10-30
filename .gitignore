@@ -1,0 +1,18 @@
+# secrets
+.env
+*.key
+keypair.json
+wallet.json
+secrets/
+# ops (never committed)
+ops/
+# build / deps
+node_modules/
+target/
+__pycache__/
+pycache/
+*.pyc
+.venv/
+venv/
+tmp/
+.pytest_cache/

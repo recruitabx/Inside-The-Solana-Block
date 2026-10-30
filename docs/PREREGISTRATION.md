@@ -10,7 +10,7 @@ Mainnet only; slots at or above `MIN_SLOT = 459653008` (first block after Alpeng
 
 ## 2. Mechanisms and hypotheses
 
-From the pinned sources in `docs/research/`: Agave 4.3.2 and 4.4.x, Jito-Solana without a BAM session and Rakurai's public code compute priority = reward x 10^6 / (cost + 1), reward = priority fee + 2,500 lamports per signature (the non-burned half of the base fee), cost from the requested compute-unit (CU) and loaded-accounts-data limits. The greedy scheduler pops the highest priority, serializes conflicting transactions on one worker, lets non-conflicting batches race across workers, schedules only while a leader bank exists, and buffers arrivals less than two slots before its window. Equal-priority ties: 4.3.2 pops the highest reused slab key, 4.4.x the oldest insertion. Firedancer 26.10.x orders by the same ratio, block order equals pack order, conflicting writers serialized, equal ratios most recently inserted first (source reading). AgaveBam and FireBAM: a BAM node orders by fee per CU in about 50 ms batches, the validator executes the received order. Harmonic clients: a hosted builder applies the operator's strategy, `fba` (50 ms batches by priority fee and tip, default), `fifo` or proprietary `mrev`, with local fallback; a memo in the window's first block names it.
+From the pinned sources in `docs/research/`: Agave 4.3.2 and 4.4.x, Jito-Solana without a BAM session and Rakurai's public code compute priority = reward x 10^6 / (cost + 1), reward = priority fee + 2,500 lamports per signature (the non-burned half of the base fee), cost from the requested compute-unit (CU) and loaded-accounts-data limits. The greedy scheduler pops the highest priority, serializes conflicting transactions on one worker, lets non-conflicting batches race across workers, schedules only while a leader bank exists, and buffers arrivals in the two slots before its window. Equal-priority ties: 4.3.2 pops the highest reused slab key, 4.4.x the oldest insertion. Firedancer 26.10.x orders by the same ratio, block order equals pack order, conflicting writers serialized, equal ratios most recently inserted first (source reading). AgaveBam and FireBAM: a BAM node orders by fee per CU in about 50 ms batches, the validator executes the received order. Harmonic clients: a hosted builder applies the operator's strategy, `fba` (50 ms batches by priority fee and tip, default), `fifo` or proprietary `mrev`, with local fallback; a memo in the window's first block names it.
 
 Notation, both conditional on the pair landing in one block: p = P(higher reward-per-cost transaction first), q = P(first-sent transaction first).
 
@@ -37,14 +37,14 @@ Full identities are frozen in `data/validators.json` before live data. Replaceme
 
 ## 5. Arms, transaction templates, randomization
 
-Every probe transaction is legacy, one signature, four instructions: `SetComputeUnitLimit(1000)`, `SetComputeUnitPrice(price)`, `SetLoadedAccountsDataSizeLimit(4096)`, `SystemProgram.Transfer(payer -> W, 0 lamports)`. Accounts: payer (writable signer), W (writable), System and ComputeBudget programs (read-only). No memo. The layout simulates at about 600 CU consumed and 235 bytes loaded (checked in the pilot). W is a fresh, never-funded address derived from the seed and probe number (a 0-lamport transfer to it still takes the write lock). Payers: a pool of 10 funded accounts, always two different ones per pair.
+Every probe transaction is legacy, one signature, four instructions: `SetComputeUnitLimit(1000)`, `SetComputeUnitPrice(price)`, `SetLoadedAccountsDataSizeLimit(4096)`, `SystemProgram.Transfer(payer -> W, 0 lamports)`. Accounts: payer (writable signer), W (writable), System and ComputeBudget programs (read-only). No memo. Expected simulation: about 600 CU and 235 bytes loaded (450 CU measured without the third instruction; checked in the pilot). W is a fresh, never-funded address derived from the seed and probe number (a 0-lamport transfer to it still takes the write lock). Payers: a pool of 10 funded accounts, always two different ones per pair.
 
 | Level | price (micro-lamports/CU) | priority fee | total fee | reward | priority key (Agave) |
 |---|---|---|---|---|---|
 | high | 5,500,000 | 5,500 | 10,500 | 8,000 | 3,434,950 |
 | low | 1,000 | 1 | 5,001 | 2,501 | 1,073,851 |
 
-Key cost = 720 (signature) + 600 (two write locks) + 1,000 (requested CU) + 8 (one 32 KiB page of loaded-data limit) = 2,328, identical within a pair, so the 3.2 reward ratio is the contrast under any fee-based key. Firedancer uses the same reward and cost constants; its loaded-data term is read from `fd_pack_cost.h` before the run. `meta.costUnits` is recorded (it reflects consumed CU). A 2x contrast (priority fee 2,502) would buy about 20% more probes; we keep 3.2x as margin against closed schedulers that may bucket or round (`docs/DESIGN.md`).
+Key cost = 720 (signature) + 600 (two write locks) + 1,000 (requested CU) + 8 (one 32 KiB page of loaded-data limit) = 2,328, identical within a pair, so the 3.2 reward ratio is the contrast under any fee-based key. Firedancer uses the same reward and cost constants; its loaded-data term is read from `fd_pack_cost.h` before the run. `meta.costUnits` is recorded (it reflects consumed CU). A 2x contrast (priority fee 2,502) would buy about 20% more probes; we keep 3.2x as margin against schedulers that may bucket or round (`docs/DESIGN.md`).
 
 | Arm | Share | Layout | Purpose |
 |---|---|---|---|
@@ -63,15 +63,15 @@ One send-time constant tau0, chosen in the pilot and then fixed: the pair is sen
 
 ## 7. Inclusion and exclusion
 
-Primary cell for validator v: arm P probes with both transactions in one block whose Fee-reward pubkey is v, in the targeted window. Excluded from p and q, counted and reported: one or zero transactions landed; different slots (reported as the "high-fee earlier slot" rate); landed at a leader other than the target (secondary data attributed to the actual leader, reported as untargeted landings, never pooled into the primary cell); slot below `MIN_SLOT` (rejected by code). A transaction with an execution error is included and flagged. Pilot probes never enter the confirmatory analysis.
+Primary cell for validator v: arm P probes with both transactions in one block whose Fee-reward pubkey is v, in the targeted window. Excluded from p and q, counted and reported: one or zero transactions landed; different slots (reported as the "high-fee earlier slot" rate); landed at a leader other than the target (secondary data attributed to the actual leader as untargeted landings, never pooled into the primary cell); slot below `MIN_SLOT` (rejected by code). A transaction with an execution error is included and flagged. Pilot probes never enter the confirmatory analysis.
 
 ## 8. Estimands, statistics, sample size, stopping
 
-Per validator, from the primary cell: p and q with exact Clopper-Pearson 95% intervals, pi = 2p - 1 reported as "share of pairs decided by fee", and the 2 x 2 table of Y_fee by send position of the high transaction. Tests: exact two-sided binomial tests of p = 0.5 and q = 0.5, Holm-corrected across the eight validators within each family, family alpha 0.05. Sensitivity check, one model per validator: logistic regression of "transaction A first" on (A is high) and (A sent first). One probe per window, so probes are independent at block level; probes sharing a block are noted.
+Per validator, from the primary cell: p and q with exact Clopper-Pearson 95% intervals, pi = 2p - 1 reported as "share of pairs decided by fee", and the 2 x 2 table of Y_fee by send position of the high transaction. Tests: exact two-sided binomial tests of p = 0.5 and q = 0.5, Holm-corrected across the eight validators, family alpha 0.05. Sensitivity check, one model per validator: logistic regression of "transaction A first" on (A is high) and (A sent first). One probe per window, so probes are independent; probes sharing a block are noted.
 
 Minimum usable N in the primary cell: 100 per validator. Exact binomial calculation at Holm alpha 0.05/8 = 0.00625, two-sided: N = 77 gives power 0.80 and N = 100 gives 0.88 against p = 0.70; the equivalence test (90% exact interval inside [0.35, 0.65]) has power 0.81 at N = 100 when p = 0.5. Secondary arms are analysed pooled across validators and by client family; per-validator secondary numbers are descriptive.
 
-Stopping: fixed quotas, no interim look at ordering outcomes; the only data-dependent choices (tau0, retry and arm-share fallbacks) come from operational pilot rates. A validator short of N = 100 at the end of the live window is reported as insufficient data.
+Stopping: fixed quotas, no interim look at ordering outcomes; the only data-dependent choices (tau0, retry and arm-share fallbacks) come from operational pilot rates. A validator short of N = 100 at the end is reported as insufficient data.
 
 ## 9. Decision rules
 
@@ -83,7 +83,7 @@ Per validator after Holm correction, with L_p the 95% lower bound:
 - "No detectable rule": only if the 90% intervals of both p and q lie inside [0.35, 0.65].
 - Otherwise "insufficient data", with the N reached.
 
-Secondary verdicts (H_tie, H_race, H_overtake, H_strategy) use the same thresholds on pooled estimates and are labelled secondary.
+Secondary verdicts (H_tie, H_race, H_overtake, H_strategy) use the same thresholds on pooled estimates.
 
 ## 10. Controls and pilot acceptance criteria
 
@@ -98,18 +98,18 @@ Criteria, all numeric, none looking at mainnet ordering outcomes:
 
 ## 11. Budget
 
-Per transaction: 5,000 base + priority fee. Pair P, D, S = 15,501 lamports; pair E = 10,002; share-weighted mean 14,951 (high-window validators) and 15,226 (Rakurai-1, Agave-1). Pilot at most 2 x 96 x 15,501 = 2,976,192. Operations: 10 payer fundings, 10 drains, up to 60 anchors, 5,000 each: 400,000. Main run: 1,800 x 14,951 + 600 x 15,226 = 36,047,400. Total fees at most 39,423,592 lamports, 10.6 million under the cap; absolute maximum 3,118 probes at the mean cost. Payer rent deposits (10 x 890,880 = 8,908,800) are recoverable, not spend; even counted against funding the total is 48,332,392, under 0.05 SOL. Enforcement: `SpendLedger` books each transaction's maximum fee at send time, replaces it by `meta.fee` on confirmation, and refuses any send that would exceed the cap.
+Per transaction: 5,000 base + priority fee. Pair P, D, S = 15,501 lamports; pair E = 10,002; share-weighted mean 14,951 (high-window validators) and 15,226 (Rakurai-1, Agave-1). Pilot at most 2 x 96 x 15,501 = 2,976,192. Operations: 10 payer fundings, 10 drains, up to 60 anchors, 5,000 each: 400,000. Main run: 1,800 x 14,951 + 600 x 15,226 = 36,047,400. Total fees at most 39,423,592 lamports, 10.6 million under the cap; absolute maximum 3,118 probes at the mean cost. Payer rent deposits (10 x 890,880 = 8,908,800) are recoverable, not spend; even counted against funding, the total 48,332,392 is under 0.05 SOL. Enforcement: `SpendLedger` books each transaction's maximum fee at send time, replaces it by `meta.fee` on confirmation, and refuses any send that would exceed the cap.
 
 ## 12. Secondary analyses without spend
 
-From the same blocks (`meta.costUnits` and fee fields of all transactions): (a) reward per cost against block index, Spearman rho per block and validator; (b) the CU-limit versus total-fee crossover: among adjacent pairs of other people's transactions where one has the higher total priority fee and the other the higher reward per cost, the share ordered by each key.
+From the same blocks (`meta.costUnits` and fee fields of all transactions): (a) reward per cost against block index, Spearman rho per block and validator; (b) the CU-limit versus total-fee crossover: among adjacent pairs of other people's transactions where total priority fee and reward per cost disagree, the share ordered by each key.
 
 ## 13. What we do not separate
 
 - First in, first out by true arrival at the leader from random order: we do not observe arrival; q measures batch position, and arm S fixes the order in one direction only.
 - External builders (BAM node, Harmonic builder) from the validator's own scheduler: we observe the composite; the Harmonic memo partly labels it.
 - Provider routing (node choice, staked or unstaked connections, duplicates, reordering) from leader behaviour.
-- Co-presence in the scheduler buffer: p measures the rule as experienced by a sender using one RPC request, a lower bound on the strictness of a priority rule under co-presence.
+- Co-presence in the scheduler buffer: p measures the rule as experienced by a sender using one RPC request, a lower bound on a priority rule's strictness under co-presence.
 - Leader software: clientId and version are self-reported gossip claims that can flip (BAM session state); per-run snapshots are committed because they cannot be re-queried later.
 
 ## 14. Verification artefacts

@@ -34,6 +34,8 @@ class FakeRpc:
             return [TARGET if ((start + i) // 4) % 2 == 0 else OTHER for i in range(n)]
         if method == "getLatestBlockhash":
             return {"value": {"blockhash": "11111111111111111111111111111111"}}
+        if method == "getSignatureStatuses":
+            return {"value": [{"slot": 1} for _ in params[0]]}
         raise AssertionError(method)
 
     def batch(self, calls, retry=True):
@@ -41,8 +43,10 @@ class FakeRpc:
         return [{"result": "sig"} for _ in calls]
 
 
-PLAN = {"seed": 1, "n_payers": 4, "targets": [{"identity": TARGET, "role": "X-1"}], "cu_price_levels": [1, 1000],
-        "cu_limit": 600, "send_offsets_slots": [0], "min_offset_slots": 0, "memo": True}
+PLAN = {"seed": 1, "n_payers": 10, "targets": [{"identity": TARGET, "role": "X-1"}],
+        "shares": {"P": 0.7, "E": 0.1, "D": 0.1, "S": 0.1}, "price_high": 5_500_000, "price_low": 1_000,
+        "cu_limit": 1000, "loaded_limit": 4096, "gap_ms": 200, "tau0_ms": -170, "tau0_grid_ms": [-270, -170, -70],
+        "min_request_interval_s": 0.5, "quota_per_target": 300, "pilot_per_target": 12}
 
 
 @pytest.fixture
@@ -86,8 +90,8 @@ def test_live_stops_at_cap_without_sending(env, monkeypatch):
     os.chmod(w, 0o600)
     monkeypatch.setenv("ITB_LIVE", "1")
     monkeypatch.setenv("ITB_WALLET", str(w))
-    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "9000")  # less than one probe (2 x 5001)
-    runner.main(["--live", "--minutes", "0.08"])
+    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "9000")  # less than one probe (>= 10,002)
+    runner.main(["--live", "--minutes", "0.08", "--no-anchor"])
     assert "sendTransaction" not in FakeRpc.calls
     recs = _records(env)
     assert any(r["record"] == "probe_aborted_cap" for r in recs)
@@ -100,11 +104,12 @@ def test_live_sends_and_reserves_before_sending(env, monkeypatch):
     os.chmod(w, 0o600)
     monkeypatch.setenv("ITB_LIVE", "1")
     monkeypatch.setenv("ITB_WALLET", str(w))
-    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "30000")  # room for 2 probes of 2 tx (10002 each)
-    runner.main(["--live", "--minutes", "0.15"])
+    monkeypatch.setenv("ITB_SPEND_CAP_LAMPORTS", "36000")  # anchor 5,000 + room for about 2 probes
+    runner.main(["--live", "--minutes", "0.3"])
     n_sent = FakeRpc.calls.count("sendTransaction")
     led = [json.loads(x) for x in (env / "data" / "ledger" / "spend.jsonl").read_text().splitlines()]
-    assert n_sent == len(led) == 4  # every send was reserved; third probe hit the cap
+    assert n_sent == len(led) >= 3  # anchor + every probe tx was reserved before sending
+    assert sum(r["max_fee"] for r in led) <= 36000
     assert any(r["record"] == "probe_aborted_cap" for r in _records(env))
 
 

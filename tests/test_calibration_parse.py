@@ -124,8 +124,19 @@ def test_formatting_contains_counts_and_labels():
     rows = lc.summarize(synthetic())
     text = lc.format_summary(rows)
     assert "20/20 = 1.000" in text and "label-1-first (placebo)" in text and "higher-fee-first" in text
-    md = lc.format_markdown(rows)
-    assert md.count("\n") == len(rows) + 1 and "| A | 20 | 20 | 20 |" in md
+    tables = lc.format_tables(rows)
+    assert "A    20/20      20/20 = 1.000 [" in tables
+    assert "4   200000  1400000   50       1      10/12" in tables
+    report = lc.render_report(rows)
+    assert report.index("B configuration sweep") < report.index("Final conditions")
+
+
+def test_summarize_cli_prints_report(tmp_path, capsys):
+    p = tmp_path / "cal.jsonl"
+    write_jsonl(p, synthetic())
+    assert lc.main(["--summarize", str(p)]) == 0
+    out = capsys.readouterr().out
+    assert "=== Final conditions ===" in out and "18/20 = 0.900" in out
 
 
 def test_empty_group_does_not_crash():

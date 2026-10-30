@@ -5,13 +5,13 @@ description = "Inside the Block: measuring how Solana mainnet leaders order tran
 requires-python = ">=3.11"
 dependencies = [
   "solders==0.29.0",
-  "numpy>=1.26",
-  "scipy>=1.11",
-  "pandas>=2.1",
-  "matplotlib>=3.8",
+  "numpy==2.5.4",
+  "scipy==1.18.1",
+  "pandas==3.1.0",
+  "matplotlib==3.11.2",
 ]
 [project.optional-dependencies]
-test = ["pytest>=8"]
+test = ["pytest==9.2.0"]
 [project.scripts]
 itb = "itb.cli:main"
 [build-system]

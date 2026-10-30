@@ -42,7 +42,7 @@ class FakeRpc:
 
 
 PLAN = {"seed": 1, "n_payers": 4, "targets": [{"identity": TARGET, "role": "X-1"}], "cu_price_levels": [1, 1000],
-        "cu_limit": 600, "send_offsets_slots": [0], "min_offset_slots": 0, "memo": False}
+        "cu_limit": 600, "send_offsets_slots": [0], "min_offset_slots": 0, "memo": True}
 
 
 @pytest.fixture

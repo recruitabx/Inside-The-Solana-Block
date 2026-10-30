@@ -104,7 +104,7 @@ class Rpc:
     def batch(self, calls: list[tuple[str, list]], *, retry: bool = True) -> list[dict]:
         """Send several calls in ONE HTTP request. Returns raw per-call responses in call order.
 
-        retry=False is used for sendTransaction batches: re-posting a send batch would
+        retry=False is used for send batches: re-posting a send batch would
         change the arrival timing we are trying to control, so a failed send is recorded as
         failed rather than silently retried.
         """

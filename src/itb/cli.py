@@ -9,7 +9,10 @@ COMMANDS = {
     "collect": "itb.collector_cli",  # resolve sent transactions to slot/index/leader records
     "analyze": "itb.analyze",     # all tables/figures/verdicts from raw data
     "snapshot": "itb.snapshot",   # client id / version snapshot of staked nodes
-    "anchor": "itb.anchor",       # memo anchor of a commit hash or data manifest
+    "fund": "itb.funds:fund",     # fund derived fee payers from the wallet (live only)
+    "drain": "itb.funds:drain",   # return payer balances to the wallet (live only)
+    "anchor": "itb.funds:anchor", # memo anchor of a sha256 (live only)
+    "audit": "itb.audit",         # prove every fee-paying tx of our accounts is in the ledger
 }
 
 
@@ -18,8 +21,11 @@ def main(argv: list[str] | None = None) -> int:
     if not argv or argv[0] in ("-h", "--help") or argv[0] not in COMMANDS:
         print("usage: itb {" + ",".join(COMMANDS) + "} [options]")
         return 0 if argv and argv[0] in ("-h", "--help") else 2
-    mod = __import__(COMMANDS[argv[0]], fromlist=["main"])
-    return int(mod.main(argv[1:]) or 0)
+    target = COMMANDS[argv[0]]
+    modname, _, attr = target.partition(":")
+    mod = __import__(modname, fromlist=["main"])
+    obj = getattr(mod, attr) if attr else mod
+    return int(obj.main(argv[1:]) or 0)
 
 
 if __name__ == "__main__":

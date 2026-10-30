@@ -2,7 +2,7 @@
 
 DRY-RUN IS THE DEFAULT. In dry-run the runner does everything a live run does (reads the real
 leader schedule, picks target windows, waits for the planned send moment, builds and signs the
-probe transactions with throw-away keys) except calling sendTransaction. It records where the
+probe transactions with throw-away keys) except handing them to the RPC. It records where the
 current slot actually was at the planned send moment, which measures our timing accuracy.
 
 LIVE sending requires ALL of: the --live flag, the environment variable ITB_LIVE=1, a mounted
@@ -27,7 +27,8 @@ from solders.keypair import Keypair
 from . import design
 from .config import HARD_SPEND_CEILING_LAMPORTS, MIN_SLOT
 from .leaders import SlotClock, client_snapshot, upcoming_windows
-from .rpc import Rpc, TransportError
+from .rpc import Rpc
+from .send import SignedTx, send_signed
 from .spend import SpendCapExceeded, SpendLedger
 from .txbuild import build_probe_tx
 
@@ -88,7 +89,8 @@ def main(argv: list[str] | None = None) -> int:
     run_id = a.run_id or time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + "-" + ("live" if live else "dry") + "-" + uuid.uuid4().hex[:6]
     out = JsonlWriter(f"data/raw/{run_id}.sent.jsonl")
 
-    read = Rpc(rate_per_s=6.0, burst=6.0)
+    # Reads go to a separate endpoint (public RPC by default) so they never eat the send rate limit.
+    read = Rpc(os.environ.get("ITB_READ_RPC_URL", "https://api.mainnet-beta.solana.com"), rate_per_s=3.0, burst=3.0)
     send = Rpc(rate_per_s=float(plan.get("send_rate_per_s", 1.0)), burst=float(plan.get("send_burst", 4)), retries=0)
 
     ledger = None
@@ -124,6 +126,7 @@ def main(argv: list[str] | None = None) -> int:
     windows = []
     win_refresh = 0.0
     payer_cursor = rng.randrange(len(payers))
+    seen: set[str] = set()
     while time.time() < t_end and probes < a.max_probes:
         if time.time() - win_refresh > 60:
             cur = clock.sync()
@@ -151,6 +154,13 @@ def main(argv: list[str] | None = None) -> int:
             memo = f"itb:{probes}:{i}" if plan.get("memo", True) else ""
             txs.append((tx, build_probe_tx(p, bh, cu_limit=tx["cu_limit"], cu_price=tx["cu_price"], memo=memo)))
         payer_cursor = (payer_cursor + len(spec["txs"]) + 1) % len(payers)
+        if any(b.signature in seen for _, b in txs):
+            # identical message (same payer, blockhash and parameters) would reuse a signature:
+            # skip rather than send a duplicate that cannot land twice
+            out.write({"record": "probe_skipped_duplicate", "run_id": run_id, "probe_id": probe_id, "t": time.time()})
+            bh = None
+            continue
+        seen.update(b.signature for _, b in txs)
         order = list(range(len(txs)))
         rng.shuffle(order)  # send position is randomized independently of treatment
         rec = {"record": "probe", "run_id": run_id, "phase": a.phase, "probe_id": probe_id, "mode": "live" if live else "dry",
@@ -166,20 +176,15 @@ def main(argv: list[str] | None = None) -> int:
             time.sleep(delay)
         if live:
             try:
-                ledger.reserve([(b.signature, b.max_fee) for _, b in txs], tag=probe_id)
+                r = send_signed(send, ledger, [SignedTx(b.signature, b.wire_b64, b.max_fee) for _, b in txs],
+                                tag=probe_id, order=order, gap_s=float(spec.get("gap_s", 0.0)),
+                                max_retries=int(plan.get("max_retries", 0)))
             except SpendCapExceeded as e:
                 rec["record"] = "probe_aborted_cap"; rec["error"] = str(e); out.write(rec)
                 print(f"SPEND CAP REACHED, stopping: {e}", file=sys.stderr)
                 break
-            calls = [("sendTransaction", [txs[i][1].wire_b64, {"encoding": "base64", "skipPreflight": True,
-                                                                 "maxRetries": plan.get("max_retries", 0)}]) for i in order]
-            t0 = time.time()
-            try:
-                resp = send.batch(calls, retry=False)
-                rec["send_results"] = [("ok" if "result" in r else r.get("error")) for r in resp]
-            except TransportError as e:
-                rec["send_results"] = [f"transport: {e}"] * len(calls)
-            rec["t_send_start"], rec["t_send_end"] = t0, time.time()
+            rec.update(r)
+            rec["t_send_start"], rec["t_send_end"] = r["send_times"][0][0], r["send_times"][-1][1]
         else:
             rec["t_send_start"] = rec["t_send_end"] = time.time()
         rec["slot_estimate_at_send"] = clock.now()

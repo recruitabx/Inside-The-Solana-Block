@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any, Iterable
 
-from .blocks import block_signatures
+from .blocks import block_info
 from .config import MAX_SUPPORTED_TX_VERSION, MIN_SLOT
 from .rpc import Rpc
 
@@ -23,18 +23,20 @@ def signature_statuses(rpc: Rpc, sigs: list[str]) -> dict[str, dict | None]:
 class BlockCache:
     def __init__(self, rpc: Rpc):
         self.rpc = rpc
-        self.sigs: dict[int, list[str] | None] = {}
-        self.leaders: dict[int, str] = {}
+        self.info: dict[int, dict | None] = {}
+
+    def get(self, slot: int) -> dict | None:
+        if slot not in self.info:
+            self.info[slot] = block_info(self.rpc, slot)
+        return self.info[slot]
 
     def signatures(self, slot: int) -> list[str] | None:
-        if slot not in self.sigs:
-            self.sigs[slot] = block_signatures(self.rpc, slot)
-        return self.sigs[slot]
+        i = self.get(slot)
+        return None if i is None else i["signatures"]
 
-    def leader(self, slot: int) -> str:
-        if slot not in self.leaders:
-            self.leaders[slot] = self.rpc.call("getSlotLeaders", [slot, 1])[0]
-        return self.leaders[slot]
+    def leader(self, slot: int) -> str | None:
+        i = self.get(slot)
+        return None if i is None else i["leader"]
 
 
 def tx_meta(rpc: Rpc, sig: str) -> dict[str, Any] | None:
@@ -74,6 +76,7 @@ def landed_records(rpc: Rpc, sent: Iterable[dict], clients: dict | None = None,
         c = (clients or {}).get(leader, {})
         out.append({"record": "landed", "signature": sig, "probe_id": s.get("probe_id"), "slot": slot,
                     "tx_index": sigs.index(sig), "block_tx_count": len(sigs), "leader": leader,
+                    "leader_source": "block Fee reward",
                     "leader_client_id": c.get("clientId"), "leader_version": c.get("version"),
                     "confirmation_status": v.get("confirmationStatus"), "status_err": v.get("err"), **meta})
     return out

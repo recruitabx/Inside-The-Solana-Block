@@ -4,7 +4,7 @@ Takes a random sample of our own transactions from the raw data, re-fetches each
 getBlock (by default from the public endpoint, no API key needed) and checks that
   1. the signature is in that slot's block,
   2. at the index we recorded,
-  3. the slot leader is the identity we recorded.
+  3. the block producer (the pubkey of the block's "Fee" reward) is the identity we recorded.
 Prints PASS/FAIL per signature and exits non-zero if anything fails.
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ import os
 import random
 import sys
 
-from .blocks import block_signatures, slot_leader
+from .blocks import block_info
 from .rpc import Rpc
 
 PUBLIC_RPC = "https://api.mainnet-beta.solana.com"
@@ -38,18 +38,19 @@ def load_landed(raw_glob: str) -> list[dict]:
 def check(rpc: Rpc, rec: dict, cache: dict) -> tuple[bool, str]:
     slot = int(rec["slot"])
     if slot not in cache:
-        cache[slot] = (block_signatures(rpc, slot), slot_leader(rpc, slot))
-    sigs, leader = cache[slot]
-    if sigs is None:
+        cache[slot] = block_info(rpc, slot, commitment="finalized")
+    info = cache[slot]
+    if info is None:
         return False, f"slot {slot} has no block"
+    sigs, leader = info["signatures"], info["leader"]
     if rec["signature"] not in sigs:
         return False, f"signature not in block {slot}"
     idx = sigs.index(rec["signature"])
     if idx != int(rec["tx_index"]):
         return False, f"index {idx} != recorded {rec['tx_index']}"
     if rec.get("leader") and leader != rec["leader"]:
-        return False, f"leader {leader} != recorded {rec['leader']}"
-    return True, f"slot {slot} index {idx}/{len(sigs)} leader {leader[:8]}"
+        return False, f"block producer {leader} != recorded {rec['leader']}"
+    return True, f"slot {slot} index {idx}/{len(sigs)} producer {str(leader)[:8]}"
 
 
 def main(argv: list[str] | None = None) -> int:

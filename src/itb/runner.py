@@ -121,8 +121,12 @@ class PayerPool:
     """Least-recently-used payers; a payer is reused only after its previous transaction has a
     status on chain or `expiry_s` has passed (so a payer never has two transactions in flight)."""
 
-    def __init__(self, payers: list[Keypair], read: Rpc, expiry_s: float = 35.0):
+    def __init__(self, payers: list[Keypair], read: Rpc, expiry_s: float = 35.0, dry: bool = False,
+                 dry_land_s: float = 1.5):
+        # In dry-run nothing lands, so a payer is treated as landed `dry_land_s` after use; this
+        # keeps the dry-run's probe rate equal to a live run's (typical confirmation ~1 s).
         self.payers, self.read, self.expiry = payers, read, expiry_s
+        self.dry, self.dry_land_s = dry, dry_land_s
         self.last: dict[int, tuple[float, str | None]] = {i: (0.0, None) for i in range(len(payers))}
 
     def take(self, k: int) -> list[int] | None:
@@ -130,7 +134,9 @@ class PayerPool:
         cand = sorted(self.last, key=lambda i: self.last[i][0])
         pending = [(i, self.last[i][1]) for i in cand if self.last[i][1] and now - self.last[i][0] < self.expiry]
         landed = set()
-        if pending:
+        if pending and self.dry:
+            landed = {i for i, _ in pending if now - self.last[i][0] >= self.dry_land_s}
+        elif pending:
             try:
                 st = self.read.call("getSignatureStatuses", [[s for _, s in pending]])["value"]
                 landed = {i for (i, _), v in zip(pending, st) if v is not None}
@@ -188,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
         payers = derive_payers(master, n_payers)
     else:
         payers = [Keypair() for _ in range(n_payers)]
-    pool = PayerPool(payers, read)
+    pool = PayerPool(payers, read, dry=not live)
 
     snap = client_snapshot(read)
     if snap["slot"] < MIN_SLOT:

@@ -8,7 +8,7 @@ import os
 import random
 
 
-def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, arm: str = "primary") -> None:
+def write_synthetic(raw_dir: str, validators: dict[str, dict], seed: int = 0, arm: str = "P") -> None:
     """validators: {identity: {"n": pairs, "p_fee": P(high fee first), "p_send": P(first-sent first),
     "client_id": str, "version": str}}. When both rules are present the fee rule wins with
     probability p_fee, else order follows send order with probability p_send."""

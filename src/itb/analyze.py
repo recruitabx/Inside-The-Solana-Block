@@ -17,10 +17,11 @@ import os
 from collections import defaultdict
 
 from .pairs import probe_rows, scheduler_priority
-from .stats import binom_two_sided_p, holm, wilson_ci
+from .stats import binom_two_sided_p, clopper_pearson, holm
 
-DEFAULTS = {"primary_arm": "primary", "alpha": 0.05, "equiv_lo": 0.35, "equiv_hi": 0.65, "rule_min_p": 0.5,
-            "min_n": 90}
+# Section 9 of docs/PREREGISTRATION.md
+DEFAULTS = {"primary_arm": "P", "alpha": 0.05, "equiv_lo": 0.35, "equiv_hi": 0.65, "strict_lb": 0.90,
+            "strong_lb": 0.75, "min_n": 100}
 
 
 def pair_outcomes(row: dict) -> dict | None:
@@ -43,23 +44,41 @@ def estimate(k: int, n: int, cfg: dict) -> dict:
     if n == 0:
         return {"n": 0}
     p = k / n
-    lo95, hi95 = wilson_ci(k, n, 0.95)
-    lo90, hi90 = wilson_ci(k, n, 0.90)
+    lo95, hi95 = clopper_pearson(k, n, 0.95)
+    lo90, hi90 = clopper_pearson(k, n, 0.90)
     return {"n": n, "k": k, "p": p, "ci95": [lo95, hi95], "ci90": [lo90, hi90], "p_value": binom_two_sided_p(k, n)}
 
 
-def verdict(est: dict, p_adj: float | None, cfg: dict, what: str) -> str:
-    if est.get("n", 0) == 0:
-        return "no data"
-    if est["n"] < cfg["min_n"] and not (p_adj is not None and p_adj < cfg["alpha"]):
-        return f"insufficient data (n={est['n']} < {cfg['min_n']})"
-    if p_adj is not None and p_adj < cfg["alpha"]:
-        direction = "first" if est["p"] > 0.5 else "LAST"
-        return f"{what} decides order: higher-{what} tx lands {direction} in {est['p']:.0%} of pairs"
+def rule_strength(est: dict, p_adj: float, cfg: dict) -> str | None:
+    """None if p = 0.5 is not rejected; else strict / strong / partial, by the 95% lower bound of
+    max(p, 1 - p) (a rule may also run in the reverse direction, which is reported as such)."""
+    if est.get("n", 0) == 0 or p_adj >= cfg["alpha"]:
+        return None
+    lo, hi = est["ci95"]
+    lb = lo if est["p"] >= 0.5 else 1 - hi
+    return "strict" if lb >= cfg["strict_lb"] else "strong" if lb >= cfg["strong_lb"] else "partial"
+
+
+def inside_equivalence(est: dict, cfg: dict) -> bool:
     lo, hi = est["ci90"]
-    if cfg["equiv_lo"] <= lo and hi <= cfg["equiv_hi"]:
-        return f"no detectable {what} rule (90% CI {lo:.2f}-{hi:.2f} inside [{cfg['equiv_lo']}, {cfg['equiv_hi']}])"
-    return "insufficient data (inconclusive)"
+    return cfg["equiv_lo"] <= lo and hi <= cfg["equiv_hi"]
+
+
+def verdict(fee: dict, send: dict, cfg: dict) -> str:
+    """Decision rules of PREREGISTRATION.md section 9 for one validator (primary cell)."""
+    if fee.get("n", 0) == 0:
+        return "no data"
+    sf, ss = rule_strength(fee, fee["p_holm"], cfg), rule_strength(send, send["p_holm"], cfg)
+    rev = lambda e: "" if e["p"] >= 0.5 else " (REVERSED: lower-priority/later-sent first)"
+    if sf and ss:
+        return f"mixed: fee rule {sf}{rev(fee)} and send-order rule {ss}{rev(send)}"
+    if sf:
+        return f"fee rule holds, {sf}{rev(fee)}"
+    if ss:
+        return f"send-order rule holds, {ss}{rev(send)}"
+    if fee["n"] >= cfg["min_n"] and inside_equivalence(fee, cfg) and inside_equivalence(send, cfg):
+        return "no detectable rule"
+    return f"insufficient data (n={fee['n']})"
 
 
 def analyze(raw_dir: str, out_dir: str, cfg: dict) -> dict:
@@ -86,23 +105,24 @@ def analyze(raw_dir: str, out_dir: str, cfg: dict) -> dict:
             continue
         table.append({"leader": leader, **meta.get(leader, {}), "n_probes": c["n_probes"], "n_same_slot": c["n_same"],
                       "fee": estimate(*c["fee"], cfg), "send": estimate(*c["send"], cfg)})
-    for what in ("fee", "send"):
+    for what in ("fee", "send"):  # Holm within each family across validators
         ps = [t[what].get("p_value", 1.0) for t in table]
         for t, pa in zip(table, holm(ps) if ps else []):
             t[what]["p_holm"] = pa
-            t[what]["verdict"] = verdict(t[what], pa, cfg, what)
+    for t in table:
+        t["verdict"] = verdict(t["fee"], t["send"], cfg)
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "verdicts.json"), "w") as f:
         json.dump({"config": cfg, "validators": table}, f, indent=1, sort_keys=True)
     with open(os.path.join(out_dir, "verdicts.csv"), "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["leader", "client_id", "version", "n_same_slot", "p_fee_first", "ci95_lo", "ci95_hi", "p_holm_fee",
-                    "verdict_fee", "q_sent_first", "q_ci95_lo", "q_ci95_hi", "verdict_send"])
+        w.writerow(["leader", "client_id", "version", "n_usable", "p_fee_first", "p_ci95_lo", "p_ci95_hi", "p_holm",
+                    "q_sent_first", "q_ci95_lo", "q_ci95_hi", "q_holm", "verdict"])
         for t in table:
             fe, se = t["fee"], t["send"]
-            w.writerow([t["leader"], t.get("client_id"), t.get("version"), t["n_same_slot"], fe.get("p"),
-                        *(fe.get("ci95") or [None, None]), fe.get("p_holm"), fe.get("verdict"), se.get("p"),
-                        *(se.get("ci95") or [None, None]), se.get("verdict")])
+            w.writerow([t["leader"], t.get("client_id"), t.get("version"), fe.get("n"), fe.get("p"),
+                        *(fe.get("ci95") or [None, None]), fe.get("p_holm"), se.get("p"),
+                        *(se.get("ci95") or [None, None]), se.get("p_holm"), t["verdict"]])
     return {"n_rows": len(rows), "validators": len(table)}
 
 

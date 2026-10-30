@@ -67,3 +67,13 @@ def min_n_for_power(p1: float, alpha: float = 0.05, power: float = 0.8, p0: floa
         if len(rej) and stats.binom.pmf(rej, n, p1).sum() >= power:
             return n
     return -1
+
+
+def clopper_pearson(k: int, n: int, conf: float = 0.95) -> tuple[float, float]:
+    """Exact (Clopper-Pearson) binomial confidence interval."""
+    if n == 0:
+        return (float("nan"), float("nan"))
+    a = 1 - conf
+    lo = 0.0 if k == 0 else float(stats.beta.ppf(a / 2, k, n - k + 1))
+    hi = 1.0 if k == n else float(stats.beta.ppf(1 - a / 2, k + 1, n - k))
+    return (lo, hi)

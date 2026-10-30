@@ -87,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
     live = live_gate(a)
     plan = json.load(open(a.plan))
     run_id = a.run_id or time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + "-" + ("live" if live else "dry") + "-" + uuid.uuid4().hex[:6]
-    out = JsonlWriter(f"data/raw/{run_id}.sent.jsonl")
+    out = JsonlWriter(f"data/{'raw' if live else 'dryrun'}/{run_id}.sent.jsonl")
 
     # Reads go to a separate endpoint (public RPC by default) so they never eat the send rate limit.
     read = Rpc(os.environ.get("ITB_READ_RPC_URL", "https://api.mainnet-beta.solana.com"), rate_per_s=3.0, burst=3.0)
@@ -188,6 +188,15 @@ def main(argv: list[str] | None = None) -> int:
         else:
             rec["t_send_start"] = rec["t_send_end"] = time.time()
         rec["slot_estimate_at_send"] = clock.now()
+        if plan.get("observe_slot_after_send", True):
+            # independent check of the slot clock: a fresh processed-slot read right after sending
+            t0 = time.time()
+            try:
+                obs = read.call("getSlot", [{"commitment": "processed"}])
+                rec["observed_slot_after_send"] = obs
+                rec["observed_slot_rtt_s"] = time.time() - t0
+            except Exception as e:  # observation only; never blocks the experiment
+                rec["observed_slot_error"] = type(e).__name__
         out.write(rec)
         probes += 1
         windows = [w for w in windows if w.first_slot > nxt.last_slot]

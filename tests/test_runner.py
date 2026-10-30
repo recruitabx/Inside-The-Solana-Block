@@ -59,7 +59,7 @@ def env(tmp_path, monkeypatch):
 
 def _records(tmp):
     out = []
-    for f in (tmp / "data" / "raw").glob("*.sent.jsonl"):
+    for f in list((tmp / "data" / "raw").glob("*.sent.jsonl")) + list((tmp / "data" / "dryrun").glob("*.sent.jsonl")):
         out += [json.loads(x) for x in f.read_text().splitlines()]
     return out
 

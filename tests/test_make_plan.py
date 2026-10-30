@@ -106,7 +106,7 @@ def test_pilot_spent_is_read_from_the_ledger(tmp_path):
             {"kind": "reserve", "sig": "d", "max_fee": 5_000, "tag": "pilot:r:1"}]            # open reservation: not spent
     led.write_text("".join(json.dumps(r) + "\n" for r in rows))
     rc, out = _plan(tmp_path, "--ledger", str(led), spent="ledger")
-    assert rc == 0 and json.load(open(out))["planned_fees"]["pilot_spent"] == 15_401
+    assert rc == 0 and json.load(open(out))["planned_fees"]["pilot_spent"] == 20_401  # every settled fee counts (pilot, re-pilot, anchors, funding); open reservations do not
     rc, out = _plan(tmp_path, "--ledger", str(tmp_path / "missing.jsonl"), spent="ledger")
     assert rc == 0 and json.load(open(out))["planned_fees"]["pilot_spent"] == 0
 

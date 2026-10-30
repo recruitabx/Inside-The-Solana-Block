@@ -17,7 +17,7 @@ Budget. The ceiling is the FUNDED fee room, passed in with --fee-room (lamports;
 the rent reserves of the payers and of the funding wallet). Planned fees =
   pilot_spent + operations (500,000) + sum over roles of quota x share-weighted mean pair fee
 (pairs P, D, S 15,501 lamports, pair E 10,002). --pilot-spent is what the pilot actually settled
-(`--pilot-spent ledger` reads it from the spend ledger with itb.spend.settled_total(path, "pilot:");
+(`--pilot-spent ledger` reads every settled fee so far from the spend ledger, itb.spend.settled_total(path);
 before the pilot pass the planned pilot cost as a number). The plan is refused (nothing written, exit 1)
 if planned fees exceed the fee room. --scale-to-room instead scales all quotas down proportionally
 (floor) so that planned fees fit, and prints the roles projected below 100 usable probes
@@ -39,7 +39,7 @@ N_PAYERS = 6
 PRICE_HIGH, PRICE_LOW, CU_LIMIT = 5_500_000, 1_000, 1_000
 PILOT_P, PILOT_S = 12, 2
 LEDGER_PATH = "data/ledger/spend.jsonl"
-PILOT_TAG_PREFIX = "pilot:"    # the runner tags pilot probe reservations "pilot:<probe id>"
+# `--pilot-spent ledger` counts EVERY settled fee so far (pilot, re-pilot, anchors, funding): all of it is spent before the main run.
 
 
 def pair_fees() -> dict:
@@ -126,7 +126,7 @@ def main(argv=None) -> int:
         raise SystemExit("--u-pilot must be in (0, 1]")
     if a.fee_room <= 0:
         raise SystemExit("--fee-room must be positive")
-    pilot_spent = settled_total(a.ledger, PILOT_TAG_PREFIX) if a.pilot_spent == "ledger" else int(a.pilot_spent)
+    pilot_spent = settled_total(a.ledger, None) if a.pilot_spent == "ledger" else int(a.pilot_spent)
     if pilot_spent < 0:
         raise SystemExit("--pilot-spent must not be negative")
     plan, rep = build_plan(json.load(open(a.validators)), a.seed, a.tau0_ms, a.u_pilot, a.shares_all_85, a.fee_room, pilot_spent,

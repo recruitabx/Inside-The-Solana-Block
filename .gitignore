@@ -17,3 +17,4 @@ venv/
 tmp/
 .pytest_cache/
 *.egg-info/
+docker-compose.override.yml

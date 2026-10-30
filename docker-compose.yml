@@ -1,0 +1,36 @@
+# One-command entry points. Default for judges:
+#   docker compose run --rm verify
+# Nothing here can spend SOL unless you run the `live` service AND provide a wallet AND ITB_LIVE=1.
+x-base: &base
+  build: .
+  image: inside-the-block:latest
+  volumes:
+    - ./data:/app/data
+  environment:
+    RPC_URL: ${RPC_URL:-https://api.mainnet-beta.solana.com}
+    VERIFY_RPC_URL: ${VERIFY_RPC_URL:-}
+
+services:
+  verify:
+    <<: *base
+    command: ["verify", "-n", "20"]
+  analyze:
+    <<: *base
+    command: ["analyze"]
+  test:
+    <<: *base
+    entrypoint: ["python", "-m", "pytest", "-q"]
+  dryrun:
+    <<: *base
+    command: ["run"]
+  live:
+    <<: *base
+    command: ["run", "--live"]
+    environment:
+      RPC_URL: ${RPC_URL:?set RPC_URL to your provider endpoint}
+      ITB_LIVE: ${ITB_LIVE:-0}
+      ITB_SPEND_CAP_LAMPORTS: ${ITB_SPEND_CAP_LAMPORTS:-50000000}
+      ITB_WALLET: /secrets/wallet.json
+    volumes:
+      - ./data:/app/data
+      - ${ITB_WALLET_FILE:-./secrets/wallet.json}:/secrets/wallet.json:ro

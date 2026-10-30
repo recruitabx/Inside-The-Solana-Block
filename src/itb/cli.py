@@ -1,0 +1,26 @@
+"""Command line entry point: `itb <command>`."""
+from __future__ import annotations
+
+import sys
+
+COMMANDS = {
+    "verify": "itb.verify",       # judges: re-check a random sample of our transactions with getBlock
+    "run": "itb.runner",          # experiment runner (dry-run by default, --live to send)
+    "collect": "itb.collector_cli",  # resolve sent transactions to slot/index/leader records
+    "analyze": "itb.analyze",     # all tables/figures/verdicts from raw data
+    "snapshot": "itb.snapshot",   # client id / version snapshot of staked nodes
+    "anchor": "itb.anchor",       # memo anchor of a commit hash or data manifest
+}
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if not argv or argv[0] in ("-h", "--help") or argv[0] not in COMMANDS:
+        print("usage: itb {" + ",".join(COMMANDS) + "} [options]")
+        return 0 if argv and argv[0] in ("-h", "--help") else 2
+    mod = __import__(COMMANDS[argv[0]], fromlist=["main"])
+    return int(mod.main(argv[1:]) or 0)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

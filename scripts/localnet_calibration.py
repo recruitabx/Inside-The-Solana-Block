@@ -8,9 +8,15 @@ Three conditions, each pair has a fee contrast and a send order drawn independen
                       Known answer: the tx sent first lands first (fee is irrelevant).
   B  priority-known   two CONFLICTING txs (both write one shared account W) written back-to-back
                       on ONE QUIC connection straight into the local TPU, optionally preceded by K
-                      low-fee filler txs that also write W. Known answer: higher reward per cost
-                      first. A configuration sweep (K, CU limit, prices) runs first and the best one
-                      (highest Wilson lower bound) is used for B.
+                      zero-priority-fee filler txs that also write W. Known answer: higher reward per
+                      cost first. A configuration sweep runs first (K, CU limits, filler weight, lead
+                      time) and the configuration with the highest Wilson lower bound is used for B.
+                      Why fillers (hypothesis from reading Agave 4.3.2, not isolated by instrumentation):
+                      the greedy scheduler schedules a tx as soon as it reaches the container, so
+                      without a pause the order is arrival order. Fillers with a 1.4M CU limit that
+                      are slow to execute (ed25519 precompile entries) occupy the W thread and the
+                      scheduling budget for a few ms, so both txs of the pair wait in the container
+                      and leave it in priority order. The sweep records what actually works.
   C  placebo          like B but with EQUAL fees. The label of each tx is a coin, so P(label 1 first)
                       must be about 0.5.
 
@@ -28,9 +34,7 @@ import argparse
 import asyncio
 import base64
 import datetime as dt
-import itertools
 import json
-import math
 import os
 import random
 import socket
@@ -136,14 +140,15 @@ def group_name(rec: dict[str, Any]) -> str:
 
 
 def summarize(records: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """One row per group (A, B, C, and every B-sweep configuration), in first-seen order.
+    """One row per group (A, B, C, then every B-sweep configuration ordered by K, filler weight, lead).
 
     The ordering statistics use SAME-SLOT pairs only (the in-block position is only comparable
     inside one block). For C there is no fee contrast, so the 'higher-fee' column holds the
     placebo statistic P(label 1 first)."""
     groups: dict[str, list[dict[str, Any]]] = {}
     for r in records:
-        groups.setdefault(group_name(r), []).append(r)
+        if r.get("record", "pair") == "pair":
+            groups.setdefault(group_name(r), []).append(r)
     rows = []
     for name, recs in groups.items():
         outs = [pair_outcome(r) for r in recs]
@@ -153,12 +158,15 @@ def summarize(records: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         n = len(same)
         k_first = sum(o["first_sent_first"] for o in same)
         k_hi = sum(o["label1_first"] if placebo else o["hi_first"] for o in same)
-        row = {"group": name, "condition": recs[0]["condition"], "placebo_label": placebo,
+        row = {"group": name, "condition": recs[0]["condition"], "placebo_label": placebo, "cfg": recs[0]["cfg"],
                "n_pairs": len(recs), "n_landed": len(landed), "n_same_slot": n,
                "k_first_sent": k_first, "k_hi": k_hi,
                "ci_first_sent": wilson_ci(k_first, n), "ci_hi": wilson_ci(k_hi, n),
                "p_first_sent": binom_two_sided_p(k_first, n), "p_hi": binom_two_sided_p(k_hi, n)}
         rows.append(row)
+    order = {"A": 0, "B": 1, "C": 2}
+    rows.sort(key=lambda r: (order.get(r["condition"], 3),
+                             (lambda c: (c.k, c.filler_sigs, c.filler_cu_limit, c.lead_ms, c.cu_limit))(cfg_from_dict(r["cfg"]))))
     return rows
 
 
@@ -194,7 +202,8 @@ def format_markdown(rows: list[dict[str, Any]]) -> str:
 def pick_best_sweep(rows: list[dict[str, Any]], min_same_frac: float = 0.5) -> dict[str, Any] | None:
     """Sweep row with the highest Wilson lower bound of higher-fee-first (needs enough same-slot pairs)."""
     ok = [r for r in rows if r["condition"] == "B-sweep" and r["n_pairs"] and r["n_same_slot"] >= min_same_frac * r["n_pairs"]]
-    return max(ok, key=lambda r: (r["ci_hi"][0], -r["n_pairs"]), default=None)
+    # highest Wilson lower bound; ties go to the simpler configuration (fewer fillers, shorter lead)
+    return max(ok, key=lambda r: (round(r["ci_hi"][0], 6), -cfg_from_dict(r["cfg"]).k, -cfg_from_dict(r["cfg"]).lead_ms), default=None)
 
 
 # --------------------------------------------------------------------------------------------
@@ -227,7 +236,7 @@ def build_tx(payer: Keypair, blockhash: Hash, *, cu_limit: int, cu_price: int, w
     return str(tx.signatures[0]), bytes(tx)
 
 
-def send_rpc(rpc: Rpc, wire: bytes, *, retries_off: bool = True) -> str:
+def send_rpc(rpc: Rpc, wire: bytes) -> str:
     return rpc.call("sendTransaction", [base64.b64encode(wire).decode(),
                                         {"encoding": "base64", "skipPreflight": True, "maxRetries": 0}])
 
@@ -450,8 +459,9 @@ async def run_pair(rpc: Rpc, tpu: TpuClient | None, p: Plan, run_id: str, seed: 
 
     sigs = [txs[1]["sig"], txs[2]["sig"]]
     got = await asyncio.to_thread(wait_statuses, rpc, sigs, settle_s) if send_error is None else {}
+    filler_got: dict[str, dict[str, Any]] = {}
     if filler_sigs:                                            # let fillers drain so pairs do not overlap
-        await asyncio.to_thread(wait_statuses, rpc, filler_sigs, 5.0)
+        filler_got = await asyncio.to_thread(wait_statuses, rpc, filler_sigs, 5.0)
     for lab in (1, 2):
         st = got.get(txs[lab]["sig"])
         if st:
@@ -460,7 +470,8 @@ async def run_pair(rpc: Rpc, tpu: TpuClient | None, p: Plan, run_id: str, seed: 
     rec: dict[str, Any] = {
         "record": "pair", "schema": SCHEMA, "run_id": run_id, "seed": seed, "condition": p.condition,
         "pair": p.idx, "cfg": asdict(cfg), "hi_label": p.hi_label, "first_label": p.first_label,
-        "send_order": order, "filler_count": len(p.fillers), "w": str(w) if cfg.transport == "quic" else None,
+        "send_order": order, "filler_count": len(p.fillers), "filler_landed": len(filler_got),
+        "filler_failed": sum(1 for st in filler_got.values() if st.get("err")), "w": str(w) if cfg.transport == "quic" else None,
         "send_error": send_error, "txs": [txs[1], txs[2]], "slot": None, "leader": None,
     }
     return rec
@@ -508,13 +519,17 @@ def check_local(url: str, what: str) -> None:
 # K fillers, pair CU limit, filler CU limit (0 = same), ed25519 entries per filler, lead (ms) before the pair.
 DEFAULT_SPECS = ";".join([
     "0,200000,0,0,0",            # bare pair, no fillers
-    "8,200000,0,0,0",            # plain fillers, no pause
+    "8,200000,0,0,0",            # plain cheap fillers
     "32,2000,0,0,0",
-    "4,2000,1400000,50,0",       # slow expensive fillers (1.4M CU limit, 50 ed25519 verifications each)
+    "4,2000,1400000,0,1",        # expensive (1.4M CU limit) but fast fillers
+    "1,2000,1400000,50,1",       # expensive and slow fillers (50 ed25519 verifications each)
+    "2,2000,1400000,50,1",
+    "4,2000,1400000,50,0",
     "4,2000,1400000,50,1",
-    "4,2000,1400000,50,3",
     "4,200000,1400000,50,1",
+    "4,2000,1400000,50,3",
     "8,2000,1400000,50,2",
+    "4,2000,1400000,25,1",
 ])
 
 
@@ -577,7 +592,7 @@ async def amain(args) -> int:
     all_recs: list[dict[str, Any]] = []
     with open(args.out, "w", encoding="utf-8") as out:
         out.write(json.dumps({"record": "meta", "schema": SCHEMA, "run_id": run_id, "seed": args.seed,
-                              "validator": version, "pairs": args.pairs, "argv": sys.argv[1:],
+                              "validator": version, "pairs": args.pairs, "argv": sys.argv[1:], "sweep_specs": args.sweep_specs,
                               "utc": dt.datetime.now(dt.timezone.utc).isoformat()}) + "\n")
 
         async def airdrop(lamports: int) -> None:
@@ -590,6 +605,7 @@ async def amain(args) -> int:
         b_cfg = Cfg(k=args.b_k, cu_limit=args.b_cu_limit, price_lo=args.price_lo, price_hi=args.price_hi,
                     lead_ms=args.b_lead_ms, filler_cu_limit=args.b_filler_cu, filler_sigs=args.b_filler_sigs)
         sweep_note = None
+        b_reliable = True
         if "B" in conds or "C" in conds:
             if args.sweep_pairs > 0:
                 grid = parse_specs(args.sweep_specs, args.price_lo, args.price_hi)
@@ -602,11 +618,13 @@ async def amain(args) -> int:
                 rows = summarize(sweep_recs)
                 best = pick_best_sweep(rows)
                 if best is not None:
-                    key = best["group"].split(" ", 1)[1]
-                    b_cfg = next(c for c in grid if c.key() == key)
+                    b_cfg = cfg_from_dict(best["cfg"])
+                    b_reliable = best["ci_hi"][0] >= args.reliable
                     sweep_note = (f"selected B configuration: {b_cfg.key()} (Wilson lower bound of higher-fee-first "
-                                  f"{best['ci_hi'][0]:.3f} on {best['n_same_slot']} same-slot sweep pairs)")
+                                  f"{best['ci_hi'][0]:.3f} on {best['n_same_slot']} same-slot sweep pairs; "
+                                  f"{'reliable' if b_reliable else 'NOT reliable'} at threshold {args.reliable})")
                 else:
+                    b_reliable = False
                     sweep_note = "no sweep configuration produced enough same-slot pairs; using the default B configuration"
                 print(sweep_note, flush=True)
         # ---- final conditions
@@ -616,8 +634,8 @@ async def amain(args) -> int:
             spec.append(("A", args.pairs, a_cfg))
         if "B" in conds:
             spec.append(("B", args.pairs, b_cfg))
-        if "C" in conds:
-            spec.append(("C", args.pairs, b_cfg))
+        if "C" in conds:   # placebo "like B", or "like A" when no B configuration was reliable
+            spec.append(("C", args.pairs, b_cfg if b_reliable else a_cfg))
         plans = make_plans(rng, spec)
         n_pay = sum(payer_count(p) for p in plans)
         await airdrop(int(n_pay * args.payer_lamports + 10**9))
@@ -635,7 +653,8 @@ async def amain(args) -> int:
         print(sweep_note)
     print("\n=== Final conditions ===")
     print(format_summary(final_rows))
-    print("\nB/C configuration:", b_cfg.key(), "| A configuration:", a_cfg.key())
+    print("\nA configuration:", a_cfg.key(), "| B configuration:", b_cfg.key(),
+          "| C configuration:", (b_cfg if b_reliable else a_cfg).key())
     print("\n" + format_markdown(rows))
     errs = [r for r in all_recs if r.get("send_error")]
     unl = sum(1 for r in all_recs for t in r["txs"] if t["slot"] is None)
@@ -662,9 +681,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--b-lead-ms", type=float, default=0.0)
     ap.add_argument("--b-filler-cu", type=int, default=0)
     ap.add_argument("--b-filler-sigs", type=int, default=0)
-    ap.add_argument("--sweep-pairs", type=int, default=20, help="pairs per sweep configuration (0 = no sweep)")
+    ap.add_argument("--sweep-pairs", type=int, default=30, help="pairs per sweep configuration (0 = no sweep)")
     ap.add_argument("--sweep-specs", default=DEFAULT_SPECS,
                     help="';'-separated configurations 'K,cu_limit,filler_cu_limit,filler_sigs,lead_ms'")
+    ap.add_argument("--reliable", type=float, default=0.8,
+                    help="a B configuration is reliable if the Wilson lower bound of higher-fee-first is >= this")
     ap.add_argument("--payer-lamports", type=int, default=5_000_000)
     ap.add_argument("--settle-s", type=float, default=20.0, help="max wait for a pair to be confirmed")
     args = ap.parse_args(argv)

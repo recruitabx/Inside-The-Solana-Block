@@ -17,6 +17,15 @@ services:
   analyze:
     <<: *base
     command: ["analyze"]
+  audit:
+    <<: *base
+    command: ["audit"]
+  snapshot:
+    <<: *base
+    command: ["snapshot"]
+  collect:
+    <<: *base
+    command: ["collect", "--no-ledger"]
   test:
     <<: *base
     entrypoint: ["python", "-m", "pytest", "-q"]

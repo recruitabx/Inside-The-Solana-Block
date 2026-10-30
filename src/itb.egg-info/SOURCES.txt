@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+src/itb/__init__.py
+src/itb/config.py
+src/itb/rpc.py
+src/itb/spend.py
+src/itb.egg-info/PKG-INFO
+src/itb.egg-info/SOURCES.txt
+src/itb.egg-info/dependency_links.txt
+src/itb.egg-info/entry_points.txt
+src/itb.egg-info/requires.txt
+src/itb.egg-info/top_level.txt
+tests/test_spend.py

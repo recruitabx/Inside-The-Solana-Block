@@ -35,6 +35,7 @@ import os
 import random
 import socket
 import ssl
+import struct
 import sys
 import time
 import urllib.parse
@@ -45,6 +46,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 from solders.compute_budget import set_compute_unit_limit, set_compute_unit_price  # noqa: E402
 from solders.hash import Hash  # noqa: E402
+from solders.instruction import Instruction  # noqa: E402
 from solders.keypair import Keypair  # noqa: E402
 from solders.message import Message  # noqa: E402
 from solders.pubkey import Pubkey  # noqa: E402
@@ -73,6 +75,8 @@ class Cfg:
     price_lo: int = LO_PRICE
     price_hi: int = HI_PRICE
     filler_price: int = 0
+    filler_cu_limit: int = 0         # 0 = same as cu_limit; a large limit makes a filler "expensive" for the scheduler
+    filler_sigs: int = 0             # 0 = plain filler; N > 0 = filler also verifies N ed25519 signatures (slow to execute)
     gap_ms: float = 50.0             # A only: gap between the two RPC sends
     lead_ms: float = 0.0             # B/C only: pause between flushing the fillers and the pair
 
@@ -80,6 +84,8 @@ class Cfg:
         if self.transport == "rpc":
             return f"rpc gap={self.gap_ms:g}ms cu={self.cu_limit} lo={self.price_lo} hi={self.price_hi}"
         s = f"K={self.k} cu={self.cu_limit} lo={self.price_lo} hi={self.price_hi}"
+        if self.k:
+            s += f" filler_cu={self.filler_cu_limit or self.cu_limit} filler_sigs={self.filler_sigs}"
         return s + (f" lead={self.lead_ms:g}ms" if self.lead_ms else "")
 
 
@@ -194,11 +200,29 @@ def pick_best_sweep(rows: list[dict[str, Any]], min_same_frac: float = 0.5) -> d
 # --------------------------------------------------------------------------------------------
 # Transactions
 # --------------------------------------------------------------------------------------------
-def build_tx(payer: Keypair, blockhash: Hash, *, cu_limit: int, cu_price: int, w: Pubkey) -> tuple[str, bytes]:
+ED25519_PROGRAM = Pubkey.from_string("Ed25519SigVerify111111111111111111111111111")
+
+
+def ed25519_burn_ix(kp: Keypair, n: int) -> Instruction:
+    """One ed25519 precompile instruction with n entries that all point at the same valid
+    (signature, pubkey, message) triple inside the instruction data. The validator verifies it n
+    times, which makes the transaction slow to execute without needing any custom program."""
+    msg = b"itb-calibration-filler"
+    sig, pub = bytes(kp.sign_message(msg)), bytes(kp.pubkey())
+    pub_off = 2 + 14 * n
+    sig_off, msg_off = pub_off + 32, pub_off + 32 + 64
+    entry = struct.pack("<7H", sig_off, 0xFFFF, pub_off, 0xFFFF, msg_off, len(msg), 0xFFFF)
+    return Instruction(ED25519_PROGRAM, bytes([n, 0]) + entry * n + pub + sig + msg, [])
+
+
+def build_tx(payer: Keypair, blockhash: Hash, *, cu_limit: int, cu_price: int, w: Pubkey,
+             burn_sigs: int = 0) -> tuple[str, bytes]:
     """Priority fee + a 0-lamport system transfer payer -> w. `w` is locked writable by the tx, so
     two txs with the same `w` conflict; a tx with its own private `w` conflicts with nobody."""
     ixs = [set_compute_unit_limit(cu_limit), set_compute_unit_price(cu_price),
            transfer(TransferParams(from_pubkey=payer.pubkey(), to_pubkey=w, lamports=0))]
+    if burn_sigs:
+        ixs.append(ed25519_burn_ix(payer, burn_sigs))
     tx = Transaction([payer], Message(ixs, payer.pubkey()), blockhash)
     return str(tx.signatures[0]), bytes(tx)
 
@@ -409,7 +433,8 @@ async def run_pair(rpc: Rpc, tpu: TpuClient | None, p: Plan, run_id: str, seed: 
         else:
             await tpu.ensure()
             for fp in p.fillers:
-                fsig, fwire = build_tx(fp, bh, cu_limit=cfg.cu_limit, cu_price=cfg.filler_price, w=w)
+                fsig, fwire = build_tx(fp, bh, cu_limit=cfg.filler_cu_limit or cfg.cu_limit, cu_price=cfg.filler_price,
+                                       w=w, burn_sigs=cfg.filler_sigs)
                 tpu.write(fwire)
                 filler_sigs.append(fsig)
             if cfg.lead_ms and p.fillers:
@@ -480,8 +505,26 @@ def check_local(url: str, what: str) -> None:
         raise SystemExit(f"refusing non-local {what}: this script only talks to a local test validator")
 
 
-def ints(s: str) -> list[int]:
-    return [int(x) for x in s.split(",") if x != ""]
+# K fillers, pair CU limit, filler CU limit (0 = same), ed25519 entries per filler, lead (ms) before the pair.
+DEFAULT_SPECS = ";".join([
+    "0,200000,0,0,0",            # bare pair, no fillers
+    "8,200000,0,0,0",            # plain fillers, no pause
+    "32,2000,0,0,0",
+    "4,2000,1400000,50,0",       # slow expensive fillers (1.4M CU limit, 50 ed25519 verifications each)
+    "4,2000,1400000,50,1",
+    "4,2000,1400000,50,3",
+    "4,200000,1400000,50,1",
+    "8,2000,1400000,50,2",
+])
+
+
+def parse_specs(text: str, price_lo: int, price_hi: int) -> list[Cfg]:
+    out = []
+    for spec in (x.strip() for x in text.split(";") if x.strip()):
+        k, cu, fcu, fsig, lead = spec.split(",")
+        out.append(Cfg(k=int(k), cu_limit=int(cu), filler_cu_limit=int(fcu), filler_sigs=int(fsig),
+                       lead_ms=float(lead), price_lo=price_lo, price_hi=price_hi))
+    return out
 
 
 async def execute(args, rpc: Rpc, tpu: TpuClient | None, plans: list[Plan], out, run_id: str, master: Keypair, tag: str) -> list[dict[str, Any]]:
@@ -545,14 +588,11 @@ async def amain(args) -> int:
 
         # ---- B configuration: sweep, then choose
         b_cfg = Cfg(k=args.b_k, cu_limit=args.b_cu_limit, price_lo=args.price_lo, price_hi=args.price_hi,
-                    lead_ms=args.b_lead_ms)
+                    lead_ms=args.b_lead_ms, filler_cu_limit=args.b_filler_cu, filler_sigs=args.b_filler_sigs)
         sweep_note = None
         if "B" in conds or "C" in conds:
             if args.sweep_pairs > 0:
-                grid = [Cfg(k=k, cu_limit=cu, price_lo=lo, price_hi=hi, lead_ms=lead)
-                        for k, cu, (lo, hi), lead in itertools.product(
-                            ints(args.sweep_k), ints(args.sweep_cu), [tuple(map(int, x.split(":"))) for x in args.sweep_prices.split(",")],
-                            [float(x) for x in args.sweep_lead_ms.split(",")])]
+                grid = parse_specs(args.sweep_specs, args.price_lo, args.price_hi)
                 plans = make_plans(rng, [("B-sweep", args.sweep_pairs, c) for c in grid])
                 n_pay = sum(payer_count(p) for p in plans)
                 await airdrop(int((n_pay * args.payer_lamports + 10**9) ))
@@ -620,11 +660,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--b-k", type=int, default=0, help="B/C fillers if the sweep is skipped")
     ap.add_argument("--b-cu-limit", type=int, default=200_000, help="CU limit of A and (without sweep) of B/C")
     ap.add_argument("--b-lead-ms", type=float, default=0.0)
+    ap.add_argument("--b-filler-cu", type=int, default=0)
+    ap.add_argument("--b-filler-sigs", type=int, default=0)
     ap.add_argument("--sweep-pairs", type=int, default=20, help="pairs per sweep configuration (0 = no sweep)")
-    ap.add_argument("--sweep-k", default="0,8,32")
-    ap.add_argument("--sweep-cu", default="2000,200000")
-    ap.add_argument("--sweep-prices", default="1000:1000000", help="comma list of lo:hi micro-lamport prices")
-    ap.add_argument("--sweep-lead-ms", default="0")
+    ap.add_argument("--sweep-specs", default=DEFAULT_SPECS,
+                    help="';'-separated configurations 'K,cu_limit,filler_cu_limit,filler_sigs,lead_ms'")
     ap.add_argument("--payer-lamports", type=int, default=5_000_000)
     ap.add_argument("--settle-s", type=float, default=20.0, help="max wait for a pair to be confirmed")
     args = ap.parse_args(argv)

@@ -60,7 +60,7 @@ from solders.transaction import Transaction  # noqa: E402
 from itb.blocks import block_info  # noqa: E402
 from itb.rpc import Rpc, RpcError, TransportError  # noqa: E402
 from itb.stats import binom_two_sided_p, wilson_ci  # noqa: E402
-from itb.txbuild import build_probe_tx  # noqa: E402
+from itb.txbuild import build_probe_tx  # noqa: E402  (the live experiment's transaction template)
 
 LOOPBACK = {"127.0.0.1", "localhost", "::1"}
 SCHEMA = 1
@@ -251,10 +251,10 @@ def ed25519_burn_ix(kp: Keypair, n: int) -> Instruction:
     return Instruction(ED25519_PROGRAM, bytes([n, 0]) + entry * n + pub + sig + msg, [])
 
 
-def build_tx(payer: Keypair, blockhash: Hash, *, cu_limit: int, cu_price: int, w: Pubkey,
-             burn_sigs: int = 0) -> tuple[str, bytes]:
-    """Priority fee + a 0-lamport system transfer payer -> w. `w` is locked writable by the tx, so
-    two txs with the same `w` conflict; a tx with its own private `w` conflicts with nobody."""
+def build_filler_tx(payer: Keypair, blockhash: Hash, *, cu_limit: int, cu_price: int, w: Pubkey,
+                    burn_sigs: int = 0) -> tuple[str, bytes]:
+    """Filler: priority fee + a 0-lamport transfer payer -> w (so it conflicts with the pair), optionally
+    followed by an ed25519 precompile instruction that makes it slow to execute."""
     ixs = [set_compute_unit_limit(cu_limit), set_compute_unit_price(cu_price),
            transfer(TransferParams(from_pubkey=payer.pubkey(), to_pubkey=w, lamports=0))]
     if burn_sigs:
@@ -442,12 +442,11 @@ async def run_pair(rpc: Rpc, tpu: TpuClient | None, p: Plan, run_id: str, seed: 
     txs: dict[int, dict[str, Any]] = {}
     wires: dict[int, bytes] = {}
     for lab in (1, 2):
-        if cfg.transport == "quic":
-            sig, wire = build_tx(p.payers[lab], bh, cu_limit=cfg.cu_limit, cu_price=price_of(p, lab), w=w)
-        else:  # A: the live experiment's probe tx (memo, own payer, no shared writable account)
-            bt = build_probe_tx(p.payers[lab], str(bh), cu_limit=cfg.cu_limit, cu_price=price_of(p, lab),
-                                memo=f"cal-{run_id}-{p.condition}{p.idx}-{lab}")
-            sig, wire = bt.signature, base64.b64decode(bt.wire_b64)
+        # The pair uses the live experiment's probe template (itb.txbuild): compute budget instructions plus a
+        # 0-lamport transfer payer -> W. B/C share one W (conflict); A gives each tx a private W (no conflict).
+        shared = w if cfg.transport == "quic" else Keypair().pubkey()
+        bt = build_probe_tx(p.payers[lab], str(bh), cu_limit=cfg.cu_limit, cu_price=price_of(p, lab), shared=shared)
+        sig, wire = bt.signature, base64.b64decode(bt.wire_b64)
         wires[lab] = wire
         txs[lab] = {"label": lab, "sig": sig, "payer": str(p.payers[lab].pubkey()), "cu_limit": cfg.cu_limit,
                     "cu_price": price_of(p, lab), "send_pos": 0 if lab == p.first_label else 1,
@@ -469,7 +468,7 @@ async def run_pair(rpc: Rpc, tpu: TpuClient | None, p: Plan, run_id: str, seed: 
         else:
             await tpu.ensure()
             for fp in p.fillers:
-                fsig, fwire = build_tx(fp, bh, cu_limit=cfg.filler_cu_limit or cfg.cu_limit, cu_price=cfg.filler_price,
+                fsig, fwire = build_filler_tx(fp, bh, cu_limit=cfg.filler_cu_limit or cfg.cu_limit, cu_price=cfg.filler_price,
                                        w=w, burn_sigs=cfg.filler_sigs)
                 tpu.write(fwire)
                 filler_sigs.append(fsig)

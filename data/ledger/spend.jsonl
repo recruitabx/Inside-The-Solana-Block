@@ -228,3 +228,20 @@
 {"actual_fee": 7290, "kind": "settle", "sig": "3M7YjTPU6SgsN3VFVRdxxdUoS1D4WP66Tq9ndeFR41v8bwvJRuSwN2QGzQKYZfrtzD8jZgdFWkUZYdX1tFQmBsQR", "ts": 1793381433.1906214}
 {"kind": "release", "reason": "unknown to cluster 206 s after reservation (blockhash expired)", "sig": "5TbpKsJhmcWiS3okxausbdebjQ2EK6p5qMRcYNbGCNb8ETxftPn1QvpfPhBtubsMR6w4dfEiwDfF9DqDi3Tmo6YQ", "ts": 1793381433.192254}
 {"kind": "release", "reason": "unknown to cluster 206 s after reservation (blockhash expired)", "sig": "gUvMAGP5y43PM8FiuocYpdsTxK6ddLxz79fgkFzDULf4byYUpuY9RKwYTLpuDXAP5WNLEGZrZJ28zmvpdH7XKTD", "ts": 1793381433.1930506}
+{"kind": "reserve", "max_fee": 7290, "sig": "zoeqKAiHBZwpotVYg2v9QM32U8ANcvZyB54Mjw285WYDuEWG4MEpMZnK7jgSG5RtKx2JGcTWW2rrQCxsSFt5B91", "tag": "anchor:20261030T173035Z-live-pilot-7740ed", "ts": 1793381436.938206}
+{"kind": "reserve", "max_fee": 5001, "sig": "2V5EceeJERqzSvqiYmW7iEHcCT4h6HjxCwN4gNthJgXNydBaf73FkADsitTsez34YnhqoBmr3XeRAsbmA32vY2zw", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:0", "ts": 1793381443.436727}
+{"kind": "reserve", "max_fee": 10500, "sig": "3aqdfDPodEaM8bGGUPq5qjBfE2GtQo7gw9nz5saMa5JQRMYXnAxwP1Y3QsC6Kn5Ph8gRMMqP962SLJQTZ7Mw9xRy", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:0", "ts": 1793381443.436727}
+{"kind": "reserve", "max_fee": 10500, "sig": "3i9tmCmnncwoJpAwgJJAkttDq8TywRpZzK6u4cqCVLGyNjmYR285Kh73hmD4TqsZSuPjs7Z1QCfsSHA7xS6a6ezr", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:1", "ts": 1793381454.9198463}
+{"kind": "reserve", "max_fee": 5001, "sig": "22MDWoAvfJiiioVBX8AcNzQApzrMdehJUQxs5XR1famwY5N6dw6Lpvuo7uopMMLHJgnmx3KZN95rWsvWXQjyHNPL", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:1", "ts": 1793381454.9198463}
+{"kind": "reserve", "max_fee": 10500, "sig": "4XXR1r7wRaFweJXdFa672MAfK9azfkzoA3odW8MXkgeShQau83PLrAk3kYdGhaKPugSgkatTpjqkoimTMDMpuuPg", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:2", "ts": 1793381458.177471}
+{"kind": "reserve", "max_fee": 5001, "sig": "2W7xoidkjbcUtKrfBZr4uTEEivQ6Wmn81XxfV6gBiWLKsv33s3bkWhUgxf4MveEBLcz2b2hR1Lueh7u7X39hJdde", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:2", "ts": 1793381458.177471}
+{"kind": "reserve", "max_fee": 5001, "sig": "2s9cytxYNGdhYU1agojFVeiFSAPEYUkFc7f88L1wv8meSZ2j8kQhrJf3kzRW8m9vVKKdB9FapX7pSfnDUcumoW6T", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:3", "ts": 1793381474.784587}
+{"kind": "reserve", "max_fee": 10500, "sig": "StQFQNkxuZVjxRvm6GcbDfnXGWeKaWiuU2vFnpXSMTCrQSMaGJwgFWzG1t4x7Yr6mZLuJpetRNiBkhFa6XobeUA", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:3", "ts": 1793381474.784587}
+{"kind": "reserve", "max_fee": 10500, "sig": "3RMwGyS691kdbPUynKZkutVEhZtKMUcjQzvpPapKwp8kP82FAuADPS727xYp6xmbkPDTdhjQG7LhUbsi181W5dDL", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:4", "ts": 1793381486.253116}
+{"kind": "reserve", "max_fee": 5001, "sig": "7aigq2QNC8sz1UjrM7cssqziUoKjJeAYf4MzvEe47DVixoBgxVt7jL9xFoeEjvQU4r9vFU67fYArdAqhvEUVUND", "tag": "pilot:20261030T173035Z-live-pilot-7740ed:4", "ts": 1793381486.253116}
+{"actual_fee": 5001, "kind": "settle", "sig": "2V5EceeJERqzSvqiYmW7iEHcCT4h6HjxCwN4gNthJgXNydBaf73FkADsitTsez34YnhqoBmr3XeRAsbmA32vY2zw", "ts": 1793381522.150105}
+{"actual_fee": 10500, "kind": "settle", "sig": "3aqdfDPodEaM8bGGUPq5qjBfE2GtQo7gw9nz5saMa5JQRMYXnAxwP1Y3QsC6Kn5Ph8gRMMqP962SLJQTZ7Mw9xRy", "ts": 1793381522.1526103}
+{"actual_fee": 10500, "kind": "settle", "sig": "4XXR1r7wRaFweJXdFa672MAfK9azfkzoA3odW8MXkgeShQau83PLrAk3kYdGhaKPugSgkatTpjqkoimTMDMpuuPg", "ts": 1793381522.1533484}
+{"actual_fee": 5001, "kind": "settle", "sig": "2W7xoidkjbcUtKrfBZr4uTEEivQ6Wmn81XxfV6gBiWLKsv33s3bkWhUgxf4MveEBLcz2b2hR1Lueh7u7X39hJdde", "ts": 1793381522.1538486}
+{"actual_fee": 5001, "kind": "settle", "sig": "2s9cytxYNGdhYU1agojFVeiFSAPEYUkFc7f88L1wv8meSZ2j8kQhrJf3kzRW8m9vVKKdB9FapX7pSfnDUcumoW6T", "ts": 1793381522.1543028}
+{"actual_fee": 7290, "kind": "settle", "sig": "zoeqKAiHBZwpotVYg2v9QM32U8ANcvZyB54Mjw285WYDuEWG4MEpMZnK7jgSG5RtKx2JGcTWW2rrQCxsSFt5B91", "ts": 1793381527.3148546}

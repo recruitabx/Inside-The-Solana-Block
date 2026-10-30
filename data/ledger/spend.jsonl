@@ -424,3 +424,8 @@
 {"kind": "release", "reason": "unknown to cluster 205 s after send (blockhash expired)", "sig": "2SzF9rSB2yZjfgJMbgTvQ8aurJRev7zz49nPD4KFrDbzy9LZc8ChK5MmguXzHTaZKUWuzTG6DVGn59iujyrCNFR4", "ts": 1793382705.481854}
 {"kind": "release", "reason": "unknown to cluster 205 s after send (blockhash expired)", "sig": "5w7Sc8AECWBfZg4A69imAZPwf4buHgVVqADuaB2v9prpoQHAcheVYQyYNJYFREaL98EF1KpceFyxC9V2t7J13asc", "ts": 1793382705.4825208}
 {"actual_fee": 7330, "kind": "settle", "sig": "2JBALi5WETujEJyy63GMSreQ4YgCDiTcGfZwWujoDKqeM1ko3hjm7iJ94Z6c1CwpBxAzLDeUmp8hX9EkSSAsuL8i", "ts": 1793382756.3812826}
+{"kind": "reserve", "max_fee": 7330, "sig": "4C9xocQVX5pqpspPtCPEdmCpjZ83EymmSAk9gNUux84XuzZgKHUuUdCybS3yizhgKHpAhyciF2jebEGGiSxoxRh5", "tag": "anchor:20261030T175239Z-live-repilot-b25293", "ts": 1793382760.2102144}
+{"kind": "reserve", "max_fee": 5001, "sig": "ZmEAMAKcu8LogWdmqeAfMQfYUT8Z7HE8RwAWsFZ7kzJSNiawmKBy7ZqSgdMxw8RtydGFC3BDKgPfJ7PFUKAfVtE", "tag": "repilot:20261030T175239Z-live-repilot-b25293:0", "ts": 1793382764.9980457}
+{"kind": "reserve", "max_fee": 10500, "sig": "5HEtbqzjg4D76RrVGYxnqRgc381LtnwF96y7mUNboytWNyQeojApZAKoVjTVZUDAqgDdmCAjBaJNqzqE8VVXfX5M", "tag": "repilot:20261030T175239Z-live-repilot-b25293:0", "ts": 1793382764.9980457}
+{"kind": "reserve", "max_fee": 10500, "sig": "2kvw9Cq4EErqszUWeX5EMFLC3VBCXtFXxWUq9bSDu4xRpVNL8ighmmLoXQCJB2yKi5jd1WLjeABg11H7tifuQhcZ", "tag": "repilot:20261030T175239Z-live-repilot-b25293:1", "ts": 1793382774.2013555}
+{"kind": "reserve", "max_fee": 5001, "sig": "3MdTYbgwVGnvfRwNKVTdjCWFn58y7LYK11fs8WtXVQRDnkousiXmbpPuhHF2uXWaZAwS92sRB8KffERSbkuUSMFw", "tag": "repilot:20261030T175239Z-live-repilot-b25293:1", "ts": 1793382774.2013555}

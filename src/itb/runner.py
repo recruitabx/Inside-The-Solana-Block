@@ -231,7 +231,7 @@ def main(argv: list[str] | None = None) -> int:
         from .funds import memo_tx
         bh0 = read.call("getLatestBlockhash", [{"commitment": "confirmed"}])["value"]["blockhash"]
         t = memo_tx(master, f"itb-run:{run_id}:{config_sha}", bh0)
-        start_rec["anchor"] = {"signature": t.signature, **send_signed(send, ledger, [t], tag=f"anchor:{run_id}")}
+        start_rec["anchor"] = {"signature": t.signature, **send_signed(send, ledger, [t], tag=f"anchor:{run_id}", max_retries=None)}
     out.write(start_rec)
 
     probes = 0

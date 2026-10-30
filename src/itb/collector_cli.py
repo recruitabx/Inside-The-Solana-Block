@@ -66,22 +66,51 @@ def collect_run(sent_path: str, rpc: Rpc, ledger: SpendLedger | None, enrich: bo
     return rep
 
 
+def reconcile_ledger(rpc: Rpc, ledger: SpendLedger, ledger_path: str, min_age_s: float = EXPIRY_MARGIN_S) -> dict:
+    """Settle or release EVERY open reservation (probes, funding, anchors): landed -> settle with the
+    on-chain fee; unknown to the cluster and reserved more than min_age_s ago -> release."""
+    ts = {}
+    with open(ledger_path) as f:
+        for line in f:
+            r = json.loads(line)
+            if r["kind"] == "reserve":
+                ts[r["sig"]] = r.get("ts", 0)
+    open_sigs = [s for s, e in ledger.entries.items() if e.state == "open"]
+    settled = released = 0
+    now = time.time()
+    for i in range(0, len(open_sigs), 200):
+        chunk = open_sigs[i:i + 200]
+        vals = rpc.call("getSignatureStatuses", [chunk, {"searchTransactionHistory": True}])["value"]
+        for sig, v in zip(chunk, vals):
+            if v is not None:
+                t = rpc.call("getTransaction", [sig, {"encoding": "json", "commitment": "confirmed",
+                                                      "maxSupportedTransactionVersion": 1}])
+                if t is not None:
+                    ledger.settle(sig, int(t["meta"]["fee"])); settled += 1
+            elif now - ts.get(sig, now) > min_age_s:
+                ledger.release(sig, f"unknown to cluster {int(now - ts[sig])} s after reservation (blockhash expired)")
+                released += 1
+    return {"open_before": len(open_sigs), "settled": settled, "released": released, "ledger": ledger.summary()}
+
+
 def main(argv: list[str] | None = None) -> int:
     from .runner import LEDGER_PATH, cap_from_env
     ap = argparse.ArgumentParser(prog="itb collect")
     ap.add_argument("runs", nargs="*", help="run ids (default: every live run in data/raw)")
     ap.add_argument("--rpc", default=os.environ.get("ITB_READ_RPC_URL", PUBLIC_RPC))
     ap.add_argument("--no-ledger", action="store_true", help="do not touch the spend ledger")
+    ap.add_argument("--ledger-only", action="store_true", help="only reconcile every open ledger reservation (incl. funding and anchors)")
     ap.add_argument("--no-enrich", action="store_true", help="do not fetch full blocks for the block summaries")
     a = ap.parse_args(argv)
     paths = [f"data/raw/{r}.sent.jsonl" for r in a.runs] if a.runs else sorted(glob.glob("data/raw/*-live-*.sent.jsonl"))
     rpc = Rpc(a.rpc, rate_per_s=3.0, burst=3.0, timeout=60)
     ledger = None if a.no_ledger or not os.path.exists(LEDGER_PATH) else SpendLedger(LEDGER_PATH, cap_from_env())
     try:
-        for p in paths:
-            print(json.dumps(collect_run(p, rpc, ledger, enrich=not a.no_enrich)))
+        if not a.ledger_only:
+            for p in paths:
+                print(json.dumps(collect_run(p, rpc, ledger, enrich=not a.no_enrich)))
         if ledger:
-            print(json.dumps({"ledger": ledger.summary()}))
+            print(json.dumps({"reconcile": reconcile_ledger(rpc, ledger, LEDGER_PATH)}))
     finally:
         if ledger:
             ledger.close()

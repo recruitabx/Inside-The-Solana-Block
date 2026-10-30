@@ -23,7 +23,10 @@ from solders.system_program import TransferParams, transfer
 from solders.transaction import Transaction
 import base64
 
+from solders.compute_budget import set_compute_unit_limit, set_compute_unit_price
+
 from .config import BASE_FEE_PER_SIGNATURE, MEMO_PROGRAM_ID
+from .spend import max_fee_lamports
 from .rpc import Rpc
 from .send import SignedTx, send_signed
 from .spend import SpendLedger
@@ -32,18 +35,28 @@ LEDGER_PATH = "data/ledger/spend.jsonl"
 PUBLIC_RPC = "https://api.mainnet-beta.solana.com"
 
 
-def _signed(tx: Transaction, nsig: int = 1) -> SignedTx:
-    return SignedTx(str(tx.signatures[0]), base64.b64encode(bytes(tx)).decode(), nsig * BASE_FEE_PER_SIGNATURE)
+# Operational transactions (funding, draining, anchors) are not measurements: they carry a modest
+# priority fee and use the provider's default rebroadcasting so that they land reliably.
+OPS_CU_PRICE = 50_000  # micro-lamports per CU
+OPS_TRANSFER_CU = 1_000
+MEMO_CU_PER_BYTE, MEMO_CU_BASE = 400, 3_000
+
+
+def _signed(tx: Transaction, cu_price: int, cu_limit: int, nsig: int = 1) -> SignedTx:
+    return SignedTx(str(tx.signatures[0]), base64.b64encode(bytes(tx)).decode(), max_fee_lamports(nsig, cu_price, cu_limit))
 
 
 def transfer_tx(src: Keypair, dst: Pubkey, lamports: int, blockhash: str) -> SignedTx:
-    ix = transfer(TransferParams(from_pubkey=src.pubkey(), to_pubkey=dst, lamports=lamports))
-    return _signed(Transaction([src], Message([ix], src.pubkey()), Hash.from_string(blockhash)))
+    ixs = [set_compute_unit_limit(OPS_TRANSFER_CU), set_compute_unit_price(OPS_CU_PRICE),
+           transfer(TransferParams(from_pubkey=src.pubkey(), to_pubkey=dst, lamports=lamports))]
+    return _signed(Transaction([src], Message(ixs, src.pubkey()), Hash.from_string(blockhash)), OPS_CU_PRICE, OPS_TRANSFER_CU)
 
 
 def memo_tx(payer: Keypair, text: str, blockhash: str) -> SignedTx:
-    ix = Instruction(Pubkey.from_string(MEMO_PROGRAM_ID), text.encode(), [])
-    return _signed(Transaction([payer], Message([ix], payer.pubkey()), Hash.from_string(blockhash)))
+    limit = MEMO_CU_BASE + MEMO_CU_PER_BYTE * len(text.encode())
+    ixs = [set_compute_unit_limit(limit), set_compute_unit_price(OPS_CU_PRICE),
+           Instruction(Pubkey.from_string(MEMO_PROGRAM_ID), text.encode(), [])]
+    return _signed(Transaction([payer], Message(ixs, payer.pubkey()), Hash.from_string(blockhash)), OPS_CU_PRICE, limit)
 
 
 def _confirm(read: Rpc, sigs: list[str], timeout_s: float = 60) -> dict:
@@ -92,14 +105,14 @@ def main_for(cmd: str, argv: list[str] | None = None) -> int:
             bals = read.call("getMultipleAccounts", [[str(p.pubkey()) for p in payers], {"encoding": "base64"}])["value"]
             for p, acc in zip(payers, bals):
                 have = (acc or {}).get("lamports", 0)
-                if have > BASE_FEE_PER_SIGNATURE:
-                    txs.append(transfer_tx(p, master.pubkey(), have - BASE_FEE_PER_SIGNATURE, bh))
+                if have > max_fee_lamports(1, OPS_CU_PRICE, OPS_TRANSFER_CU):
+                    txs.append(transfer_tx(p, master.pubkey(), have - max_fee_lamports(1, OPS_CU_PRICE, OPS_TRANSFER_CU), bh))
         elif cmd == "anchor":
             if len(a.sha256) != 64 or not a.label:
                 raise SystemExit("--sha256 (64 hex chars) and --label are required")
             txs.append(memo_tx(master, f"itb-anchor:{a.label}:{a.sha256}", bh))
         for i, t in enumerate(txs):
-            r = send_signed(send, ledger, [t], tag=f"{cmd}:{i}")
+            r = send_signed(send, ledger, [t], tag=f"{cmd}:{i}", max_retries=None)
             log.append({"signature": t.signature, **r})
             time.sleep(1.1)
         status = _confirm(read, [t.signature for t in txs]) if txs else {}

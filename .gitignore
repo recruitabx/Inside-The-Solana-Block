@@ -16,3 +16,4 @@ pycache/
 venv/
 tmp/
 .pytest_cache/
+*.egg-info/

@@ -6,7 +6,7 @@ Version 1.1, written 2026-10-30 before any live measurement (v1.0 was revised af
 
 For each selected validator: by what rule does it order transactions in its block, how strictly does the rule hold, and is there a rule at all. "No rule, it is noise" is an admissible answer.
 
-Mainnet only; slots at or above `MIN_SLOT = 459653008` (first block after Alpenglow, `docs/ALPENGLOW_BOUNDARY.md`); primary evidence is our own transactions, other transactions are supplementary; Jito bundles and tips are out of scope; total fee spend is capped at 0.05 SOL (50,000,000 lamports) by `HARD_SPEND_CEILING_LAMPORTS` in `src/itb/config.py`; live window 2026-11-01 to 2026-11-02, reserve 2026-11-03, resumable runs of at most 20 minutes, about 16 run-hours in total (the two low-window validators need 11 to 14 run-hours to reach their quotas).
+Mainnet only; slots at or above `MIN_SLOT = 459653008` (first block after Alpenglow, `docs/ALPENGLOW_BOUNDARY.md`); primary evidence is our own transactions, other transactions are supplementary; Jito bundles and tips are out of scope; total fee spend is capped at 0.05 SOL (50,000,000 lamports) by `HARD_SPEND_CEILING_LAMPORTS` in `src/itb/config.py`; live window from the target freeze and pilot on 2026-10-31 to 2026-11-02, reserve 2026-11-03, resumable runs of at most 20 minutes, about 16 run-hours in total (the two low-window validators need 11 to 14 run-hours to reach their quotas).
 
 ## 2. Mechanisms and hypotheses
 

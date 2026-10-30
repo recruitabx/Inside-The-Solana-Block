@@ -610,3 +610,5 @@
 {"kind": "release", "reason": "unknown to cluster 328 s after send (blockhash expired)", "sig": "627fyBEMb7BaXYhuomT8fwuqixDP3Hhw1MmRTXmj5p5qpw3JnUGY5zkiFjoFZ72Rerz2Gc3xia8C1HSir6fpkk95", "ts": 1793384134.3674526}
 {"actual_fee": 5001, "kind": "settle", "sig": "4WM3bvpxn4W3w4dXkrRgjMo3gELDASxe4fYAfY1U256mBzkvrYiFVm5vtGUyeEV9pmHsNcoAUkHViAEHh4Cx3S5u", "ts": 1793384134.3680415}
 {"actual_fee": 7330, "kind": "settle", "sig": "4C9xocQVX5pqpspPtCPEdmCpjZ83EymmSAk9gNUux84XuzZgKHUuUdCybS3yizhgKHpAhyciF2jebEGGiSxoxRh5", "ts": 1793384169.0975468}
+{"kind": "reserve", "max_fee": 7330, "sig": "YvTvfJiZLnM66MVTKZKwHSkNVr5AREa6sLkemqKyJ2oKRi6eCJrsfe4Kh8B4CoJxFNdKWGe1Bxr2b4FUmQibJgB", "tag": "anchor:20261030T181612Z-live-repilot-63306b", "ts": 1793384173.6638608}
+{"actual_fee": 7330, "kind": "settle", "sig": "YvTvfJiZLnM66MVTKZKwHSkNVr5AREa6sLkemqKyJ2oKRi6eCJrsfe4Kh8B4CoJxFNdKWGe1Bxr2b4FUmQibJgB", "ts": 1793384197.498561}

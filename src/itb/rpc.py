@@ -58,7 +58,7 @@ class TokenBucket:
 
 class Rpc:
     def __init__(self, url: str | None = None, *, env: str = "RPC_URL", timeout: float = 30.0,
-                 rate_per_s: float = 8.0, burst: float = 8.0, retries: int = 4):
+                 rate_per_s: float = 8.0, burst: float = 8.0, retries: int = 6):
         url = url or os.environ.get(env)
         if not url:
             raise SystemExit(f"environment variable {env} is not set (see .env.example)")
@@ -83,7 +83,7 @@ class Rpc:
                     return json.loads(r.read())
             except urllib.error.HTTPError as e:
                 status = e.code
-                if status in (429, 500, 502, 503, 504) and attempt < self.retries:
+                if status in (408, 413, 425, 429, 500, 502, 503, 504) and attempt < self.retries:
                     time.sleep(delay); delay *= 2
                     continue
                 raise TransportError(f"HTTP {status} from {self.host}") from None

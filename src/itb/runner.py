@@ -194,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
         payers = derive_payers(master, n_payers)
     else:
         payers = [Keypair() for _ in range(n_payers)]
-    pool = PayerPool(payers, read, dry=not live)
+    pool = PayerPool(payers, read, expiry_s=float(plan.get("payer_lock_s", 35.0)), dry=not live)
 
     snap = client_snapshot(read)
     if snap["slot"] < MIN_SLOT:

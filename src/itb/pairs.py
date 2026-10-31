@@ -113,7 +113,26 @@ def probe_rows(raw_dir: str = "data/raw") -> list[dict]:
             row["first_landed"] = order[0]
             row["index_gap"] = abs(txs[0]["tx_index"] - txs[1]["tx_index"]) if len(txs) == 2 else None
         rows.append(row)
+    flag_payer_conflicts(rows)
     return rows
+
+
+def flag_payer_conflicts(rows: list[dict]) -> None:
+    """Amendment 5: a payer may be reused 12 s after its previous transaction if that one has no status yet,
+    so an old transaction of one of a pair's payers could land in the same block as the pair. Such pairs get
+    payer_conflict = True and leave the primary cell (the pair's two transactions would not be the only
+    writers of their payer accounts in that block)."""
+    by_slot: dict[int, list[tuple[str, str]]] = {}
+    for r in rows:
+        for t in r["txs"]:
+            if t.get("landed") and t.get("slot") is not None:
+                by_slot.setdefault(int(t["slot"]), []).append((r["probe_id"], t.get("payer")))
+    for r in rows:
+        conflict = False
+        if r.get("same_slot"):
+            payers = {t.get("payer") for t in r["txs"]}
+            conflict = any(pid != r["probe_id"] and payer in payers for pid, payer in by_slot.get(int(r["slot"]), []))
+        r["payer_conflict"] = conflict
 
 
 def load_block_summaries(raw_dir: str = "data/raw") -> dict[int, dict]:

@@ -79,7 +79,7 @@ def high_index(row: dict) -> int | None:
 def in_cell(row: dict, arm: str) -> bool:
     """Both transactions in one block produced by the target, in the targeted window, clientId unchanged."""
     return (row.get("arm") == arm and row["n_tx"] == 2 and row["same_slot"] and row.get("target_hit") is True
-            and row.get("in_window") is True and not row["claim_changed_in_run"])
+            and row.get("in_window") is True and not row["claim_changed_in_run"] and not row.get("payer_conflict"))
 
 
 def outcomes(row: dict) -> dict:
@@ -299,7 +299,7 @@ def analyze_rows(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
         urows = by_unit[key]
         prow = [r for r in urows if r.get("arm") == arm_p]
         cell = [r for r in prow if in_cell(r, arm_p)]
-        excl = {"claim_changed_in_run": 0, "none_landed": 0, "one_landed": 0, "different_slots": 0,
+        excl = {"claim_changed_in_run": 0, "payer_conflict": 0, "none_landed": 0, "one_landed": 0, "different_slots": 0,
                 "other_producer": 0, "target_outside_window": 0, "primary": len(cell), "primary_with_execution_error": 0,
                 "claim_end_unknown": 0}
         for r in prow:
@@ -316,6 +316,8 @@ def analyze_rows(rows: list[dict], blocks: dict[int, dict], cfg: dict) -> dict:
                 excl["other_producer"] += 1
             elif not r["in_window"]:
                 excl["target_outside_window"] += 1
+            elif r.get("payer_conflict"):
+                excl["payer_conflict"] += 1
             excl["claim_end_unknown"] += int(r["claim_end_unknown"])
         for r in cell:
             excl["primary_with_execution_error"] += int(any(t.get("err") or t.get("status_err") for t in r["txs"]))

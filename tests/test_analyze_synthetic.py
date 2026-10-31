@@ -299,3 +299,12 @@ def test_fifo_clause_not_hidden_by_pooling():
     assert fifo_excluded(pooled_null, {"n": 7, "k": 7}, cfg) is False      # own client 7/7 rejects 0.5 (p = 0.016)
     assert fifo_excluded({"n": 112, "k": 90, "ci90": [0.74, 0.86]}, {"n": 14, "k": 7}, cfg) is False
     assert fifo_excluded({"n": 0}, None, cfg) is False
+
+
+def test_payer_conflict_flag():
+    from itb.pairs import flag_payer_conflicts
+    rows = [{"probe_id": "a", "same_slot": True, "slot": 10, "txs": [{"landed": True, "slot": 10, "payer": "P1"}, {"landed": True, "slot": 10, "payer": "P2"}]},
+            {"probe_id": "b", "same_slot": False, "txs": [{"landed": True, "slot": 10, "payer": "P1"}, {"landed": False, "slot": None, "payer": "P3"}]},
+            {"probe_id": "c", "same_slot": True, "slot": 11, "txs": [{"landed": True, "slot": 11, "payer": "P4"}, {"landed": True, "slot": 11, "payer": "P5"}]}]
+    flag_payer_conflicts(rows)
+    assert rows[0]["payer_conflict"] is True and rows[2]["payer_conflict"] is False

@@ -187,5 +187,6 @@
    "Agave-1": 114.1635
   },
   "roles_below_100_usable": []
- }
+ },
+ "payer_lock_s": 12.0
 }

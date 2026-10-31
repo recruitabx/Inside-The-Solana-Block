@@ -18,9 +18,13 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261030T181612Z-live-repilot-63306b | repilot | live | 2026-10-30T18:16:13Z | 2026-10-30T18:16:25Z | 9c3cc4c61b... | 0 | 0 | 0 |  | 0 | 0 | YvTvfJiZLnM6... | n/a | ended with KeyboardInterrupt |
 | **TOTAL repilot** | repilot |  | 2026-10-30T17:34:56Z | 2026-10-30T18:16:25Z |  | **89** | **178** | **138** | **77.5%** | **27** | **1075068** |  | yes | 3 runs |
 | 20261031T083802Z-live-2661db | main | unknown | 2026-10-31T08:38:02Z |  |  | 0 | 0 | 0 |  | 0 | 0 |  | n/a | no run_start record (empty or still starting) |
-| 20261031T084501Z-live-0dbdde | main | live | 2026-10-31T08:45:02Z |  | d088e2fbb4... | 8 | 16 | 0 | 0.0% | 0 | 0 | 3Xxkc1Yg9yhP... | no | no run_end record (running, or killed) |
-| **TOTAL main** | main |  | 2026-10-31T08:38:02Z |  |  | **8** | **16** | **0** | **0.0%** | **0** | **0** |  | no | 2 runs |
-| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-30T18:16:25Z |  | **155** | **310** | **220** | **71.0%** | **44** | **1710609** |  | partial | 7 runs |
+| 20261031T084501Z-live-0dbdde | main | live | 2026-10-31T08:45:02Z | 2026-10-31T09:01:42Z | d088e2fbb4... | 48 | 96 | 51 | 53.1% | 10 | 381528 | 3Xxkc1Yg9yhP... | yes |  |
+| 20261031T091005Z-live-1545ab | main | live | 2026-10-31T09:10:06Z | 2026-10-31T09:27:54Z | cfa4363eb6... | 55 | 110 | 65 | 59.1% | 17 | 501033 | 46P39FrB8Peb... | yes |  |
+| 20261031T093617Z-live-bf5cc3 | main | live | 2026-10-31T09:36:18Z | 2026-10-31T09:53:31Z | 2068b11508... | 62 | 124 | 68 | 54.8% | 9 | 505038 | 4pd4hgdpBU3R... | yes |  |
+| 20261031T100908Z-live-ad1524 | main | live | 2026-10-31T10:09:08Z | 2026-10-31T10:27:08Z | dae309c042... | 54 | 108 | 59 | 54.6% | 11 | 443532 | 3VJhHMSX1U62... | yes |  |
+| 20261031T103531Z-live-471f48 | main | live | 2026-10-31T10:35:32Z |  | d693d6f298... | 13 | 26 | 12 | 46.2% | 1 | 98505 | 4xGsQp5bgfkk... | yes | no run_end record (running, or killed) |
+| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T10:27:08Z |  | **232** | **464** | **255** | **55.0%** | **48** | **1929636** |  | yes | 6 runs |
+| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T10:27:08Z |  | **379** | **758** | **475** | **62.7%** | **92** | **3640245** |  | yes | 11 runs |
 
 ## Run anchors (memo transaction of each run)
 
@@ -31,18 +35,22 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261030T173455Z-live-repilot-dd99a1 | `2JBALi5WETujEJyy63GMSreQ4YgCDiTcGfZwWujoDKqeM1ko3hjm7iJ94Z6c1CwpBxAzLDeUmp8hX9EkSSAsuL8i` | 7330 |
 | 20261030T175239Z-live-repilot-b25293 | `4C9xocQVX5pqpspPtCPEdmCpjZ83EymmSAk9gNUux84XuzZgKHUuUdCybS3yizhgKHpAhyciF2jebEGGiSxoxRh5` | 7330 |
 | 20261030T181612Z-live-repilot-63306b | `YvTvfJiZLnM66MVTKZKwHSkNVr5AREa6sLkemqKyJ2oKRi6eCJrsfe4Kh8B4CoJxFNdKWGe1Bxr2b4FUmQibJgB` | 7330 |
-| 20261031T084501Z-live-0dbdde | `3Xxkc1Yg9yhPidCw4ekob3aD7arn1SKxnmNQ9sj34RXUJb7vP9swq67LLGRYaBBnKLgC4sWt3QFBqEicjfva6bDK` |  |
+| 20261031T084501Z-live-0dbdde | `3Xxkc1Yg9yhPidCw4ekob3aD7arn1SKxnmNQ9sj34RXUJb7vP9swq67LLGRYaBBnKLgC4sWt3QFBqEicjfva6bDK` | 7170 |
+| 20261031T091005Z-live-1545ab | `46P39FrB8PebGeLiMHKmYdhT24s4Nve95UVSoLGNFfMjRvduuVCc7bVywkkdHhqTxmcEWkxGicvtxzryEuEXWwBh` | 7170 |
+| 20261031T093617Z-live-bf5cc3 | `4pd4hgdpBU3RDziXkmsUaYZYkAUrva8x5oaUoDPSwnfPfGRR3RR6Wtxnq157zRo9zEgRqtroRsKQp6v6W5qa1XZ6` | 7170 |
+| 20261031T100908Z-live-ad1524 | `3VJhHMSX1U62ok86ExeJZ8jR8BdSBdESnzCtuCaWJbfHeYR4LdiSuwDxivDzRmny2nJUPQXkLSNH1cuRhqUrfUdv` | 7170 |
+| 20261031T103531Z-live-471f48 | `4xGsQp5bgfkk8DDMwQs4qQg3Zvsi8x5j8E2vSLy7nq6161DpA7R1DkHEmumVFHszL5FdHpQ9ojzABehSsFCNrmBz` | 7170 |
 
 ## Main phase by role
 
 | role | probes | usable | quota (data/plan.json) |
 |---|---|---|---|
-| HarmonicAgave-1 | 1 | 0 | 333 |
-| AgaveBam-1 | 0 | 0 | 333 |
-| JitoLabs-1 | 2 | 0 | 333 |
-| HarmonicFiredancer-1 | 0 | 0 | 333 |
-| Firedancer-1 | 3 | 0 | 333 |
-| FireBAM-1 | 0 | 0 | 333 |
-| Rakurai-1 | 2 | 0 | 330 |
-| Agave-1 | 0 | 0 | 330 |
-| **total** | **8** | **0** | **2658** |
+| HarmonicAgave-1 | 58 | 5 | 333 |
+| AgaveBam-1 | 46 | 13 | 333 |
+| JitoLabs-1 | 42 | 17 | 333 |
+| HarmonicFiredancer-1 | 28 | 2 | 333 |
+| Firedancer-1 | 29 | 1 | 333 |
+| FireBAM-1 | 16 | 5 | 333 |
+| Rakurai-1 | 8 | 3 | 330 |
+| Agave-1 | 5 | 2 | 330 |
+| **total** | **232** | **48** | **2658** |

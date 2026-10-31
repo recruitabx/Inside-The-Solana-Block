@@ -453,7 +453,7 @@ def _flat(est: dict) -> list:
     return [est.get("k"), est.get("p"), ci[0], ci[1], est.get("p_value"), est.get("p_holm")]
 
 
-def write_outputs(res: dict, out_dir: str, meta: dict) -> None:
+def write_outputs(res: dict, out_dir: str, meta: dict, figure: bool = True) -> None:
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "verdicts.json"), "w") as f:
         json.dump({**meta, **res}, f, indent=1, sort_keys=True, default=str)
@@ -496,9 +496,13 @@ def write_outputs(res: dict, out_dir: str, meta: dict) -> None:
                        + [lg.get("se", {}).get(t) for t in LOGIT_TERMS] + [lg.get("converged"), lg.get("separation"), lg.get("error")])
     with open(os.path.join(out_dir, "secondary.json"), "w") as f:
         json.dump(res["secondary"], f, indent=1, sort_keys=True, default=str)
+    if figure:    # the forest plot of p and q, from the verdicts.json just written
+        from .figures import forest_plot
+        with open(os.path.join(out_dir, "verdicts.json")) as f:
+            forest_plot(json.load(f), os.path.join(out_dir, "figure_pq.png"))
 
 
-def analyze(raw_dir: str, out_dir: str, cfg: dict, final: bool = False) -> dict:
+def analyze(raw_dir: str, out_dir: str, cfg: dict, final: bool = False, figure: bool = True) -> dict:
     all_rows = probe_rows(raw_dir)
     rows, refused = select_rows(all_rows, final)
     res = analyze_rows(rows, load_block_summaries(raw_dir), cfg)
@@ -506,7 +510,7 @@ def analyze(raw_dir: str, out_dir: str, cfg: dict, final: bool = False) -> dict:
             "mode": "final: phase main only, real data" if final else "synthetic data only (self-test); not confirmatory",
             "n_rows_read": len(all_rows), "n_rows_analysed": len(rows),
             ("n_rows_excluded" if final else "n_rows_refused"): refused}
-    write_outputs(res, out_dir, meta)
+    write_outputs(res, out_dir, meta, figure=figure)
     return {"final": final, "n_rows": len(all_rows), "n_rows_analysed": len(rows),
             ("n_rows_excluded" if final else "n_rows_refused"): refused, "units": len(res["units"]),
             "claim_end_unknown_probes": res["claim_end_unknown"]["total_all_arms"],

@@ -23,6 +23,12 @@ services:
   audit:
     <<: *base
     command: ["audit"]
+  runs:   # operational table of all runs (probes, landings, usable pairs, fees; no ordering outcomes) -> ./results/runs.md and runs.csv
+    <<: *base
+    command: ["runs"]
+    volumes:
+      - ./data:/app/data:ro
+      - ./results:/app/results
   snapshot:
     <<: *base
     command: ["snapshot"]

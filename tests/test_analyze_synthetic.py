@@ -17,7 +17,7 @@ def _run(tmp_path, validators, seed=0, final=False, mutate=None):
     write_synthetic(str(raw), validators, seed=seed)
     if mutate:
         mutate(raw)
-    summary = analyze(str(raw), str(tmp_path / f"out{seed}"), dict(DEFAULTS), final=final)
+    summary = analyze(str(raw), str(tmp_path / f"out{seed}"), dict(DEFAULTS), final=final, figure=False)
     doc = json.load(open(tmp_path / f"out{seed}" / "verdicts.json"))
     return {u["identity"]: u for u in doc["units"]}, doc, summary
 

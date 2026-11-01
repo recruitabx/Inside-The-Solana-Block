@@ -1,9 +1,9 @@
 target_role,identity,client_id,sent_first_landed_first,sent_first_landed_second,sent_second_landed_first,sent_second_landed_second
-Agave-1,7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE,Agave,5,1,2,6
-AgaveBam-1,DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy,AgaveBam,51,6,37,20
-FireBAM-1,9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP,FireBAM,20,3,21,10
-Firedancer-1,9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY,Firedancer,4,0,9,1
-HarmonicAgave-1,Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk,HarmonicAgave,23,0,17,5
+Agave-1,7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE,Agave,10,2,2,6
+AgaveBam-1,DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy,AgaveBam,92,10,66,28
+FireBAM-1,9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP,FireBAM,35,6,34,16
+Firedancer-1,9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY,Firedancer,6,0,12,1
+HarmonicAgave-1,Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk,HarmonicAgave,44,0,29,5
 HarmonicFiredancer-1,JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b,HarmonicFiredancer,14,0,10,3
-JitoLabs-1,E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL,JitoLabs,42,7,15,27
-Rakurai-1,ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY,Rakurai,5,1,4,2
+JitoLabs-1,E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL,JitoLabs,69,11,20,38
+Rakurai-1,ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY,Rakurai,10,2,6,8

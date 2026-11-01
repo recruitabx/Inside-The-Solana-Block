@@ -1,0 +1,202 @@
+{
+ "seed": 20261031,
+ "targets": [
+  {
+   "role": "HarmonicAgave-1",
+   "clientId": "HarmonicAgave",
+   "version": "4.4.0",
+   "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+   "candidates": [
+    "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
+    "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+    "FBKFWadXZJahGtFitAsBvbqh5968gLY7dMBBJUoUjeNi",
+    "BtsmiEEvnSuUnKxqXj2PZRYpPJAc7C34mGz8gtJ1DAaH"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 900
+  },
+  {
+   "role": "AgaveBam-1",
+   "clientId": "AgaveBam",
+   "version": "4.4.0-rc.1",
+   "identity": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+   "candidates": [
+    "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
+    "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+    "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
+    "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 900
+  },
+  {
+   "role": "JitoLabs-1",
+   "clientId": "JitoLabs",
+   "version": "4.4.0",
+   "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+   "candidates": [
+    "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+    "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
+    "5pPRHniefFjkiaArbGX3Y8NUysJmQ9tMZg3FrFGwHzSm",
+    "GnC339vkyXRm1jRX69dt9mapPPu2LbzXfSDoxc91qta6"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 900
+  },
+  {
+   "role": "HarmonicFiredancer-1",
+   "clientId": "HarmonicFiredancer",
+   "version": "26.10.5",
+   "identity": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+   "candidates": [
+    "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+    "CQdLgwkmmHF8DE6t4sguXMTXWDxq3oLh3xfekDTmow12"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 333
+  },
+  {
+   "role": "Firedancer-1",
+   "clientId": "Firedancer",
+   "version": "26.10.5",
+   "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+   "candidates": [
+    "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
+    "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
+    "FBbqKvwLfKGZrKrfSbPJz4ymQ7zMarhRyZtu1RBkSe89",
+    "DNVZMSqeRH18Xa4MCTrb1MndNf3Npg4MEwqswo23eWkf"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 333
+  },
+  {
+   "role": "FireBAM-1",
+   "clientId": "FireBAM",
+   "version": "26.10.5",
+   "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
+   "candidates": [
+    "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 333
+  },
+  {
+   "role": "Rakurai-1",
+   "clientId": "Rakurai",
+   "version": "4.3.2",
+   "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+   "candidates": [
+    "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 330
+  },
+  {
+   "role": "Agave-1",
+   "clientId": "Agave",
+   "version": "4.3.2",
+   "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+   "candidates": [
+    "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE"
+   ],
+   "shares": {
+    "P": 0.85,
+    "E": 0.05,
+    "D": 0.05,
+    "S": 0.05
+   },
+   "quota_per_target": 330
+  }
+ ],
+ "n_payers": 6,
+ "price_high": 5500000,
+ "price_low": 1000,
+ "cu_limit": 1000,
+ "loaded_limit": 4096,
+ "gap_ms": 200,
+ "tau0_grid_ms": [
+  -270,
+  -170,
+  -70
+ ],
+ "tau0_ms": -270,
+ "pilot_per_target": 12,
+ "pilot_s_per_target": 2,
+ "min_request_interval_s": 2.0,
+ "send_rate_per_s": 1.0,
+ "send_burst": 2,
+ "max_retries": 2,
+ "observe_slot_after_send": true,
+ "u_pilot": 0.407,
+ "shares_all_85": true,
+ "planned_fees": {
+  "u_used": 0.407,
+  "fee_room": 43763840,
+  "pilot_spent": 1784529,
+  "main_run_fees": 40470841,
+  "operations": 500000,
+  "planned_fee_total": 42755370,
+  "planned_fee_total_unscaled": 42755370,
+  "scaled_to_room": false,
+  "scale_factor": 1.0,
+  "projected_usable": {
+   "HarmonicAgave-1": 115.20134999999999,
+   "AgaveBam-1": 115.20134999999999,
+   "JitoLabs-1": 115.20134999999999,
+   "HarmonicFiredancer-1": 115.20134999999999,
+   "Firedancer-1": 115.20134999999999,
+   "FireBAM-1": 115.20134999999999,
+   "Rakurai-1": 114.1635,
+   "Agave-1": 114.1635
+  },
+  "roles_below_100_usable": []
+ },
+ "payer_lock_s": 12.0,
+ "amendment6": {
+  "extended_roles": [
+   "AgaveBam-1",
+   "JitoLabs-1",
+   "HarmonicAgave-1"
+  ],
+  "cap": 900,
+  "stop_at_usable_armP": 115,
+  "deadline": "2026-11-02T08:00:00Z"
+ }
+}

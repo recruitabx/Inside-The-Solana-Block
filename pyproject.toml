@@ -1,0 +1,24 @@
+[project]
+name = "itb"
+version = "0.1.0"
+description = "Inside the Block: measuring how Solana mainnet leaders order transactions"
+requires-python = ">=3.11"
+dependencies = [
+  "solders==0.29.0",
+  "numpy==2.5.4",
+  "scipy==1.18.1",
+  "pandas==3.1.0",
+  "matplotlib==3.11.2",
+]
+[project.optional-dependencies]
+test = ["pytest==9.2.0"]
+[project.scripts]
+itb = "itb.cli:main"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

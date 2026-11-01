@@ -1,0 +1,6 @@
+PASS no secret-like strings in tracked files
+PASS no secret-like strings in history (files and messages)
+PASS no service or key files in history
+PASS no em-dash characters
+PASS relative Markdown links resolve
+PREPUBLISH: PASS

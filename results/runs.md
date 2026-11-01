@@ -38,7 +38,7 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T172415Z-live-dbd7db | main | live | 2026-10-31T17:24:16Z | 2026-10-31T17:42:11Z | aeefb0d6fd... | 79 | 158 | 93 | 58.9% | 10 | 718047 | 4LrvrryeuPq4... | yes |  |
 | 20261031T175034Z-live-ea2eeb | main | live | 2026-10-31T17:50:35Z | 2026-10-31T18:08:37Z | 6f561c6c8b... | 92 | 184 | 125 | 67.9% | 16 | 971562 | 21pr6NBcdrtK... | yes |  |
 | 20261031T181700Z-live-75730f | main | live | 2026-10-31T18:17:01Z | 2026-10-31T18:34:43Z | 9b0ccd485f... | 71 | 142 | 87 | 61.3% | 15 | 660546 | FA2m9AYf6ZUk... | yes |  |
-| 20261031T184307Z-live-8c3f95 | main | live | 2026-10-31T18:43:08Z | 2026-10-31T19:01:00Z | 3491bb83e0... | 47 | 94 | 0 | 0.0% | 0 | 0 | 4wSLYvBtmzVD... | no |  |
+| 20261031T184307Z-live-8c3f95 | main | live | 2026-10-31T18:43:08Z | 2026-10-31T19:01:00Z | 3491bb83e0... | 47 | 94 | 54 | 57.5% | 12 | 407529 | 4wSLYvBtmzVD... | yes |  |
 | 20261031T190923Z-live-5626ab | main | live | 2026-10-31T19:09:24Z | 2026-10-31T19:27:04Z | 611f26400f... | 51 | 102 | 0 | 0.0% | 0 | 0 | 2EviNfd2p4HL... | no |  |
 | 20261031T193527Z-live-37d80d | main | live | 2026-10-31T19:35:28Z | 2026-10-31T19:53:24Z | 976733a4e7... | 43 | 86 | 0 | 0.0% | 0 | 0 | 5zzCDHZQFgLP... | no |  |
 | 20261031T200225Z-live-740532 | main | live | 2026-10-31T20:02:26Z | 2026-10-31T20:20:28Z | 8c391f7263... | 118 | 236 | 0 | 0.0% | 0 | 0 | NiNiWRBmvTd6... | no |  |
@@ -47,8 +47,8 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T212127Z-live-51d947 | main | live | 2026-10-31T21:21:28Z | 2026-10-31T21:39:12Z | b0d55ecf82... | 114 | 228 | 0 | 0.0% | 0 | 0 | CvhehWTnG4TC... | no |  |
 | 20261031T214735Z-live-0fdc2c | main | live | 2026-10-31T21:47:36Z | 2026-10-31T22:05:33Z | a7b9d70749... | 114 | 228 | 0 | 0.0% | 0 | 0 | 2rUT44kt1G2E... | no |  |
 | 20261031T221356Z-live-70dfcc | main | live | 2026-10-31T22:13:57Z | 2026-10-31T22:31:58Z | 6699010a1a... | 115 | 230 | 0 | 0.0% | 0 | 0 | 4AVitg6qvtiN... | no |  |
-| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T22:31:58Z |  | **2649** | **5298** | **2407** | **45.4%** | **439** | **18350259** |  | partial | 30 runs |
-| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T22:31:58Z |  | **2796** | **5592** | **2627** | **47.0%** | **483** | **20060868** |  | partial | 35 runs |
+| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T22:31:58Z |  | **2649** | **5298** | **2461** | **46.5%** | **451** | **18757788** |  | partial | 30 runs |
+| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T22:31:58Z |  | **2796** | **5592** | **2681** | **47.9%** | **495** | **20468397** |  | partial | 35 runs |
 
 ## Run anchors (memo transaction of each run)
 
@@ -98,7 +98,7 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | JitoLabs-1 | 471 | 102 | 900 |
 | HarmonicFiredancer-1 | 333 | 31 | 333 |
 | Firedancer-1 | 333 | 16 | 333 |
-| FireBAM-1 | 227 | 60 | 333 |
-| Rakurai-1 | 124 | 14 | 330 |
-| Agave-1 | 105 | 16 | 330 |
-| **total** | **2649** | **439** | **4359** |
+| FireBAM-1 | 227 | 69 | 333 |
+| Rakurai-1 | 124 | 15 | 330 |
+| Agave-1 | 105 | 18 | 330 |
+| **total** | **2649** | **451** | **4359** |

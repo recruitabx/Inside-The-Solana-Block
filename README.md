@@ -4,15 +4,22 @@
 
 **Method in one paragraph.** We send pairs of our own transactions into each target's leader window. The two transactions of a pair differ only in fee (3.2x reward per cost unit), both write one shared account so the scheduler must serialize them, and which one is high-fee and which one goes first in the request are randomized independently. From each block (`getBlock`) we read which came first, giving two numbers per validator: p (share of pairs where the higher-fee transaction came first) and q (share where the first-sent came first), with exact confidence intervals and verdicts fixed in advance in [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md). All measurements are after the Alpenglow upgrade (slot 459653008 and later, [docs/ALPENGLOW_BOUNDARY.md](docs/ALPENGLOW_BOUNDARY.md)).
 
-**Status.** Preregistered; live measurement 2026-10-31 to 2026-11-02. Results, the verdict table and the report will appear here and in `REPORT.md`.
+**Result.** For all eight leaders the point estimate of p, the share of conflicting pairs in which the higher-fee transaction landed first, was above one half (0.60 to 0.95), but in no validator was this strict: the position of the transaction in our request also mattered (share q from 0.37 to 0.80). Two validators reached the preregistered sample size and both get the verdict "mixed": fee and request position each decide part of the pairs. In pairs sent before the leader's window that landed in its first slot (our co-presence subgroup, 110 pairs over all validators), the higher fee came first in 88% [81%, 94%]; when the two were sent 200 ms apart, the first-sent always came first (12 of 12). The main limitation: we could only send through one RPC provider (no direct QUIC), so arrival order at the leader is not observed, and six of eight validators stayed below the preregistered N of 100 usable pairs because many pairs did not land together in the target's own window.
 
-## Verify our data in 60 seconds
+| Validator (role) | Client, version (gossip, 2026-10-31) | N usable | p: higher fee first [95% CI] | q: first in request first [95% CI] | Preregistered verdict |
+|---|---|---|---|---|---|
+| AgaveBam-1 `DRpbCB..` | AgaveBam 4.4.0-rc.1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | mixed: fee rule partial, request-position rule partial |
+| JitoLabs-1 `E1r4Ps..` | JitoLabs 4.4.0 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial, request-position rule partial |
+| FireBAM-1 `9jxgos..` | FireBAM 26.10.5 | 91 | 0.76 [0.66, 0.84] | 0.56 [0.45, 0.66] | insufficient data (n < 100) |
+| HarmonicAgave-1 `Fd7btg..` | HarmonicAgave 4.4.0 | 78 | 0.94 [0.86, 0.98] | 0.63 [0.51, 0.74] | insufficient data (n < 100) |
+| HarmonicFiredancer-1 `JUPiTE..` | HarmonicFiredancer 26.10.5 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data (n < 100) |
+| Rakurai-1 `ana2y2..` | Rakurai 4.3.2 | 26 | 0.62 [0.41, 0.80] | 0.69 [0.48, 0.86] | insufficient data (n < 100) |
+| Agave-1 `7QQGNm..` | Agave 4.3.2 | 20 | 0.60 [0.36, 0.81] | 0.80 [0.56, 0.94] | insufficient data (n < 100) |
+| Firedancer-1 `9eGrDo..` | Firedancer 26.10.5 | 19 | 0.95 [0.74, 1.00] | 0.37 [0.16, 0.62] | insufficient data (n < 100) |
 
-```bash
-docker compose run --rm verify
-```
+Source: `results/verdicts.csv` (built by `docker compose run --rm analyze` from `data/raw/`; full identities, Holm-adjusted p-values and the 2 x 2 tables are there). Measurements: 2026-10-31 08:38 to 22:31 UTC, all after the Alpenglow upgrade; per-run dates in [results/runs.md](results/runs.md); full write-up in [REPORT.md](REPORT.md).
 
-It picks a random sample of our transactions from `data/raw/`, fetches each block from the public mainnet RPC (no API key needed) and prints PASS or FAIL per signature: is the signature in that slot, at the recorded index, in a block produced by the recorded leader (the pubkey of the block's `Fee` reward). `docker compose run --rm analyze` rebuilds every table and verdict from the raw files.
+![p and q per validator](results/figure_pq.png)
 
 ## Design at a glance
 
@@ -62,6 +69,15 @@ docker compose run --rm audit     # every fee-paying transaction of our accounts
 ```
 
 Live sending needs all of: the `live` service, `ITB_LIVE=1`, a wallet file mounted read-only (`ITB_WALLET_FILE`), and room under `ITB_SPEND_CAP_LAMPORTS` (at most 50,000,000). Every transaction's worst-case fee is written to `data/ledger/spend.jsonl` before it is sent.
+
+## Rubric map
+
+| Judging criterion (weight) | Where it is addressed |
+|---|---|
+| Design validity (35%) | [docs/DESIGN.md](docs/DESIGN.md), the Considerations table above, [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md) with its amendments, [docs/CALIBRATION.md](docs/CALIBRATION.md), [docs/research/](docs/research/) |
+| Verifiability and reproducibility (25%) | `docker compose run --rm verify` (public RPC, no key), raw data in `data/` ([DATA.md](DATA.md)), three mainnet anchors, `docker compose run --rm analyze` |
+| Analysis quality (25%) | [REPORT.md](REPORT.md): exact intervals, preregistered verdicts, equal-fee control, co-presence subgroup, arrival arm, what went wrong |
+| Engineering (15%) | dry-run default, spend ledger and single send function (`src/itb/spend.py`, `src/itb/send.py`), `itb audit`, tests (`docker compose run --rm test`), Docker Compose services |
 
 ## Repository map
 

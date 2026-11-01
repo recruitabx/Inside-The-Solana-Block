@@ -39,16 +39,16 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T175034Z-live-ea2eeb | main | live | 2026-10-31T17:50:35Z | 2026-10-31T18:08:37Z | 6f561c6c8b... | 92 | 184 | 125 | 67.9% | 16 | 971562 | 21pr6NBcdrtK... | yes |  |
 | 20261031T181700Z-live-75730f | main | live | 2026-10-31T18:17:01Z | 2026-10-31T18:34:43Z | 9b0ccd485f... | 71 | 142 | 87 | 61.3% | 15 | 660546 | FA2m9AYf6ZUk... | yes |  |
 | 20261031T184307Z-live-8c3f95 | main | live | 2026-10-31T18:43:08Z | 2026-10-31T19:01:00Z | 3491bb83e0... | 47 | 94 | 54 | 57.5% | 12 | 407529 | 4wSLYvBtmzVD... | yes |  |
-| 20261031T190923Z-live-5626ab | main | live | 2026-10-31T19:09:24Z | 2026-10-31T19:27:04Z | 611f26400f... | 51 | 102 | 0 | 0.0% | 0 | 0 | 2EviNfd2p4HL... | no |  |
-| 20261031T193527Z-live-37d80d | main | live | 2026-10-31T19:35:28Z | 2026-10-31T19:53:24Z | 976733a4e7... | 43 | 86 | 0 | 0.0% | 0 | 0 | 5zzCDHZQFgLP... | no |  |
-| 20261031T200225Z-live-740532 | main | live | 2026-10-31T20:02:26Z | 2026-10-31T20:20:28Z | 8c391f7263... | 118 | 236 | 0 | 0.0% | 0 | 0 | NiNiWRBmvTd6... | no |  |
-| 20261031T202851Z-live-88df58 | main | live | 2026-10-31T20:28:52Z | 2026-10-31T20:46:48Z | 11cdef1809... | 99 | 198 | 0 | 0.0% | 0 | 0 | 4Dxw2HKT9YSW... | no |  |
-| 20261031T205511Z-live-022c4c | main | live | 2026-10-31T20:55:12Z | 2026-10-31T21:13:04Z | df41c36ec8... | 106 | 212 | 0 | 0.0% | 0 | 0 | 4dgd8JyHJgW1... | no |  |
-| 20261031T212127Z-live-51d947 | main | live | 2026-10-31T21:21:28Z | 2026-10-31T21:39:12Z | b0d55ecf82... | 114 | 228 | 0 | 0.0% | 0 | 0 | CvhehWTnG4TC... | no |  |
-| 20261031T214735Z-live-0fdc2c | main | live | 2026-10-31T21:47:36Z | 2026-10-31T22:05:33Z | a7b9d70749... | 114 | 228 | 0 | 0.0% | 0 | 0 | 2rUT44kt1G2E... | no |  |
-| 20261031T221356Z-live-70dfcc | main | live | 2026-10-31T22:13:57Z | 2026-10-31T22:31:58Z | 6699010a1a... | 115 | 230 | 0 | 0.0% | 0 | 0 | 4AVitg6qvtiN... | no |  |
-| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T22:31:58Z |  | **2649** | **5298** | **2461** | **46.5%** | **451** | **18757788** |  | partial | 30 runs |
-| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T22:31:58Z |  | **2796** | **5592** | **2681** | **47.9%** | **495** | **20468397** |  | partial | 35 runs |
+| 20261031T190923Z-live-5626ab | main | live | 2026-10-31T19:09:24Z | 2026-10-31T19:27:04Z | 611f26400f... | 51 | 102 | 0 | 0.0% | 0 | 480033 | 2EviNfd2p4HL... | no |  |
+| 20261031T193527Z-live-37d80d | main | live | 2026-10-31T19:35:28Z | 2026-10-31T19:53:24Z | 976733a4e7... | 43 | 86 | 0 | 0.0% | 0 | 480033 | 5zzCDHZQFgLP... | no |  |
+| 20261031T200225Z-live-740532 | main | live | 2026-10-31T20:02:26Z | 2026-10-31T20:20:28Z | 8c391f7263... | 118 | 236 | 0 | 0.0% | 0 | 1415094 | NiNiWRBmvTd6... | no |  |
+| 20261031T202851Z-live-88df58 | main | live | 2026-10-31T20:28:52Z | 2026-10-31T20:46:48Z | 11cdef1809... | 99 | 198 | 0 | 0.0% | 0 | 1083576 | 4Dxw2HKT9YSW... | no |  |
+| 20261031T205511Z-live-022c4c | main | live | 2026-10-31T20:55:12Z | 2026-10-31T21:13:04Z | df41c36ec8... | 106 | 212 | 0 | 0.0% | 0 | 1266081 | 4dgd8JyHJgW1... | no |  |
+| 20261031T212127Z-live-51d947 | main | live | 2026-10-31T21:21:28Z | 2026-10-31T21:39:12Z | b0d55ecf82... | 114 | 228 | 0 | 0.0% | 0 | 1356099 | CvhehWTnG4TC... | no |  |
+| 20261031T214735Z-live-0fdc2c | main | live | 2026-10-31T21:47:36Z | 2026-10-31T22:05:33Z | a7b9d70749... | 114 | 228 | 0 | 0.0% | 0 | 1356099 | 2rUT44kt1G2E... | no |  |
+| 20261031T221356Z-live-70dfcc | main | live | 2026-10-31T22:13:57Z | 2026-10-31T22:31:58Z | 6699010a1a... | 115 | 230 | 0 | 0.0% | 0 | 1221591 | 4AVitg6qvtiN... | no |  |
+| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T22:31:58Z |  | **2649** | **5298** | **2461** | **46.5%** | **451** | **27416394** |  | partial | 30 runs |
+| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T22:31:58Z |  | **2796** | **5592** | **2681** | **47.9%** | **495** | **29127003** |  | partial | 35 runs |
 
 ## Run anchors (memo transaction of each run)
 
@@ -71,23 +71,23 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T131705Z-live-6da283 | `4NyadG99MDSwrZWoDgQ7tb57jhYDomoqvXbd9pewuUqS9CqJX9bW9UVyrhBe8amXo4UWwkAnYdQZoVpSa7fiGz6y` | 7170 |
 | 20261031T135019Z-live-c4a21b | `4xpoeA2TVjewZ6qF9YK1x5kWWLBUYc9gYiAknFGUV2j196oGB7xGwmAQDqhCgyp1fnnWs4CdVo3YDyL2FPPSAbgv` | 7170 |
 | 20261031T143056Z-live-b3e100 | `3TVnw8d1PYsgRcN4TBh11HamUMRwZo7hhV9nHKWpgu9rSKEfAEpLMRixD3cgZXNCo2SioAUCRQWEJ9HKpUd6yxR5` | 7170 |
-| 20261031T151240Z-live-4fff40 | `4tA81kCQaUSuS98NexQbg8aP4Rc4He4Tn9TNA4GtJp8ZHtJmLbX4tEvyTPstBfX4Hs9h2Ae19bwuiAhviadBzbij` |  |
-| 20261031T153848Z-live-2d70c6 | `42HT7v5mUpi5njECyVyJLDZ9S4gxGfvTdSQ3CP8zoSpRp7V53cKEmx3EC72cw2Ppx4hLEbMJEtKycrvdkbEwWX8n` |  |
-| 20261031T160518Z-live-a5ef1a | `45QZFzGBEf6GPGLfYn7fndRRQ9bkfsN61BargNUERBhdmcnB7kJ298WYtzji9454Jx1MdtnPaeZWUcpRwX2SXShP` |  |
-| 20261031T163130Z-live-4d211e | `63yraMSsLetp8GQvBikzrfEm9nNjYDdnpHSJvDhKsnkkfYDZoLqs2FdpDJP5F7JjXNhzygp9rTYXY1MxomoRNNM4` |  |
-| 20261031T165749Z-live-466b92 | `4JAGwzGVK8syQS7RDWJ48eibJKZ5snECHWriNnJcco7ZpGJ8voPjJoxLmrMSwRjiqVjYzbwrxYWbw9Ff3Nt1uz4Q` |  |
-| 20261031T172415Z-live-dbd7db | `4LrvrryeuPq4J6ZEaXaPfuQ4Mu9vBQLxJNbjz2TyS1HhYHPJg12MUddQnVaWgtAMcheGmC77MQFF5X2oMXwNL2s3` |  |
-| 20261031T175034Z-live-ea2eeb | `21pr6NBcdrtKyurrUYXGaS8ASQK1BSPqQADkrJXm26MVfhR8agRmcZPRXp3bqHvuFKVLtgQDGnab8dYcqEraqgzx` |  |
-| 20261031T181700Z-live-75730f | `FA2m9AYf6ZUkxeRvMxSTKkGsskB8xLg7NUurRNkcirxMBo8pSYvG7ABarPfMndotQtypWU8PSh8ZhJWwRG3f8tF` |  |
-| 20261031T184307Z-live-8c3f95 | `4wSLYvBtmzVDtuDtZwdHDn5cUL3hrUdCsZfPS8cvM8yqa5cPKgvc5SfoEXJXmMJBjZJcm9YKqqCMo9h4FQoYf8S2` |  |
-| 20261031T190923Z-live-5626ab | `2EviNfd2p4HLxjwYJxmAK8Kec46QxZWmpptPbP7WkBh5eEEiC3hVTwccAT7PW4t9rc3G9K1yaayU2VfwFFyaLNMC` |  |
-| 20261031T193527Z-live-37d80d | `5zzCDHZQFgLPMuMaDGXgWWzNR8aufJfJLBMHMA1WN6yaB3zbHgt4Y7GTgviXZ3YtqYdFwxT8j7Ro2iMdWYGrQrkS` |  |
-| 20261031T200225Z-live-740532 | `NiNiWRBmvTd6caG2MnegwBVFLLEUzQm99cLubTBYKmSFScrxa2WWuUcaJLwMgSutcYx9zpu7bMvt1kLFTSwbGAB` |  |
-| 20261031T202851Z-live-88df58 | `4Dxw2HKT9YSWbgkRSpaFTE7zMrcJtVGUPqG2raSFTeTwWwZb3RGaHw6ZzEfH5aMb6SbtgbLxQSwWRfmX8pJSKhvZ` |  |
-| 20261031T205511Z-live-022c4c | `4dgd8JyHJgW1fxa3ajC2iFgSKTh8d4d4Fa5nErhppiXjGfnv5L6MftM25pVEGKUAuGG2cFYLUpr3KhXH2TLu1NgV` |  |
-| 20261031T212127Z-live-51d947 | `CvhehWTnG4TCcFBDmghUCUaAxjLY8nBq9NVTyNMcB4o2izaizpaERHb2tV6zZAMfGxn6uhrinYnx9zDLvBqczCH` |  |
-| 20261031T214735Z-live-0fdc2c | `2rUT44kt1G2EgbS3TiAGZEKeRgz3sHgYW1j6Ny44Ra347QiSRvJuhnQqkqo7aM81tZ3t8cMz3kU3Niqg981ZUMrc` |  |
-| 20261031T221356Z-live-70dfcc | `4AVitg6qvtiNxHr62UTsjWw8LrB81EW4gKMVUsayVdFyErX6SGcbBgQCUQEkRZFBrF9nJuEWrZoMLC71g6RfQLCh` |  |
+| 20261031T151240Z-live-4fff40 | `4tA81kCQaUSuS98NexQbg8aP4Rc4He4Tn9TNA4GtJp8ZHtJmLbX4tEvyTPstBfX4Hs9h2Ae19bwuiAhviadBzbij` | 7170 |
+| 20261031T153848Z-live-2d70c6 | `42HT7v5mUpi5njECyVyJLDZ9S4gxGfvTdSQ3CP8zoSpRp7V53cKEmx3EC72cw2Ppx4hLEbMJEtKycrvdkbEwWX8n` | 7170 |
+| 20261031T160518Z-live-a5ef1a | `45QZFzGBEf6GPGLfYn7fndRRQ9bkfsN61BargNUERBhdmcnB7kJ298WYtzji9454Jx1MdtnPaeZWUcpRwX2SXShP` | 7170 |
+| 20261031T163130Z-live-4d211e | `63yraMSsLetp8GQvBikzrfEm9nNjYDdnpHSJvDhKsnkkfYDZoLqs2FdpDJP5F7JjXNhzygp9rTYXY1MxomoRNNM4` | 7170 |
+| 20261031T165749Z-live-466b92 | `4JAGwzGVK8syQS7RDWJ48eibJKZ5snECHWriNnJcco7ZpGJ8voPjJoxLmrMSwRjiqVjYzbwrxYWbw9Ff3Nt1uz4Q` | 7170 |
+| 20261031T172415Z-live-dbd7db | `4LrvrryeuPq4J6ZEaXaPfuQ4Mu9vBQLxJNbjz2TyS1HhYHPJg12MUddQnVaWgtAMcheGmC77MQFF5X2oMXwNL2s3` | 7170 |
+| 20261031T175034Z-live-ea2eeb | `21pr6NBcdrtKyurrUYXGaS8ASQK1BSPqQADkrJXm26MVfhR8agRmcZPRXp3bqHvuFKVLtgQDGnab8dYcqEraqgzx` | 7170 |
+| 20261031T181700Z-live-75730f | `FA2m9AYf6ZUkxeRvMxSTKkGsskB8xLg7NUurRNkcirxMBo8pSYvG7ABarPfMndotQtypWU8PSh8ZhJWwRG3f8tF` | 7170 |
+| 20261031T184307Z-live-8c3f95 | `4wSLYvBtmzVDtuDtZwdHDn5cUL3hrUdCsZfPS8cvM8yqa5cPKgvc5SfoEXJXmMJBjZJcm9YKqqCMo9h4FQoYf8S2` | 7170 |
+| 20261031T190923Z-live-5626ab | `2EviNfd2p4HLxjwYJxmAK8Kec46QxZWmpptPbP7WkBh5eEEiC3hVTwccAT7PW4t9rc3G9K1yaayU2VfwFFyaLNMC` | 7170 |
+| 20261031T193527Z-live-37d80d | `5zzCDHZQFgLPMuMaDGXgWWzNR8aufJfJLBMHMA1WN6yaB3zbHgt4Y7GTgviXZ3YtqYdFwxT8j7Ro2iMdWYGrQrkS` | 7170 |
+| 20261031T200225Z-live-740532 | `NiNiWRBmvTd6caG2MnegwBVFLLEUzQm99cLubTBYKmSFScrxa2WWuUcaJLwMgSutcYx9zpu7bMvt1kLFTSwbGAB` | 7170 |
+| 20261031T202851Z-live-88df58 | `4Dxw2HKT9YSWbgkRSpaFTE7zMrcJtVGUPqG2raSFTeTwWwZb3RGaHw6ZzEfH5aMb6SbtgbLxQSwWRfmX8pJSKhvZ` | 7170 |
+| 20261031T205511Z-live-022c4c | `4dgd8JyHJgW1fxa3ajC2iFgSKTh8d4d4Fa5nErhppiXjGfnv5L6MftM25pVEGKUAuGG2cFYLUpr3KhXH2TLu1NgV` | 7170 |
+| 20261031T212127Z-live-51d947 | `CvhehWTnG4TCcFBDmghUCUaAxjLY8nBq9NVTyNMcB4o2izaizpaERHb2tV6zZAMfGxn6uhrinYnx9zDLvBqczCH` | 7170 |
+| 20261031T214735Z-live-0fdc2c | `2rUT44kt1G2EgbS3TiAGZEKeRgz3sHgYW1j6Ny44Ra347QiSRvJuhnQqkqo7aM81tZ3t8cMz3kU3Niqg981ZUMrc` | 7170 |
+| 20261031T221356Z-live-70dfcc | `4AVitg6qvtiNxHr62UTsjWw8LrB81EW4gKMVUsayVdFyErX6SGcbBgQCUQEkRZFBrF9nJuEWrZoMLC71g6RfQLCh` | 7170 |
 
 ## Main phase by role
 

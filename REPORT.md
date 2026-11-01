@@ -60,13 +60,13 @@ Reading. "Partial" means the rule is real (Holm-adjusted p below 0.05) but its 9
 
 ## 7. What went wrong
 
-- 2026-10-30 16:4x: the first preregistration anchor (no priority fee, no provider retries) was accepted by the provider but never landed; its reservation was released, and operational transactions now carry a small priority fee.
+- 2026-10-30, shortly before 17:09: the first preregistration anchor (no priority fee, no provider retries) was accepted by the provider but never landed; its reservation was released, and operational transactions now carry a small priority fee.
 - Pilot landing was 70.7% with `maxRetries: 0`, below the 80% criterion; the preregistered fallback (`maxRetries: 2`, one re-pilot) raised it to 77.5%, still below 80%.
 - 2026-10-31 08:38: the first main run stopped at start on a transient HTTP 413 from the public RPC; it sent nothing. The RPC client now retries 408, 413 and 425.
 - 2026-10-31 08:45 to 10:45: 857 target windows were skipped because the 35 s payer lock kept six payers busy; Amendment 5 lowered it to 12 s and excludes pairs whose block contains another of our transactions from the same payer.
 - The realized usable fraction (0.02 to 0.29 per arm-P probe) was far below the pilot's 0.41; Amendment 6 extended sampling, without looking at ordering, for the three roles that could reach 115 usable pairs. AgaveBam-1 overshot that target because the stop check did not run during the last runs.
 - 2026-10-31 22:31: the session's machine paused overnight and the remaining runs never started, so the low-window validators (Agave-1, Rakurai-1) ended far below their quotas.
-- Block enrichment (full `getBlock` per landed slot) was too slow for the final collection; the last ten runs have no block summaries, so the Harmonic strategy and supplementary block statistics cover the earlier runs only. A stuck collector process held the spend-ledger lock and delayed the payer drain; a first data-manifest anchor (`2wjEuhwT...`) was written before the last eight runs were collected and is superseded by the one in section 1.
+- Block enrichment (full `getBlock` per landed slot) was too slow for the final collection; the runs collected last have no block summaries, so the Harmonic strategy and supplementary block statistics cover the earlier runs only. A stuck collector process held the spend-ledger lock and delayed the payer drain; a first data-manifest anchor (`2wjEuhwT...`) was written before the last eight runs were collected and is superseded by the one in section 1.
 - Budget for external review ran out: the planned red-team and independent reviews of the final analysis were not run; the automated checks below were.
 
 ## 8. Checks and cost accounting

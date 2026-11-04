@@ -20,7 +20,7 @@ All times UTC. Every run (start, end, phase, probes, transactions, landed, usabl
 | 2026-11-01 | data manifest after the first period anchored: `5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA` |
 | 2026-11-04 20:4x | final data manifest (`data/anchors/data_manifest.txt`) anchored: `4RkSVcG5zzQcig15ZuLicLZdRWNk9Bzk8QHKPL9vfNNZCsiWhBC5H1foUwVWvvX2HpZsPrXhayC1WDNA3ZukF6JL` |
 
-Each anchor is a Memo; `getTransaction` shows the hash, which you can compare with `sha256sum` of the file at the named commit.
+Each anchor is a Memo; `getTransaction` shows the hash, which you can compare with `sha256sum` of the file at the named commit. For the final data manifest, the memo label names the commit (`7e89757`) at which every listed file matches: `git checkout 7e89757 && sha256sum -c data/anchors/data_manifest.txt`. Later commits differ only in the two ledger files, which then also record the anchor transaction itself.
 
 ## 2. Method in brief
 

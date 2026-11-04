@@ -75,7 +75,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 333
+   "quota_per_target": 900
   },
   {
    "role": "Firedancer-1",
@@ -94,7 +94,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 333
+   "quota_per_target": 900
   },
   {
    "role": "FireBAM-1",
@@ -110,7 +110,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 333
+   "quota_per_target": 900
   },
   {
    "role": "Rakurai-1",
@@ -126,7 +126,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 330
+   "quota_per_target": 900
   },
   {
    "role": "Agave-1",
@@ -142,7 +142,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 330
+   "quota_per_target": 900
   }
  ],
  "n_payers": 6,
@@ -198,5 +198,11 @@
   "cap": 900,
   "stop_at_usable_armP": 115,
   "deadline": "2026-11-02T08:00:00Z"
+ },
+ "amendment7": {
+  "extension_until": "2026-11-04T20:00:00Z",
+  "stop_at_usable_armP": 115,
+  "cap": 900,
+  "family_alpha_pooled": 0.025
  }
 }

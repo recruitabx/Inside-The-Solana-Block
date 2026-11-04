@@ -1,10 +1,10 @@
 {
  "accounts": 7,
- "onchain_signatures": 3887,
- "ledger_signatures": 5649,
+ "onchain_signatures": 4800,
+ "ledger_signatures": 6946,
  "external_incoming": 8,
  "unledgered_fee_paying": [],
- "settled_fees_lamports": 29490783,
+ "settled_fees_lamports": 36440074,
  "open_reservations_max_lamports": 0,
  "hard_ceiling_lamports": 50000000,
  "within_ceiling": true,

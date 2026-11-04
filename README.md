@@ -6,20 +6,22 @@ Interactive summary: https://recruitabx.github.io/Inside-The-Solana-Block/
 
 **Method in one paragraph.** We send pairs of our own transactions into each target's leader window. The two transactions of a pair differ only in fee (3.2x reward per cost unit), both write one shared account so the scheduler must serialize them, and which one is high-fee and which one goes first in the request are randomized independently. From each block (`getBlock`) we read which came first, giving two numbers per validator: p (share of pairs where the higher-fee transaction came first) and q (share where the first-sent came first), with exact confidence intervals and verdicts fixed in advance in [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md). All measurements are after the Alpenglow upgrade (slot 459653008 and later, [docs/ALPENGLOW_BOUNDARY.md](docs/ALPENGLOW_BOUNDARY.md)).
 
-**Result.** For all eight leaders the point estimate of p, the share of conflicting pairs in which the higher-fee transaction landed first, was above one half (0.60 to 0.95), but in no validator was this strict: the position of the transaction in our request also mattered (share q from 0.37 to 0.80). Two validators reached the preregistered sample size and both get the verdict "mixed": fee and request position each decide part of the pairs. In pairs sent before the leader's window that landed in its first slot (our co-presence subgroup, 110 pairs over all validators), the higher fee came first in 88% [81%, 94%]; when the two were sent 200 ms apart, the first-sent always came first (12 of 12). The main limitation: we could only send through one RPC provider (no direct QUIC), so arrival order at the leader is not observed, and six of eight validators stayed below the preregistered N of 100 usable pairs because many pairs did not land together in the target's own window.
+**Result.** For every validator with at least 10 usable pairs, the higher-fee transaction of a conflicting pair came first in more than half of them (p from 0.59 to 0.94), but never strictly. 4 validators reached the preregistered N of 100 and got a verdict at family alpha 0.025: AgaveBam-1 (AgaveBam) fee rule holds, partial; JitoLabs-1 (JitoLabs) mixed: fee rule partial and request-position rule partial; FireBAM-1 (FireBAM) fee rule holds, partial; HarmonicAgave-1 (HarmonicAgave) fee rule holds, strong. In pairs that were sent before the leader's window and landed in its first slot, the higher fee came first in 0.85 [0.77, 0.91] (n = 124); when the two were sent 200 ms apart, the first-sent came first in 13 of 13. The main limitation: we could only send through one RPC provider (no direct QUIC), so true arrival order at the leader is not observed, and the Firedancer and HarmonicFiredancer leaders, as well as the two low-stake ones, rarely included our pairs in their own window.
 
-| Validator (role) | Client, version (gossip, 2026-10-31) | N usable | p: higher fee first [95% CI] | q: first in request first [95% CI] | Preregistered verdict |
+| Validator (role, identity) | Client, version (gossip claims) | N usable | p: higher fee first [95% CI] | q: first in request first [95% CI] | Preregistered verdict (family alpha 0.025) |
 |---|---|---|---|---|---|
-| AgaveBam-1 `DRpbCB..` | AgaveBam 4.4.0-rc.1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | mixed: fee rule partial, request-position rule partial |
-| JitoLabs-1 `E1r4Ps..` | JitoLabs 4.4.0 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial, request-position rule partial |
-| FireBAM-1 `9jxgos..` | FireBAM 26.10.5 | 91 | 0.76 [0.66, 0.84] | 0.56 [0.45, 0.66] | insufficient data (n < 100) |
-| HarmonicAgave-1 `Fd7btg..` | HarmonicAgave 4.4.0 | 78 | 0.94 [0.86, 0.98] | 0.63 [0.51, 0.74] | insufficient data (n < 100) |
-| HarmonicFiredancer-1 `JUPiTE..` | HarmonicFiredancer 26.10.5 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data (n < 100) |
-| Rakurai-1 `ana2y2..` | Rakurai 4.3.2 | 26 | 0.62 [0.41, 0.80] | 0.69 [0.48, 0.86] | insufficient data (n < 100) |
-| Agave-1 `7QQGNm..` | Agave 4.3.2 | 20 | 0.60 [0.36, 0.81] | 0.80 [0.56, 0.94] | insufficient data (n < 100) |
-| Firedancer-1 `9eGrDo..` | Firedancer 26.10.5 | 19 | 0.95 [0.74, 1.00] | 0.37 [0.16, 0.62] | insufficient data (n < 100) |
+| AgaveBam-1 `DRpbCB..` | AgaveBam 4.4.0-rc.1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | fee rule holds, partial |
+| JitoLabs-1 `E1r4Ps..` | JitoLabs 4.4.0 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial and request-position rule partial |
+| FireBAM-1 `9jxgos..` | FireBAM 26.10.5 | 119 | 0.77 [0.69, 0.84] | 0.52 [0.43, 0.61] | fee rule holds, partial |
+| HarmonicAgave-1 `Fd7btg..` | HarmonicAgave 4.4.0 | 110 | 0.94 [0.87, 0.97] | 0.61 [0.51, 0.70] | fee rule holds, strong |
+| Rakurai-1 `ana2y2..` | Rakurai 4.3.2, 4.4.0 | 37 | 0.59 [0.42, 0.75] | 0.70 [0.53, 0.84] | insufficient data (n=37) |
+| Firedancer-1 `9eGrDo..` | Firedancer 26.10.5 | 27 | 0.93 [0.76, 0.99] | 0.41 [0.22, 0.61] | insufficient data (n=27) |
+| HarmonicFiredancer-1 `JUPiTE..` | HarmonicFiredancer 26.10.5 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data (n=27) |
+| Agave-1 `7QQGNm..` | Agave 4.3.2, 4.4.0 | 23 | 0.61 [0.39, 0.80] | 0.83 [0.61, 0.95] | insufficient data (n=23) |
+| HarmonicFiredancer-1 `Awes4T..` | HarmonicFiredancer 26.10.5 | 5 | 0.80 [0.28, 0.99] | 1.00 [0.48, 1.00] | insufficient data (n=5) |
+| HarmonicFiredancer-1 `87CcUx..` | HarmonicFiredancer 26.10.5 | 1 | 1.00 [0.03, 1.00] | 1.00 [0.03, 1.00] | insufficient data (n=1) |
 
-Source: `results/verdicts.csv` (built by `docker compose run --rm analyze` from `data/raw/`; full identities, Holm-adjusted p-values and the 2 x 2 tables are there). Measurements: 2026-10-31 08:38 to 22:31 UTC, all after the Alpenglow upgrade; per-run dates in [results/runs.md](results/runs.md); full write-up in [REPORT.md](REPORT.md).
+Source: `results/verdicts.csv` (built by `docker compose run --rm analyze` from `data/raw/`; full identities, Holm-adjusted p-values and the 2 x 2 tables are there). Measurements: 2026-10-31 08:38 to 22:31 UTC and 2026-11-04 08:34 to 19:56 UTC (extension, Amendment 7), all after the Alpenglow upgrade; per-run dates in [results/runs.md](results/runs.md); full write-up in [REPORT.md](REPORT.md).
 
 ![p and q per validator](results/figure_pq.png)
 

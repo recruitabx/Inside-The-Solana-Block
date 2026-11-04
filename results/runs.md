@@ -47,8 +47,17 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T212127Z-live-51d947 | main | live | 2026-10-31T21:21:28Z | 2026-10-31T21:39:12Z | b0d55ecf82... | 114 | 228 | 181 | 79.4% | 52 | 1356099 | CvhehWTnG4TC... | yes |  |
 | 20261031T214735Z-live-0fdc2c | main | live | 2026-10-31T21:47:36Z | 2026-10-31T22:05:33Z | a7b9d70749... | 114 | 228 | 181 | 79.4% | 42 | 1356099 | 2rUT44kt1G2E... | yes |  |
 | 20261031T221356Z-live-70dfcc | main | live | 2026-10-31T22:13:57Z | 2026-10-31T22:31:58Z | 6699010a1a... | 115 | 230 | 164 | 71.3% | 36 | 1221591 | 4AVitg6qvtiN... | yes |  |
-| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-10-31T22:31:58Z |  | **2649** | **5298** | **3603** | **68.0%** | **706** | **27416394** |  | yes | 30 runs |
-| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-10-31T22:31:58Z |  | **2796** | **5592** | **3823** | **68.4%** | **750** | **29127003** |  | yes | 35 runs |
+| 20261104T083405Z-live-15484a | main | live | 2026-11-04T08:34:15Z | 2026-11-04T08:52:23Z | cd40a00876... | 88 | 176 | 123 | 69.9% | 20 | 950562 | 3hEVfHWkgqny... | yes |  |
+| 20261104T091925Z-live-7cd97d | main | live | 2026-11-04T09:19:26Z | 2026-11-04T09:37:24Z | 3e0ea46bd7... | 94 | 188 | 135 | 71.8% | 17 | 1054566 | 4iPmb4WZzgKo... | yes |  |
+| 20261104T104146Z-live-2532ea | main | live | 2026-11-04T10:41:47Z | 2026-11-04T10:59:28Z | 191240ca0e... | 71 | 142 | 105 | 73.9% | 12 | 805554 | 4Xg6TinNi5uD... | yes |  |
+| 20261104T110112Z-live-3cd77b | main | live | 2026-11-04T11:01:13Z | 2026-11-04T11:18:56Z | 50a386f4fe... | 70 | 140 | 100 | 71.4% | 12 | 775050 | 4nQpQBLhE5Cn... | yes |  |
+| 20261104T123029Z-live-c48b36 | main | live | 2026-11-04T12:30:30Z |  | 3a0cc34017... | 18 | 36 | 27 | 75.0% | 3 | 206514 | 47QiK5dFAo8x... | yes | no run_end record (running, or killed) |
+| 20261104T125803Z-live-9b5d4a | main | live | 2026-11-04T12:58:05Z | 2026-11-04T13:15:54Z | 06bc162f09... | 77 | 154 | 91 | 59.1% | 16 | 680550 | 2U3AcSRjyM7N... | yes |  |
+| 20261104T141841Z-live-ba0b44 | main | live | 2026-11-04T14:18:42Z | 2026-11-04T14:36:39Z | b87bc21bee... | 80 | 160 | 118 | 73.8% | 8 | 881565 | 3xhLKtgQURxu... | yes |  |
+| 20261104T163835Z-live-aecc21 | main | live | 2026-11-04T16:38:39Z | 2026-11-04T16:56:40Z | a95454a739... | 48 | 96 | 65 | 67.7% | 2 | 495534 | 5ifYDv2UgGS4... | yes |  |
+| 20261104T193736Z-live-5497c7 | main | live | 2026-11-04T19:37:37Z | 2026-11-04T19:55:38Z | a12b81da76... | 91 | 182 | 126 | 69.2% | 9 | 960066 | 51E5HH1bheRR... | yes |  |
+| **TOTAL main** | main |  | 2026-10-31T08:38:02Z | 2026-11-04T19:55:38Z |  | **3286** | **6572** | **4493** | **68.4%** | **805** | **34226355** |  | yes | 39 runs |
+| **TOTAL all** |  |  | 2026-10-30T17:10:30Z | 2026-11-04T19:55:38Z |  | **3433** | **6866** | **4713** | **68.6%** | **849** | **35936964** |  | yes | 44 runs |
 
 ## Run anchors (memo transaction of each run)
 
@@ -88,17 +97,26 @@ Counts and fees only: no ordering outcome is read or shown here. Written by `itb
 | 20261031T212127Z-live-51d947 | `CvhehWTnG4TCcFBDmghUCUaAxjLY8nBq9NVTyNMcB4o2izaizpaERHb2tV6zZAMfGxn6uhrinYnx9zDLvBqczCH` | 7170 |
 | 20261031T214735Z-live-0fdc2c | `2rUT44kt1G2EgbS3TiAGZEKeRgz3sHgYW1j6Ny44Ra347QiSRvJuhnQqkqo7aM81tZ3t8cMz3kU3Niqg981ZUMrc` | 7170 |
 | 20261031T221356Z-live-70dfcc | `4AVitg6qvtiNxHr62UTsjWw8LrB81EW4gKMVUsayVdFyErX6SGcbBgQCUQEkRZFBrF9nJuEWrZoMLC71g6RfQLCh` | 7170 |
+| 20261104T083405Z-live-15484a | `3hEVfHWkgqnyKpjv9rWNuhMJMdnXk5cn5mPAUYZjcnywW64UTu2hgsh9pvXTVdZ2mwg9AnUEc5hYsw3SXvSD7xpR` | 7170 |
+| 20261104T091925Z-live-7cd97d | `4iPmb4WZzgKoewKWPaHTT99aje6g32f3FAkqBcaxSbaYsipvYpQZ2xkCDpF2JfkyvNvoQGyyRU5jMNSgYozqzyRo` | 7170 |
+| 20261104T104146Z-live-2532ea | `4Xg6TinNi5uDM3zjDvozappv2dj4JZJjuUytaWLoLRFTATvjRZM2syV2GcCRzz2fDP1XVSJKkGf4LzDtGvTJYRD6` | 7170 |
+| 20261104T110112Z-live-3cd77b | `4nQpQBLhE5CnEcdjGwqR4sUDEaywVPgGRh8pMJnvxLoadT3NCeFrkSsaa5o3ihLUiCJvLrRquGMZDKKYueNxcXaM` | 7170 |
+| 20261104T123029Z-live-c48b36 | `47QiK5dFAo8xGgr5K7eNWt5dcHMsYVMBpK6x1MBkBdrHFvbjb1hUL2NJpnkhL6B6MBTCEYV25zLgmb9Xawmj3JAe` | 7170 |
+| 20261104T125803Z-live-9b5d4a | `2U3AcSRjyM7NrTJFLmJmMF8CTXbzczx3xCnv7Y5vyzmgayGpJhfUs9k7vEyEA7bpDNTinMGLMSQoZPKHAhLnjMxA` | 7170 |
+| 20261104T141841Z-live-ba0b44 | `3xhLKtgQURxuH12ryErWx4AwCiFbKtv2EoW3FJSrr5hiWpMYcEGifkjPFN8jixGVKTf29LXU77vmsFVYZ7usMtCd` | 7170 |
+| 20261104T163835Z-live-aecc21 | `5ifYDv2UgGS4M29VtFexCNZtxp1JtsJ1w3ztBEPLggZbP1YK7hkWseMCYYkHQyPxti9Rh9EKUdnnpAYVDzr1nAHx` | 7170 |
+| 20261104T193736Z-live-5497c7 | `51E5HH1bheRREoSt98Vh7CL5qGGbFWLh9VCj1fKpNGiiatMmdPuvAF3jPjbzrkwX5Lct4FtQoUU8nr4ozHXmkYc8` | 7170 |
 
 ## Main phase by role
 
 | role | probes | usable | quota (data/plan.json) |
 |---|---|---|---|
-| HarmonicAgave-1 | 550 | 95 | 900 |
-| AgaveBam-1 | 506 | 246 | 900 |
-| JitoLabs-1 | 471 | 157 | 900 |
-| HarmonicFiredancer-1 | 333 | 31 | 333 |
-| Firedancer-1 | 333 | 21 | 333 |
-| FireBAM-1 | 227 | 104 | 333 |
-| Rakurai-1 | 124 | 28 | 330 |
-| Agave-1 | 105 | 24 | 330 |
-| **total** | **2649** | **706** | **4359** |
+| HarmonicAgave-1 | 815 | 130 | 900 |
+| AgaveBam-1 | 506 | 246 | 506 |
+| JitoLabs-1 | 471 | 157 | 471 |
+| HarmonicFiredancer-1 | 426 | 37 | 900 |
+| Firedancer-1 | 469 | 31 | 900 |
+| FireBAM-1 | 302 | 137 | 900 |
+| Rakurai-1 | 160 | 40 | 900 |
+| Agave-1 | 137 | 27 | 900 |
+| **total** | **3286** | **805** | **6377** |

@@ -1,9 +1,11 @@
 target_role,identity,client_id,n_probes_all_arms,n_claim_end_unknown_all_arms,n_claim_end_unknown_arm_P,n_primary_with_claim_end_unknown
-Agave-1,7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE,Agave,105,0,0,0
+Agave-1,7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE,Agave,137,0,0,0
 AgaveBam-1,DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy,AgaveBam,506,3,2,0
-FireBAM-1,9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP,FireBAM,227,1,1,0
-Firedancer-1,9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY,Firedancer,333,2,2,0
-HarmonicAgave-1,Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk,HarmonicAgave,550,5,5,0
+FireBAM-1,9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP,FireBAM,302,3,2,1
+Firedancer-1,9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY,Firedancer,469,6,3,0
+HarmonicAgave-1,Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk,HarmonicAgave,815,14,14,1
+HarmonicFiredancer-1,87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5,HarmonicFiredancer,57,3,2,0
+HarmonicFiredancer-1,Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM,HarmonicFiredancer,36,0,0,0
 HarmonicFiredancer-1,JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b,HarmonicFiredancer,333,1,1,0
 JitoLabs-1,E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL,JitoLabs,471,1,1,1
-Rakurai-1,ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY,Rakurai,124,0,0,0
+Rakurai-1,ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY,Rakurai,160,0,0,0

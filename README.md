@@ -1,5 +1,7 @@
 # Inside the Block: how Solana mainnet leaders order transactions
 
+Interactive summary: https://recruitabx.github.io/Inside-The-Solana-Block/
+
 **Question.** For each of eight mainnet validators running different client software (Agave, Jito, BAM, Harmonic, Firedancer, Rakurai), what decides which of two transactions lands earlier in the leader's block, how strictly, and is there a rule at all?
 
 **Method in one paragraph.** We send pairs of our own transactions into each target's leader window. The two transactions of a pair differ only in fee (3.2x reward per cost unit), both write one shared account so the scheduler must serialize them, and which one is high-fee and which one goes first in the request are randomized independently. From each block (`getBlock`) we read which came first, giving two numbers per validator: p (share of pairs where the higher-fee transaction came first) and q (share where the first-sent came first), with exact confidence intervals and verdicts fixed in advance in [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md). All measurements are after the Alpenglow upgrade (slot 459653008 and later, [docs/ALPENGLOW_BOUNDARY.md](docs/ALPENGLOW_BOUNDARY.md)).

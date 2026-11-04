@@ -7,7 +7,7 @@
     "n_claim_end_unknown_all_arms": 0,
     "n_claim_end_unknown_arm_P": 0,
     "n_primary_with_claim_end_unknown": 0,
-    "n_probes_all_arms": 105,
+    "n_probes_all_arms": 137,
     "target_role": "Agave-1"
    },
    {
@@ -22,29 +22,47 @@
    {
     "client_id": "FireBAM",
     "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
-    "n_claim_end_unknown_all_arms": 1,
-    "n_claim_end_unknown_arm_P": 1,
-    "n_primary_with_claim_end_unknown": 0,
-    "n_probes_all_arms": 227,
+    "n_claim_end_unknown_all_arms": 3,
+    "n_claim_end_unknown_arm_P": 2,
+    "n_primary_with_claim_end_unknown": 1,
+    "n_probes_all_arms": 302,
     "target_role": "FireBAM-1"
    },
    {
     "client_id": "Firedancer",
     "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
-    "n_claim_end_unknown_all_arms": 2,
-    "n_claim_end_unknown_arm_P": 2,
+    "n_claim_end_unknown_all_arms": 6,
+    "n_claim_end_unknown_arm_P": 3,
     "n_primary_with_claim_end_unknown": 0,
-    "n_probes_all_arms": 333,
+    "n_probes_all_arms": 469,
     "target_role": "Firedancer-1"
    },
    {
     "client_id": "HarmonicAgave",
     "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
-    "n_claim_end_unknown_all_arms": 5,
-    "n_claim_end_unknown_arm_P": 5,
-    "n_primary_with_claim_end_unknown": 0,
-    "n_probes_all_arms": 550,
+    "n_claim_end_unknown_all_arms": 14,
+    "n_claim_end_unknown_arm_P": 14,
+    "n_primary_with_claim_end_unknown": 1,
+    "n_probes_all_arms": 815,
     "target_role": "HarmonicAgave-1"
+   },
+   {
+    "client_id": "HarmonicFiredancer",
+    "identity": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+    "n_claim_end_unknown_all_arms": 3,
+    "n_claim_end_unknown_arm_P": 2,
+    "n_primary_with_claim_end_unknown": 0,
+    "n_probes_all_arms": 57,
+    "target_role": "HarmonicFiredancer-1"
+   },
+   {
+    "client_id": "HarmonicFiredancer",
+    "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "n_claim_end_unknown_all_arms": 0,
+    "n_claim_end_unknown_arm_P": 0,
+    "n_primary_with_claim_end_unknown": 0,
+    "n_probes_all_arms": 36,
+    "target_role": "HarmonicFiredancer-1"
    },
    {
     "client_id": "HarmonicFiredancer",
@@ -70,16 +88,16 @@
     "n_claim_end_unknown_all_arms": 0,
     "n_claim_end_unknown_arm_P": 0,
     "n_primary_with_claim_end_unknown": 0,
-    "n_probes_all_arms": 124,
+    "n_probes_all_arms": 160,
     "target_role": "Rakurai-1"
    }
   ],
   "label": "probes of runs without an end snapshot are kept and flagged claim_end_unknown",
-  "total_all_arms": 13,
-  "total_primary": 1
+  "total_all_arms": 31,
+  "total_primary": 3
  },
  "config": {
-  "alpha": 0.05,
+  "alpha": 0.025,
   "equiv_hi": 0.65,
   "equiv_lo": 0.35,
   "min_n": 100,
@@ -92,17 +110,17 @@
   "excluded": false,
   "pooled_q_S": {
    "ci90": [
-    0.779077808054444,
+    0.7941833348134493,
     1.0
    ],
    "ci95": [
-    0.7353515306029488,
+    0.752947361999529,
     1.0
    ],
-   "k": 12,
-   "n": 12,
+   "k": 13,
+   "n": 13,
    "p": 1.0,
-   "p_value": 0.00048828125
+   "p_value": 0.000244140625
   },
   "q_S_by_client_id": {
    "label": "descriptive",
@@ -125,7 +143,18 @@
      "p_value": 0.015625
     },
     "FireBAM": {
-     "n": 0
+     "ci90": [
+      0.04999999999999999,
+      1.0
+     ],
+     "ci95": [
+      0.025000000000000022,
+      1.0
+     ],
+     "k": 1,
+     "n": 1,
+     "p": 1.0,
+     "p_value": 1.0
     },
     "Firedancer": {
      "n": 0
@@ -169,64 +198,64 @@
   "rule": "arrival order (FIFO) is excluded for a unit only if the 90% Clopper-Pearson interval of the arm-S q_S pooled over all targets lies inside [0.35, 0.65] and the q_S of the unit's clientId does not reject 0.5 (exact two-sided test at 0.05)"
  },
  "final": true,
- "holm_family_size": 16,
+ "holm_family_size": 20,
  "mode": "final: phase main only, real data",
- "n_rows_analysed": 2649,
+ "n_rows_analysed": 3286,
  "n_rows_excluded": {
   "other_phase": 89,
   "pilot": 58,
   "synthetic": 0
  },
- "n_rows_read": 2796,
+ "n_rows_read": 3433,
  "secondary": {
   "arm_D_vs_P": {
    "ALL": {
     "fisher_fee_first": {
-     "k1": 32,
-     "k2": 459,
-     "n1": 49,
-     "n2": 595,
-     "odds_ratio": 0.5577342047930284,
-     "p_value": 0.07919517223263955
+     "k1": 38,
+     "k2": 532,
+     "n1": 56,
+     "n2": 683,
+     "odds_ratio": 0.5992063492063492,
+     "p_value": 0.0976378404270469
     },
     "label": "exploratory",
     "p_D": {
      "ci90": [
-      0.5261754065345634,
-      0.7654535811923912
+      0.5614884793335329,
+      0.7808812801501687
      ],
      "ci95": [
-      0.5036128022805357,
-      0.783275621892519
+      0.5403637655155918,
+      0.7971454879571769
      ],
-     "k": 32,
-     "n": 49,
-     "p": 0.6530612244897959,
-     "p_value": 0.04438416098714981
+     "k": 38,
+     "n": 56,
+     "p": 0.6785714285714286,
+     "p_value": 0.01045481832189218
     },
     "p_P": {
      "ci90": [
-      0.7412999858021252,
-      0.7995386497558137
+      0.7511932324417397,
+      0.8048360341046942
      ],
      "ci95": [
-      0.7355452674566383,
-      0.804591836094692
+      0.7458920406070246,
+      0.8095095334327238
      ],
-     "k": 459,
-     "n": 595,
-     "p": 0.7714285714285715,
-     "p_value": 6.826010175170384e-42
+     "k": 532,
+     "n": 683,
+     "p": 0.7789165446559297,
+     "p_value": 1.2761221572965307e-50
     }
    },
    "Agave": {
     "fisher_fee_first": {
      "k1": 1,
-     "k2": 12,
+     "k2": 14,
      "n1": 3,
-     "n2": 20,
-     "odds_ratio": 0.3333333333333333,
-     "p_value": 0.55957086391869
+     "n2": 23,
+     "odds_ratio": 0.32142857142857145,
+     "p_value": 0.5557692307692308
     },
     "label": "exploratory",
     "p_D": {
@@ -245,17 +274,17 @@
     },
     "p_P": {
      "ci90": [
-      0.39358488675696957,
-      0.7829314106299258
+      0.4168451778511049,
+      0.7783641508676293
      ],
      "ci95": [
-      0.3605425873074897,
-      0.8088099392746928
+      0.3854189573888497,
+      0.8029235760309856
      ],
-     "k": 12,
-     "n": 20,
-     "p": 0.6,
-     "p_value": 0.5034446716308594
+     "k": 14,
+     "n": 23,
+     "p": 0.6086956521739131,
+     "p_value": 0.4048728942871094
     }
    },
    "AgaveBam": {
@@ -299,129 +328,129 @@
    },
    "FireBAM": {
     "fisher_fee_first": {
-     "k1": 3,
-     "k2": 69,
-     "n1": 3,
-     "n2": 91,
-     "odds_ratio": null,
+     "k1": 5,
+     "k2": 92,
+     "n1": 6,
+     "n2": 119,
+     "odds_ratio": 1.4673913043478262,
      "p_value": 1.0
     },
     "label": "exploratory",
     "p_D": {
      "ci90": [
-      0.36840314986403866,
-      1.0
+      0.41819659074797405,
+      0.9914875553891529
      ],
      "ci95": [
-      0.29240177382128674,
-      1.0
+      0.3587654210023252,
+      0.9957892554855106
      ],
-     "k": 3,
-     "n": 3,
-     "p": 1.0,
-     "p_value": 0.25
+     "k": 5,
+     "n": 6,
+     "p": 0.8333333333333334,
+     "p_value": 0.21875
     },
     "p_P": {
      "ci90": [
-      0.6731110367990163,
-      0.8302974545235238
+      0.7009485107077832,
+      0.8347556414523939
      ],
      "ci95": [
-      0.6571655985479521,
-      0.8418701860640567
+      0.6873188939776418,
+      0.8448404589956129
      ],
-     "k": 69,
-     "n": 91,
-     "p": 0.7582417582417582,
-     "p_value": 8.187199365843673e-07
+     "k": 92,
+     "n": 119,
+     "p": 0.773109243697479,
+     "p_value": 1.7323422836309298e-09
     }
    },
    "Firedancer": {
     "fisher_fee_first": {
-     "k1": 2,
-     "k2": 18,
-     "n1": 2,
-     "n2": 19,
+     "k1": 4,
+     "k2": 25,
+     "n1": 4,
+     "n2": 27,
      "odds_ratio": null,
      "p_value": 1.0
     },
     "label": "exploratory",
     "p_D": {
      "ci90": [
-      0.22360679774997894,
+      0.47287080450158786,
       1.0
      ],
      "ci95": [
-      0.15811388300841903,
+      0.3976353643835254,
       1.0
      ],
-     "k": 2,
-     "n": 2,
+     "k": 4,
+     "n": 4,
      "p": 1.0,
-     "p_value": 0.5
+     "p_value": 0.125
     },
     "p_P": {
      "ci90": [
-      0.773625750727622,
-      0.9973039936971287
+      0.784700038857546,
+      0.986677008511863
      ],
      "ci95": [
-      0.7397193458047858,
-      0.9986683711958205
+      0.7571016531543728,
+      0.9908999270576937
      ],
-     "k": 18,
-     "n": 19,
-     "p": 0.9473684210526315,
-     "p_value": 7.62939453125e-05
+     "k": 25,
+     "n": 27,
+     "p": 0.9259259259259259,
+     "p_value": 5.647540092468262e-06
     }
    },
    "HarmonicAgave": {
     "fisher_fee_first": {
-     "k1": 2,
-     "k2": 73,
-     "n1": 8,
-     "n2": 78,
-     "odds_ratio": 0.0228310502283105,
-     "p_value": 2.4631665376327673e-05
+     "k1": 4,
+     "k2": 103,
+     "n1": 10,
+     "n2": 110,
+     "odds_ratio": 0.045307443365695796,
+     "p_value": 7.929462231541619e-05
     },
     "label": "exploratory",
     "p_D": {
      "ci90": [
-      0.04638926397961112,
-      0.5996893891908329
+      0.15002824080667998,
+      0.6964627874359576
      ],
      "ci95": [
-      0.031854026249944246,
-      0.6508557944128242
+      0.1215522581198272,
+      0.7376219233930549
      ],
-     "k": 2,
-     "n": 8,
-     "p": 0.25,
-     "p_value": 0.2890625
+     "k": 4,
+     "n": 10,
+     "p": 0.4,
+     "p_value": 0.75390625
     },
     "p_P": {
      "ci90": [
-      0.8699368015793969,
-      0.9744042844390621
+      0.8837979144290673,
+      0.9697553509546615
      ],
      "ci95": [
-      0.8567124038931144,
-      0.9788602795885386
+      0.8732740734518525,
+      0.9740343856463762
      ],
-     "k": 73,
-     "n": 78,
-     "p": 0.9358974358974359,
-     "p_value": 1.4966458740841218e-16
+     "k": 103,
+     "n": 110,
+     "p": 0.9363636363636364,
+     "p_value": 5.2527095298045276e-23
     }
    },
    "HarmonicFiredancer": {
     "fisher_fee_first": {
      "k1": 1,
-     "k2": 24,
+     "k2": 29,
      "n1": 3,
-     "n2": 27,
-     "odds_ratio": 0.0625,
-     "p_value": 0.06403940886699508
+     "n2": 33,
+     "odds_ratio": 0.06896551724137931,
+     "p_value": 0.06582633053221287
     },
     "label": "exploratory",
     "p_D": {
@@ -440,17 +469,17 @@
     },
     "p_P": {
      "ci90": [
-      0.7372611569249587,
-      0.9690216067659646
+      0.743747308173882,
+      0.9575187002072613
      ],
      "ci95": [
-      0.708413075726448,
-      0.976472545619146
+      0.7179837714627797,
+      0.9659671185770213
      ],
-     "k": 24,
-     "n": 27,
-     "p": 0.8888888888888888,
-     "p_value": 4.9233436584472656e-05
+     "k": 29,
+     "n": 33,
+     "p": 0.8787878787878788,
+     "p_value": 1.0928604751825333e-05
     }
    },
    "JitoLabs": {
@@ -495,9 +524,9 @@
    "Rakurai": {
     "fisher_fee_first": {
      "k1": 1,
-     "k2": 16,
+     "k2": 22,
      "n1": 1,
-     "n2": 26,
+     "n2": 37,
      "odds_ratio": null,
      "p_value": 1.0
     },
@@ -518,17 +547,17 @@
     },
     "p_P": {
      "ci90": [
-      0.43566269385563405,
-      0.7743001177767628
+      0.4463441121359716,
+      0.7309448129224286
      ],
      "ci95": [
-      0.40570753529859144,
-      0.7977397563449796
+      0.4209972493731196,
+      0.7524576235233262
      ],
-     "k": 16,
-     "n": 26,
-     "p": 0.6153846153846154,
-     "p_value": 0.32693958282470703
+     "k": 22,
+     "n": 37,
+     "p": 0.5945945945945946,
+     "p_value": 0.3240086000878364
     }
    }
   },
@@ -537,34 +566,34 @@
     "client_id": "ALL",
     "p": {
      "ci90": [
-      0.3384515587076344,
-      0.5852427590032403
+      0.35303215545114514,
+      0.5928264302473543
      ],
      "ci95": [
-      0.3181491785686087,
-      0.6067580238830776
+      0.3330246956788964,
+      0.6136447928059006
      ],
-     "k": 23,
-     "n": 50,
-     "p": 0.46,
+     "k": 25,
+     "n": 53,
+     "p": 0.4716981132075472,
      "p_holm": 1.0,
-     "p_value": 0.6718110337653656
+     "p_value": 0.7838463022094988
     },
     "p_rule": null,
     "q": {
      "ci90": [
-      0.5553767041811579,
-      0.7878959020953986
+      0.5585605903797208,
+      0.7842392915217965
      ],
      "ci95": [
-      0.5330061598852693,
-      0.8047958053371607
+      0.5368387712284395,
+      0.8008133531683659
      ],
-     "k": 34,
-     "n": 50,
-     "p": 0.68,
-     "p_holm": 0.2455468453220817,
-     "p_value": 0.015346677832630107
+     "k": 36,
+     "n": 53,
+     "p": 0.6792452830188679,
+     "p_holm": 0.2025653728386274,
+     "p_value": 0.012660335802414213
     },
     "q_rule": null
    },
@@ -642,34 +671,34 @@
     "client_id": "FireBAM",
     "p": {
      "ci90": [
-      0.22244110100812936,
-      0.7775588989918706
+      0.27124991407766885,
+      0.8004238501161631
      ],
      "ci95": [
-      0.18708602844739855,
-      0.8129139715526015
+      0.23379359765934518,
+      0.8325119059362929
      ],
-     "k": 5,
-     "n": 10,
-     "p": 0.5,
+     "k": 6,
+     "n": 11,
+     "p": 0.5454545454545454,
      "p_holm": 1.0,
      "p_value": 1.0
     },
     "p_rule": null,
     "q": {
      "ci90": [
-      0.39337578389458766,
-      0.9127355660858496
+      0.3498115345719175,
+      0.8649245270803587
      ],
      "ci95": [
-      0.34754714994000274,
-      0.9332604888222655
+      0.3079047150116772,
+      0.8907365561809019
      ],
      "k": 7,
-     "n": 10,
-     "p": 0.7,
+     "n": 11,
+     "p": 0.6363636363636364,
      "p_holm": 1.0,
-     "p_value": 0.34375
+     "p_value": 0.548828125
     },
     "q_rule": null
    },
@@ -688,32 +717,32 @@
     "client_id": "HarmonicAgave",
     "p": {
      "ci90": [
-      0.008512444610847119,
-      0.5818034092520259
+      0.0073008319790147,
+      0.5207029735913071
      ],
      "ci95": [
-      0.004210744514489473,
-      0.6412345789976748
+      0.0036102968619005863,
+      0.5787231970431952
      ],
      "k": 1,
-     "n": 6,
-     "p": 0.16666666666666666,
+     "n": 7,
+     "p": 0.14285714285714285,
      "p_holm": 1.0,
-     "p_value": 0.21875
+     "p_value": 0.125
     },
     "p_rule": null,
     "q": {
      "ci90": [
-      0.15316111797522317,
-      0.8468388820247768
+      0.2253215840324477,
+      0.8712436071957572
      ],
      "ci95": [
-      0.11811724875702523,
-      0.8818827512429748
+      0.18405156764008307,
+      0.9010117215574921
      ],
-     "k": 3,
-     "n": 6,
-     "p": 0.5,
+     "k": 4,
+     "n": 7,
+     "p": 0.5714285714285714,
      "p_holm": 1.0,
      "p_value": 1.0
     },
@@ -793,34 +822,34 @@
     "client_id": "Rakurai",
     "p": {
      "ci90": [
-      0.04999999999999999,
+      0.22360679774997894,
       1.0
      ],
      "ci95": [
-      0.025000000000000022,
+      0.15811388300841903,
       1.0
      ],
-     "k": 1,
-     "n": 1,
+     "k": 2,
+     "n": 2,
      "p": 1.0,
      "p_holm": 1.0,
-     "p_value": 1.0
+     "p_value": 0.5
     },
     "p_rule": null,
     "q": {
      "ci90": [
-      0.04999999999999999,
+      0.22360679774997894,
       1.0
      ],
      "ci95": [
-      0.025000000000000022,
+      0.15811388300841903,
       1.0
      ],
-     "k": 1,
-     "n": 1,
+     "k": 2,
+     "n": 2,
      "p": 1.0,
      "p_holm": 1.0,
-     "p_value": 1.0
+     "p_value": 0.5
     },
     "q_rule": null
    }
@@ -830,36 +859,36 @@
     "client_id": "ALL",
     "p": {
      "ci90": [
-      0.4726733964396566,
-      0.9281297444577301
+      0.4273806605917876,
+      0.8873342192097178
      ],
      "ci95": [
-      0.4281415381218109,
-      0.9451393554720072
+      0.38573833824929565,
+      0.9090796054279033
      ],
      "k": 9,
-     "n": 12,
-     "p": 0.75,
-     "p_holm": 0.75,
-     "p_value": 0.14599609375
+     "n": 13,
+     "p": 0.6923076923076923,
+     "p_holm": 1.0,
+     "p_value": 0.266845703125
     },
     "p_rule": null,
     "q": {
      "ci90": [
-      0.779077808054444,
+      0.7941833348134493,
       1.0
      ],
      "ci95": [
-      0.7353515306029488,
+      0.752947361999529,
       1.0
      ],
-     "k": 12,
-     "n": 12,
+     "k": 13,
+     "n": 13,
      "p": 1.0,
-     "p_holm": 0.00390625,
-     "p_value": 0.00048828125
+     "p_holm": 0.00244140625,
+     "p_value": 0.000244140625
     },
-    "q_rule": "request-position rule partial"
+    "q_rule": "request-position rule strong"
    },
    "Agave": {
     "client_id": "Agave",
@@ -886,7 +915,7 @@
      "k": 6,
      "n": 7,
      "p": 0.8571428571428571,
-     "p_holm": 0.75,
+     "p_holm": 1.0,
      "p_value": 0.125
     },
     "p_rule": null,
@@ -902,7 +931,7 @@
      "k": 7,
      "n": 7,
      "p": 1.0,
-     "p_holm": 0.109375,
+     "p_holm": 0.140625,
      "p_value": 0.015625
     },
     "q_rule": null
@@ -910,11 +939,35 @@
    "FireBAM": {
     "client_id": "FireBAM",
     "p": {
-     "n": 0
+     "ci90": [
+      0.0,
+      0.95
+     ],
+     "ci95": [
+      0.0,
+      0.975
+     ],
+     "k": 0,
+     "n": 1,
+     "p": 0.0,
+     "p_holm": 1.0,
+     "p_value": 1.0
     },
     "p_rule": null,
     "q": {
-     "n": 0
+     "ci90": [
+      0.04999999999999999,
+      1.0
+     ],
+     "ci95": [
+      0.025000000000000022,
+      1.0
+     ],
+     "k": 1,
+     "n": 1,
+     "p": 1.0,
+     "p_holm": 1.0,
+     "p_value": 1.0
     },
     "q_rule": null
    },
@@ -1026,32 +1079,32 @@
    "ALL": {
     "p_co": {
      "ci90": [
-      0.8186836068705645,
-      0.9286600577820997
+      0.7833238051627955,
+      0.8972770214879799
      ],
      "ci95": [
-      0.8063865581143239,
-      0.9355490260696622
+      0.7711047077983709,
+      0.9051545106309519
      ],
-     "k": 97,
-     "n": 110,
-     "p": 0.8818181818181818,
-     "p_holm": 3.7607528523344297e-16,
-     "p_value": 4.700941065418037e-17
+     "k": 105,
+     "n": 124,
+     "p": 0.8467741935483871,
+     "p_holm": 1.0465143835707319e-14,
+     "p_value": 1.3081429794634149e-15
     },
     "q_co": {
      "ci90": [
-      0.508101772008622,
-      0.6699650507701116
+      0.5028556164503808,
+      0.6554912184226975
      ],
      "ci95": [
-      0.49307647729861137,
-      0.6837206674704388
+      0.48871202879583925,
+      0.6686351030392259
      ],
-     "k": 65,
-     "n": 110,
-     "p": 0.5909090909090909,
-     "p_value": 0.06956519633623025
+     "k": 72,
+     "n": 124,
+     "p": 0.5806451612903226,
+     "p_value": 0.08755276689017025
     },
     "rule": "fee rule strong"
    },
@@ -1099,31 +1152,31 @@
    "FireBAM": {
     "p_co": {
      "ci90": [
-      0.34259168199886125,
-      0.9897937816869885
+      0.40031061080916697,
+      0.9536107360203888
      ],
      "ci95": [
-      0.28358206388191054,
-      0.9949492366205319
+      0.34914420558717585,
+      0.9681459737500557
      ],
-     "k": 4,
-     "n": 5,
-     "p": 0.8,
-     "p_holm": 0.5,
-     "p_value": 0.375
+     "k": 6,
+     "n": 8,
+     "p": 0.75,
+     "p_holm": 0.578125,
+     "p_value": 0.2890625
     },
     "q_co": {
      "ci90": [
-      0.18925537743777077,
-      0.923559608587671
+      0.19290294999413105,
+      0.8070970500058688
      ],
      "ci95": [
-      0.14663279963467318,
-      0.9472550494736831
+      0.15701277048705797,
+      0.842987229512942
      ],
-     "k": 3,
-     "n": 5,
-     "p": 0.6,
+     "k": 4,
+     "n": 8,
+     "p": 0.5,
      "p_value": 1.0
     },
     "rule": null
@@ -1131,64 +1184,64 @@
    "Firedancer": {
     "p_co": {
      "ci90": [
-      0.7615958096191473,
-      1.0
+      0.7360426027114314,
+      0.9967993022898115
      ],
      "ci95": [
-      0.7150858470818456,
-      1.0
+      0.6976792615654681,
+      0.9984188882772341
      ],
-     "k": 11,
-     "n": 11,
-     "p": 1.0,
-     "p_holm": 0.0048828125,
-     "p_value": 0.0009765625
+     "k": 15,
+     "n": 16,
+     "p": 0.9375,
+     "p_holm": 0.00311279296875,
+     "p_value": 0.000518798828125
     },
     "q_co": {
      "ci90": [
-      0.07882004566602895,
-      0.5643741882892295
+      0.1777658516875884,
+      0.6089884169792585
      ],
      "ci95": [
-      0.06021773417290667,
-      0.6097425595724212
+      0.1519836750811221,
+      0.6456539056979218
      ],
-     "k": 3,
-     "n": 11,
-     "p": 0.2727272727272727,
-     "p_value": 0.2265625
+     "k": 6,
+     "n": 16,
+     "p": 0.375,
+     "p_value": 0.454498291015625
     },
     "rule": "fee rule partial"
    },
    "HarmonicAgave": {
     "p_co": {
      "ci90": [
-      0.7077268034920106,
-      0.9650466651662819
+      0.660598028638409,
+      0.9268862285231525
      ],
      "ci95": [
-      0.6763886418111671,
-      0.973440685013751
+      0.6310666505807963,
+      0.9393570911807925
      ],
-     "k": 21,
-     "n": 24,
-     "p": 0.875,
-     "p_holm": 0.0016629695892333984,
-     "p_value": 0.0002771615982055664
+     "k": 23,
+     "n": 28,
+     "p": 0.8214285714285714,
+     "p_holm": 0.004561170935630798,
+     "p_value": 0.0009122341871261597
     },
     "q_co": {
      "ci90": [
-      0.5212720941280304,
-      0.8543135197119636
+      0.5062110280808656,
+      0.8209229948652812
      ],
      "ci95": [
-      0.4890521861421669,
-      0.8738479114763087
+      0.47648359329038154,
+      0.8412239621138461
      ],
-     "k": 17,
-     "n": 24,
-     "p": 0.7083333333333334,
-     "p_value": 0.06391465663909912
+     "k": 19,
+     "n": 28,
+     "p": 0.6785714285714286,
+     "p_value": 0.08715855330228806
     },
     "rule": "fee rule partial"
    },
@@ -1259,31 +1312,31 @@
    "Rakurai": {
     "p_co": {
      "ci90": [
-      0.36840314986403866,
-      1.0
+      0.18925537743777077,
+      0.923559608587671
      ],
      "ci95": [
-      0.29240177382128674,
-      1.0
+      0.14663279963467318,
+      0.9472550494736831
      ],
      "k": 3,
-     "n": 3,
-     "p": 1.0,
-     "p_holm": 0.5,
-     "p_value": 0.25
+     "n": 5,
+     "p": 0.6,
+     "p_holm": 1.0,
+     "p_value": 1.0
     },
     "q_co": {
      "ci90": [
-      0.016952427508441496,
-      0.8646496378284161
+      0.07644039141232886,
+      0.8107446225622291
      ],
      "ci95": [
-      0.008403758659612643,
-      0.9057006759497539
+      0.05274495052631693,
+      0.8533672003653268
      ],
-     "k": 1,
-     "n": 3,
-     "p": 0.3333333333333333,
+     "k": 2,
+     "n": 5,
+     "p": 0.4,
      "p_value": 1.0
     },
     "rule": null
@@ -1293,27 +1346,38 @@
    "D/ALL": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.32810871510135664,
-      0.7141995219128239
+      0.398424154755433,
+      0.7415758657964993
      ],
      "ci95": [
-      0.29780683878364417,
-      0.7428693735935925
+      0.3691803809239666,
+      0.7664780168725565
      ],
-     "k": 11,
-     "n": 21,
-     "p": 0.5238095238095238,
-     "p_value": 1.0
+     "k": 15,
+     "n": 26,
+     "p": 0.5769230769230769,
+     "p_value": 0.557197093963623
     },
-    "n_both_landed": 90,
-    "n_different_slots": 21
+    "n_both_landed": 109,
+    "n_different_slots": 26
    },
    "D/Agave": {
     "high_fee_earlier_slot": {
-     "n": 0
+     "ci90": [
+      0.04999999999999999,
+      1.0
+     ],
+     "ci95": [
+      0.025000000000000022,
+      1.0
+     ],
+     "k": 1,
+     "n": 1,
+     "p": 1.0,
+     "p_value": 1.0
     },
-    "n_both_landed": 5,
-    "n_different_slots": 0
+    "n_both_landed": 6,
+    "n_different_slots": 1
    },
    "D/AgaveBam": {
     "high_fee_earlier_slot": {
@@ -1348,10 +1412,46 @@
      "p": 0.5,
      "p_value": 1.0
     },
-    "n_both_landed": 6,
+    "n_both_landed": 9,
     "n_different_slots": 2
    },
    "D/Firedancer": {
+    "high_fee_earlier_slot": {
+     "ci90": [
+      0.13535036217158378,
+      0.9830475724915585
+     ],
+     "ci95": [
+      0.09429932405024613,
+      0.9915962413403874
+     ],
+     "k": 2,
+     "n": 3,
+     "p": 0.6666666666666666,
+     "p_value": 1.0
+    },
+    "n_both_landed": 12,
+    "n_different_slots": 3
+   },
+   "D/HarmonicAgave": {
+    "high_fee_earlier_slot": {
+     "ci90": [
+      0.18925537743777077,
+      0.923559608587671
+     ],
+     "ci95": [
+      0.14663279963467318,
+      0.9472550494736831
+     ],
+     "k": 3,
+     "n": 5,
+     "p": 0.6,
+     "p_value": 1.0
+    },
+    "n_both_landed": 23,
+    "n_different_slots": 5
+   },
+   "D/HarmonicFiredancer": {
     "high_fee_earlier_slot": {
      "ci90": [
       0.025320565519103604,
@@ -1366,44 +1466,8 @@
      "p": 0.5,
      "p_value": 1.0
     },
-    "n_both_landed": 6,
+    "n_both_landed": 13,
     "n_different_slots": 2
-   },
-   "D/HarmonicAgave": {
-    "high_fee_earlier_slot": {
-     "ci90": [
-      0.09761146288641433,
-      0.9023885371135856
-     ],
-     "ci95": [
-      0.067585986488543,
-      0.932414013511457
-     ],
-     "k": 2,
-     "n": 4,
-     "p": 0.5,
-     "p_value": 1.0
-    },
-    "n_both_landed": 19,
-    "n_different_slots": 4
-   },
-   "D/HarmonicFiredancer": {
-    "high_fee_earlier_slot": {
-     "ci90": [
-      0.04999999999999999,
-      1.0
-     ],
-     "ci95": [
-      0.025000000000000022,
-      1.0
-     ],
-     "k": 1,
-     "n": 1,
-     "p": 1.0,
-     "p_value": 1.0
-    },
-    "n_both_landed": 9,
-    "n_different_slots": 1
    },
    "D/JitoLabs": {
     "high_fee_earlier_slot": {
@@ -1426,56 +1490,56 @@
    "D/Rakurai": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.016952427508441496,
-      0.8646496378284161
+      0.09761146288641433,
+      0.9023885371135856
      ],
      "ci95": [
-      0.008403758659612643,
-      0.9057006759497539
+      0.067585986488543,
+      0.932414013511457
      ],
-     "k": 1,
-     "n": 3,
-     "p": 0.3333333333333333,
+     "k": 2,
+     "n": 4,
+     "p": 0.5,
      "p_value": 1.0
     },
-    "n_both_landed": 4,
-    "n_different_slots": 3
+    "n_both_landed": 5,
+    "n_different_slots": 4
    },
    "P/ALL": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.467191304078093,
-      0.559183662696249
+      0.4661470983941585,
+      0.5477992077915343
      ],
      "ci95": [
-      0.4586779161995849,
-      0.5676368890792147
+      0.45856935275776534,
+      0.5553518107573341
      ],
-     "k": 174,
-     "n": 339,
-     "p": 0.5132743362831859,
-     "p_value": 0.6639883747317784
+     "k": 217,
+     "n": 428,
+     "p": 0.5070093457943925,
+     "p_value": 0.8090593913100436
     },
-    "n_both_landed": 1322,
-    "n_different_slots": 339
+    "n_both_landed": 1668,
+    "n_different_slots": 428
    },
    "P/Agave": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.2823555265728761,
-      0.642436040653479
+      0.27774875202434934,
+      0.5814381529637083
      ],
      "ci95": [
-      0.2555302019947463,
-      0.671791924304822
+      0.2547618227346959,
+      0.6078469838121148
      ],
-     "k": 11,
-     "n": 24,
-     "p": 0.4583333333333333,
-     "p_value": 0.8388197422027588
+     "k": 14,
+     "n": 33,
+     "p": 0.42424242424242425,
+     "p_value": 0.48685024166479707
     },
-    "n_both_landed": 53,
-    "n_different_slots": 24
+    "n_both_landed": 70,
+    "n_different_slots": 33
    },
    "P/AgaveBam": {
     "high_fee_earlier_slot": {
@@ -1498,74 +1562,74 @@
    "P/FireBAM": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.3286658211660266,
-      0.6023017079074977
+      0.3988888138223885,
+      0.636567683805551
      ],
      "ci95": [
-      0.30655943285140136,
-      0.6257515716862507
+      0.3783650800896947,
+      0.6565704071235272
      ],
-     "k": 19,
-     "n": 41,
-     "p": 0.4634146341463415,
-     "p_value": 0.755228657504631
+     "k": 28,
+     "n": 54,
+     "p": 0.5185185185185185,
+     "p_value": 0.8919231511047488
     },
-    "n_both_landed": 149,
-    "n_different_slots": 41
+    "n_both_landed": 203,
+    "n_different_slots": 54
    },
    "P/Firedancer": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.4168451778511049,
-      0.7783641508676293
+      0.37656695148524416,
+      0.6782303006034112
      ],
      "ci95": [
-      0.3854189573888497,
-      0.8029235760309856
+      0.35129283705141207,
+      0.7022133335818035
      ],
-     "k": 14,
-     "n": 23,
-     "p": 0.6086956521739131,
-     "p_value": 0.4048728942871094
+     "k": 18,
+     "n": 34,
+     "p": 0.5294117647058824,
+     "p_value": 0.8641662404406816
     },
-    "n_both_landed": 124,
-    "n_different_slots": 23
+    "n_both_landed": 192,
+    "n_different_slots": 34
    },
    "P/HarmonicAgave": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.3042902128510222,
-      0.5665263748779049
+      0.3476621876094155,
+      0.5417093599694637
      ],
      "ci95": [
-      0.28349372808928663,
-      0.5896627838939661
+      0.33124728936528164,
+      0.5592280905480949
      ],
-     "k": 19,
-     "n": 44,
-     "p": 0.4318181818181818,
-     "p_value": 0.4513808323961257
+     "k": 35,
+     "n": 79,
+     "p": 0.4430379746835443,
+     "p_value": 0.3681876338306311
     },
-    "n_both_landed": 239,
-    "n_different_slots": 44
+    "n_both_landed": 381,
+    "n_different_slots": 79
    },
    "P/HarmonicFiredancer": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.4640640923907075,
-      0.8318241766085034
+      0.5338525437032049,
+      0.8127012596808366
      ],
      "ci95": [
-      0.4303245170958757,
-      0.8541230576569032
+      0.5071199996848251,
+      0.8314828492529975
      ],
-     "k": 14,
-     "n": 21,
-     "p": 0.6666666666666666,
-     "p_value": 0.18924713134765625
+     "k": 24,
+     "n": 35,
+     "p": 0.6857142857142857,
+     "p_value": 0.040959591511636986
     },
-    "n_both_landed": 116,
-    "n_different_slots": 21
+    "n_both_landed": 160,
+    "n_different_slots": 35
    },
    "P/JitoLabs": {
     "high_fee_earlier_slot": {
@@ -1588,38 +1652,38 @@
    "P/Rakurai": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.5286084845169541,
-      0.843180977862442
+      0.43321475303838924,
+      0.7311590534350347
      ],
      "ci95": [
-      0.49818633362999865,
-      0.8624734460594208
+      0.40696943297084814,
+      0.7535292647022493
      ],
-     "k": 19,
-     "n": 27,
-     "p": 0.7037037037037037,
-     "p_value": 0.052238985896110535
+     "k": 20,
+     "n": 34,
+     "p": 0.5882352941176471,
+     "p_value": 0.39152830513194203
     },
-    "n_both_landed": 70,
-    "n_different_slots": 27
+    "n_both_landed": 91,
+    "n_different_slots": 34
    },
    "S/ALL": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.4227279050225385,
-      0.682667197494422
+      0.46348671744882103,
+      0.7049888508764157
      ],
      "ci95": [
-      0.3999734964036788,
-      0.7035560761341417
+      0.4416928277674612,
+      0.7241570394874148
      ],
-     "k": 25,
-     "n": 45,
-     "p": 0.5555555555555556,
-     "p_value": 0.5514843298025198
+     "k": 30,
+     "n": 51,
+     "p": 0.5882352941176471,
+     "p_value": 0.2624375357110438
     },
-    "n_both_landed": 76,
-    "n_different_slots": 45
+    "n_both_landed": 90,
+    "n_different_slots": 51
    },
    "S/Agave": {
     "high_fee_earlier_slot": {
@@ -1660,58 +1724,22 @@
    "S/FireBAM": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.47929702640869287,
-      0.9926991680209853
+      0.5293205913988683,
+      0.993608849045455
      ],
      "ci95": [
-      0.42127680295680486,
-      0.9963897031380994
+      0.4734903291247935,
+      0.9968402764687481
      ],
-     "k": 6,
-     "n": 7,
-     "p": 0.8571428571428571,
-     "p_value": 0.125
+     "k": 7,
+     "n": 8,
+     "p": 0.875,
+     "p_value": 0.0703125
     },
-    "n_both_landed": 9,
-    "n_different_slots": 7
+    "n_both_landed": 11,
+    "n_different_slots": 8
    },
    "S/Firedancer": {
-    "high_fee_earlier_slot": {
-     "ci90": [
-      0.13535036217158378,
-      0.9830475724915585
-     ],
-     "ci95": [
-      0.09429932405024613,
-      0.9915962413403874
-     ],
-     "k": 2,
-     "n": 3,
-     "p": 0.6666666666666666,
-     "p_value": 1.0
-    },
-    "n_both_landed": 7,
-    "n_different_slots": 3
-   },
-   "S/HarmonicAgave": {
-    "high_fee_earlier_slot": {
-     "ci90": [
-      0.12875639280424267,
-      0.7746784159675522
-     ],
-     "ci95": [
-      0.09898827844250789,
-      0.8159484323599169
-     ],
-     "k": 3,
-     "n": 7,
-     "p": 0.42857142857142855,
-     "p_value": 1.0
-    },
-    "n_both_landed": 13,
-    "n_different_slots": 7
-   },
-   "S/HarmonicFiredancer": {
     "high_fee_earlier_slot": {
      "ci90": [
       0.09761146288641433,
@@ -1726,8 +1754,44 @@
      "p": 0.5,
      "p_value": 1.0
     },
-    "n_both_landed": 11,
+    "n_both_landed": 9,
     "n_different_slots": 4
+   },
+   "S/HarmonicAgave": {
+    "high_fee_earlier_slot": {
+     "ci90": [
+      0.25136762740817725,
+      0.8312495040126759
+     ],
+     "ci95": [
+      0.212008506778868,
+      0.8630043377348335
+     ],
+     "k": 5,
+     "n": 9,
+     "p": 0.5555555555555556,
+     "p_value": 1.0
+    },
+    "n_both_landed": 20,
+    "n_different_slots": 9
+   },
+   "S/HarmonicFiredancer": {
+    "high_fee_earlier_slot": {
+     "ci90": [
+      0.18925537743777077,
+      0.923559608587671
+     ],
+     "ci95": [
+      0.14663279963467318,
+      0.9472550494736831
+     ],
+     "k": 3,
+     "n": 5,
+     "p": 0.6,
+     "p_value": 1.0
+    },
+    "n_both_landed": 13,
+    "n_different_slots": 5
    },
    "S/JitoLabs": {
     "high_fee_earlier_slot": {
@@ -1750,26 +1814,26 @@
    "S/Rakurai": {
     "high_fee_earlier_slot": {
      "ci90": [
-      0.0,
-      0.776393202250021
+      0.016952427508441496,
+      0.8646496378284161
      ],
      "ci95": [
-      0.0,
-      0.841886116991581
+      0.008403758659612643,
+      0.9057006759497539
      ],
-     "k": 0,
-     "n": 2,
-     "p": 0.0,
-     "p_value": 0.5
+     "k": 1,
+     "n": 3,
+     "p": 0.3333333333333333,
+     "p_value": 1.0
     },
-    "n_both_landed": 2,
-    "n_different_slots": 2
+    "n_both_landed": 3,
+    "n_different_slots": 3
    }
   },
   "execution_errors": {
    "by_arm": {},
    "by_target": {},
-   "n_tx_landed": 3603,
+   "n_tx_landed": 4493,
    "n_tx_with_error": 0
   },
   "harmonic_strategy": {
@@ -1804,17 +1868,17 @@
     },
     "no block summary": {
      "ci90": [
-      0.9132188107085251,
-      1.0
+      0.8944017302410807,
+      0.9883857090695879
      ],
      "ci95": [
-      0.8942371899254207,
-      1.0
+      0.8814449055470013,
+      0.9912000804384358
      ],
-     "k": 33,
-     "n": 33,
-     "p": 1.0,
-     "p_value": 2.3283064365386963e-10
+     "k": 68,
+     "n": 71,
+     "p": 0.9577464788732394,
+     "p_value": 5.057803134644878e-17
     }
    },
    "fisher_pairs": {
@@ -1843,74 +1907,128 @@
   "untargeted_landings": [
    {
     "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 17,
-    "n_same_slot_pairs_arm_P": 23,
-    "n_tx": 89,
+    "high_fee_first_arm_P": 27,
+    "n_same_slot_pairs_arm_P": 38,
+    "n_tx": 138,
     "producer": "HEL1USMZKAL2odpNBj2oCjffnFGaYwmbGmyewGv1e2TU",
-    "sent_first_first_arm_P": 12,
+    "sent_first_first_arm_P": 19,
     "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 15,
-    "n_same_slot_pairs_arm_P": 15,
-    "n_tx": 51,
+    "high_fee_first_arm_P": 30,
+    "n_same_slot_pairs_arm_P": 30,
+    "n_tx": 96,
     "producer": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
-    "sent_first_first_arm_P": 9,
+    "sent_first_first_arm_P": 15,
     "version": "4.4.0-rc.1"
    },
    {
     "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 14,
-    "n_same_slot_pairs_arm_P": 15,
-    "n_tx": 47,
-    "producer": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+    "high_fee_first_arm_P": 11,
+    "n_same_slot_pairs_arm_P": 13,
+    "n_tx": 64,
+    "producer": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
     "sent_first_first_arm_P": 5,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 19,
+    "n_same_slot_pairs_arm_P": 20,
+    "n_tx": 58,
+    "producer": "EvnRmnMrd69kFdbLMxWkTn1icZ7DCceRhvmb2SJXqDo4",
+    "sent_first_first_arm_P": 8,
     "version": "4.3.2"
    },
    {
     "client_id": "JitoLabs",
     "high_fee_first_arm_P": 6,
-    "n_same_slot_pairs_arm_P": 7,
-    "n_tx": 36,
-    "producer": "C8Bey3LKVJHVqN6xPTeW8WJfUgFQAeGNBpT4Rp99JP1k",
-    "sent_first_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 8,
+    "n_tx": 47,
+    "producer": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
+    "sent_first_first_arm_P": 3,
     "version": "4.4.0"
    },
    {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 3,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 36,
-    "producer": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
-    "sent_first_first_arm_P": 1,
-    "version": "4.4.0"
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 8,
+    "n_same_slot_pairs_arm_P": 10,
+    "n_tx": 46,
+    "producer": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
+    "sent_first_first_arm_P": 7,
+    "version": "4.3.2"
    },
    {
     "client_id": "FireBAM",
-    "high_fee_first_arm_P": 7,
-    "n_same_slot_pairs_arm_P": 8,
-    "n_tx": 31,
+    "high_fee_first_arm_P": 9,
+    "n_same_slot_pairs_arm_P": 10,
+    "n_tx": 39,
     "producer": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
-    "sent_first_first_arm_P": 4,
+    "sent_first_first_arm_P": 6,
     "version": "26.10.5"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 8,
+    "n_same_slot_pairs_arm_P": 10,
+    "n_tx": 36,
+    "producer": "76rcGHdPvgs8G1XrzCXUTWtwgT59AFDvpB4VbTS2TBBJ",
+    "sent_first_first_arm_P": 5,
+    "version": "4.3.2"
    },
    {
     "client_id": "HarmonicAgave",
     "high_fee_first_arm_P": 8,
     "n_same_slot_pairs_arm_P": 9,
-    "n_tx": 31,
+    "n_tx": 33,
     "producer": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
     "sent_first_first_arm_P": 4,
     "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 7,
+    "n_same_slot_pairs_arm_P": 8,
+    "n_tx": 33,
+    "producer": "GBQ2GvTzmjXMu97dr7WUnLKYTNim1aoZsYS53KYXAAAA",
+    "sent_first_first_arm_P": 3,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 8,
+    "n_same_slot_pairs_arm_P": 8,
+    "n_tx": 32,
+    "producer": "GSTampk6BJRKSDkzhaMM49R7qRx98MTPYYWvKbp83XKc",
+    "sent_first_first_arm_P": 4,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 6,
     "n_same_slot_pairs_arm_P": 6,
-    "n_tx": 27,
-    "producer": "76rcGHdPvgs8G1XrzCXUTWtwgT59AFDvpB4VbTS2TBBJ",
+    "n_tx": 31,
+    "producer": "22rU5yUmdVThrkoPieVNphqEyAtMQKmZxjwcD8v4bJDU",
+    "sent_first_first_arm_P": 5,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 8,
+    "n_same_slot_pairs_arm_P": 8,
+    "n_tx": 31,
+    "producer": "AWcCdYG7Dy6GX45c6QMPbgGwgRZPKcBDT4bXGb3QrVRV",
     "sent_first_first_arm_P": 4,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 7,
+    "n_same_slot_pairs_arm_P": 7,
+    "n_tx": 31,
+    "producer": "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
+    "sent_first_first_arm_P": 2,
     "version": "4.3.2"
    },
    {
@@ -1926,63 +2044,72 @@
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 7,
     "n_same_slot_pairs_arm_P": 7,
-    "n_tx": 26,
-    "producer": "AWcCdYG7Dy6GX45c6QMPbgGwgRZPKcBDT4bXGb3QrVRV",
-    "sent_first_first_arm_P": 4,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 26,
-    "producer": "Fc6NNdS2j3EmrWbU6Uqt6wsKB5ef72NjaWfNxKYbULGD",
-    "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 25,
-    "producer": "22rU5yUmdVThrkoPieVNphqEyAtMQKmZxjwcD8v4bJDU",
-    "sent_first_first_arm_P": 4,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 6,
-    "n_same_slot_pairs_arm_P": 6,
-    "n_tx": 22,
+    "n_tx": 24,
     "producer": "5ejbTALcBsKQ7Cj1iSuu2mY5jqbYHqh9gF5ERXLiYj1z",
-    "sent_first_first_arm_P": 3,
+    "sent_first_first_arm_P": 4,
     "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 21,
-    "producer": "5Cchr1XGEg7dbBXByV5NY2ad8jfxAM7HA3x8D56rq9Ux",
-    "sent_first_first_arm_P": 3,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 21,
-    "producer": "GSTampk6BJRKSDkzhaMM49R7qRx98MTPYYWvKbp83XKc",
-    "sent_first_first_arm_P": 2,
-    "version": "4.3.2"
+    "high_fee_first_arm_P": 8,
+    "n_same_slot_pairs_arm_P": 8,
+    "n_tx": 23,
+    "producer": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
+    "sent_first_first_arm_P": 5,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 3,
-    "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 20,
-    "producer": "GBQ2GvTzmjXMu97dr7WUnLKYTNim1aoZsYS53KYXAAAA",
+    "n_same_slot_pairs_arm_P": 4,
+    "n_tx": 23,
+    "producer": "HnfPZDrbJFooiP9vvgWrjx3baXVNAZCgisT58gyMCgML",
+    "sent_first_first_arm_P": 3,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 4,
+    "n_same_slot_pairs_arm_P": 4,
+    "n_tx": 23,
+    "producer": "HpcB5Qg8Y9E73dUkot5e8HkgAJbExsYeUzniY4bCuKac",
     "sent_first_first_arm_P": 2,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 9,
+    "n_same_slot_pairs_arm_P": 9,
+    "n_tx": 22,
+    "producer": "DUND26mEDfFeaPsVof3YvbXDRvpuQX7HMUJrLgEWzYw4",
+    "sent_first_first_arm_P": 7,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 7,
+    "n_same_slot_pairs_arm_P": 7,
+    "n_tx": 21,
+    "producer": "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC",
+    "sent_first_first_arm_P": 5,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 7,
+    "n_same_slot_pairs_arm_P": 7,
+    "n_tx": 21,
+    "producer": "HbidP4hpQdwhkzrxder3x3VNPt6DQnE25gFG46napD2p",
+    "sent_first_first_arm_P": 5,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 5,
+    "n_same_slot_pairs_arm_P": 6,
+    "n_tx": 19,
+    "producer": "6y7V8dL673XFzm9QyC5vvh3itWkp7wztahBd2yDqsyrK",
+    "sent_first_first_arm_P": 4,
     "version": "4.3.2"
    },
    {
@@ -1996,127 +2123,109 @@
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 6,
-    "n_same_slot_pairs_arm_P": 6,
-    "n_tx": 18,
-    "producer": "HbidP4hpQdwhkzrxder3x3VNPt6DQnE25gFG46napD2p",
+    "high_fee_first_arm_P": 5,
+    "n_same_slot_pairs_arm_P": 5,
+    "n_tx": 19,
+    "producer": "BUv44cVtsdvU9z2BfFGk6s5JZZWrmVnq5qCaii5ARyyB",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 5,
+    "n_tx": 19,
+    "producer": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
     "sent_first_first_arm_P": 4,
     "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 17,
-    "producer": "5EhGYUyQNrxgUbuYF4vbL2SZDT6RMfhq3yjeyevvULeC",
-    "sent_first_first_arm_P": 3,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
     "n_same_slot_pairs_arm_P": 6,
-    "n_tx": 17,
+    "n_tx": 19,
     "producer": "GQzMeEMwAR44ugoNCifTb5NdRKos1GduDUPeNh6AgV46",
     "sent_first_first_arm_P": 2,
     "version": "4.3.2"
    },
    {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 16,
-    "producer": "9rkJMARqK6VBkcxGfKBAwnA44gPAfGxPbPsfsggFNDSQ",
-    "sent_first_first_arm_P": 2,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 6,
-    "n_same_slot_pairs_arm_P": 6,
-    "n_tx": 16,
-    "producer": "DUND26mEDfFeaPsVof3YvbXDRvpuQX7HMUJrLgEWzYw4",
-    "sent_first_first_arm_P": 5,
+    "client_id": "HarmonicAgave",
+    "high_fee_first_arm_P": 7,
+    "n_same_slot_pairs_arm_P": 7,
+    "n_tx": 18,
+    "producer": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
+    "sent_first_first_arm_P": 4,
     "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 4,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 15,
-    "producer": "6y7V8dL673XFzm9QyC5vvh3itWkp7wztahBd2yDqsyrK",
-    "sent_first_first_arm_P": 4,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "HarmonicAgave",
-    "high_fee_first_arm_P": 5,
-    "n_same_slot_pairs_arm_P": 5,
-    "n_tx": 14,
-    "producer": "CAo1dCGYrB6NhHh5xb1cGjUiu86iyCfMTENxgHumSve4",
-    "sent_first_first_arm_P": 3,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 14,
-    "producer": "CoG8d9Fp2TFJRkAmrPMiPsGhQWHzdTTVoegEp9svRgmJ",
-    "sent_first_first_arm_P": 2,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 14,
-    "producer": "EUcJwf7jXskRE6NZBtFPVH2EedNvNYko8LL2WT62XctB",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 13,
+    "n_same_slot_pairs_arm_P": 4,
+    "n_tx": 17,
     "producer": "BSVckjdW2f8kcXPGcrPPtV9kUDBZ8w8PjrrGVnxgEdwq",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 12,
-    "producer": "5DYpYgKgHV5aswMXBLp3UfJnbbzzFnGiJPpcxVAm56bG",
-    "sent_first_first_arm_P": 3,
+    "sent_first_first_arm_P": 1,
     "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 3,
     "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 12,
-    "producer": "BUv44cVtsdvU9z2BfFGk6s5JZZWrmVnq5qCaii5ARyyB",
+    "n_tx": 17,
+    "producer": "CoG8d9Fp2TFJRkAmrPMiPsGhQWHzdTTVoegEp9svRgmJ",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 5,
+    "n_same_slot_pairs_arm_P": 6,
+    "n_tx": 16,
+    "producer": "7KVnUL45FH4N8Z7x1dnvJ7GzMx12cs81mS26mHzNjQPN",
+    "sent_first_first_arm_P": 3,
+    "version": null
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 15,
+    "producer": "EUcJwf7jXskRE6NZBtFPVH2EedNvNYko8LL2WT62XctB",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 14,
+    "producer": "39ECbLHtUs6wdSRfWLBdzbmoCEvhq5Hh4vbmXTRsRFxr",
     "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
+    "version": null
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 12,
-    "producer": "CMPSSdrTnRQBiBGTyFpdCc3VMNuLWYWaSkE8Zh5z6gbd",
-    "sent_first_first_arm_P": 2,
-    "version": "4.4.0-rc.1"
+    "n_tx": 14,
+    "producer": "5DYpYgKgHV5aswMXBLp3UfJnbbzzFnGiJPpcxVAm56bG",
+    "sent_first_first_arm_P": 3,
+    "version": "4.3.2"
    },
    {
-    "client_id": "JitoLabs",
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 12,
-    "producer": "FbYX2uN573G5WsgiPdHU6fS5PNUyjdXfGfpZNkYUuT4k",
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 14,
+    "producer": "HaLanfo94ezLc3JZ55qqxr7W3qbe1PprJyv2uEtriEqN",
+    "sent_first_first_arm_P": 2,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "Agave",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 4,
+    "n_tx": 13,
+    "producer": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
     "sent_first_first_arm_P": 3,
     "version": "4.3.2"
    },
@@ -2124,7 +2233,25 @@
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 12,
+    "n_tx": 13,
+    "producer": "CMPSSdrTnRQBiBGTyFpdCc3VMNuLWYWaSkE8Zh5z6gbd",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 13,
+    "producer": "GzDfKKoZ6E8ReqKfH96k5bkmA6CEWtnUrQnZjSqW4ZzG",
+    "sent_first_first_arm_P": 2,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 13,
     "producer": "HSDTxfgrqY8ZK88Q5Fx2DdX7zxMDqXgxJKgErTBSLoQJ",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0-rc.1"
@@ -2134,45 +2261,72 @@
     "high_fee_first_arm_P": 4,
     "n_same_slot_pairs_arm_P": 4,
     "n_tx": 12,
-    "producer": "HpcB5Qg8Y9E73dUkot5e8HkgAJbExsYeUzniY4bCuKac",
-    "sent_first_first_arm_P": 2,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 11,
-    "producer": "39ECbLHtUs6wdSRfWLBdzbmoCEvhq5Hh4vbmXTRsRFxr",
-    "sent_first_first_arm_P": 1,
-    "version": null
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 4,
-    "n_same_slot_pairs_arm_P": 4,
-    "n_tx": 11,
     "producer": "7CR3Jq4ny2tsr3DX3DvyjoU8TYs776MGkU6nLMWjAqCT",
     "sent_first_first_arm_P": 1,
     "version": "4.3.2"
    },
    {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 12,
+    "producer": "FWwwP9tNttSy9dJFxwf6ebXWfc6VJXqFNMTccrMiLFTH",
+    "sent_first_first_arm_P": 3,
+    "version": "4.3.2"
+   },
+   {
     "client_id": null,
-    "high_fee_first_arm_P": 4,
-    "n_same_slot_pairs_arm_P": 4,
-    "n_tx": 11,
-    "producer": "7KVnUL45FH4N8Z7x1dnvJ7GzMx12cs81mS26mHzNjQPN",
-    "sent_first_first_arm_P": 1,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 12,
+    "producer": "J1to5o1Q7W7Y2Q7zpETTezv3DyzPMHKDg66X2nZPMr4X",
+    "sent_first_first_arm_P": 3,
     "version": null
    },
    {
-    "client_id": "Agave",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 4,
-    "n_tx": 11,
-    "producer": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
+    "client_id": "Firedancer",
+    "high_fee_first_arm_P": 4,
+    "n_same_slot_pairs_arm_P": 5,
+    "n_tx": 12,
+    "producer": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
     "sent_first_first_arm_P": 3,
+    "version": "26.10.5"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 12,
+    "producer": "vu1sGn2f1Xim6voHNLt4nLn38zNkYdLasU7hEr1TC2D",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 11,
+    "producer": "2GUnfxZavKoPfS9s3VSEjaWDzB3vNf5RojUhprCS1rSx",
+    "sent_first_first_arm_P": 1,
     "version": "4.3.2"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 11,
+    "producer": "3SkE34PVeGck2ArEffFKjihrQgURsvnoTAhitsNXNzXd",
+    "sent_first_first_arm_P": 2,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 11,
+    "producer": "7qGNnXKW1e3DsqEaSxwxMdBTFsrK73XtWTmkGitRyMQc",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0"
    },
    {
     "client_id": "HarmonicAgave",
@@ -2185,10 +2339,37 @@
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 11,
+    "producer": "Ninja1spj6n9t5hVYgF3PdnYz2PLnkt7rvaw3firmjs",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "Rakurai",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 11,
+    "producer": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
+    "sent_first_first_arm_P": 2,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 10,
+    "producer": "8uJiHDJ1b7UDQ4KFsQGJXK9nUCkokdKRJymg1Wy9nxvM",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "Rakurai",
     "high_fee_first_arm_P": 3,
     "n_same_slot_pairs_arm_P": 3,
     "n_tx": 10,
-    "producer": "2GUnfxZavKoPfS9s3VSEjaWDzB3vNf5RojUhprCS1rSx",
+    "producer": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
     "sent_first_first_arm_P": 1,
     "version": "4.3.2"
    },
@@ -2203,11 +2384,11 @@
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 2,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 3,
     "n_tx": 10,
-    "producer": "HnfPZDrbJFooiP9vvgWrjx3baXVNAZCgisT58gyMCgML",
-    "sent_first_first_arm_P": 2,
+    "producer": "GEM1N1UE3C8BB8EaaEPrcFvT3iLMVrurknjW5AYjUReR",
+    "sent_first_first_arm_P": 1,
     "version": "4.3.2"
    },
    {
@@ -2220,6 +2401,15 @@
     "version": "26.10.5"
    },
    {
+    "client_id": "FireBAM",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 10,
+    "producer": "LA1NEzryoih6CQW3gwQqJQffK2mKgnXcjSQZSRpM3wc",
+    "sent_first_first_arm_P": 1,
+    "version": "26.10.5"
+   },
+   {
     "client_id": "JitoLabs",
     "high_fee_first_arm_P": 3,
     "n_same_slot_pairs_arm_P": 3,
@@ -2229,49 +2419,76 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 3,
-    "n_same_slot_pairs_arm_P": 3,
+    "client_id": null,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
     "n_tx": 9,
-    "producer": "3SkE34PVeGck2ArEffFKjihrQgURsvnoTAhitsNXNzXd",
+    "producer": "6aow5rTURdbhbeMDrFrbP2GR5vZjMEhktEy87iH1VGPs",
     "sent_first_first_arm_P": 2,
+    "version": null
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 9,
+    "producer": "6xWLi1TDSh65fWsSqE1zdvANTSuVDRMx4ghsGJwgunS8",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 9,
+    "producer": "AEHqTB2RtJjegsR2ePjvoJSm6AA5pnYKWVbcsn6kqTBD",
+    "sent_first_first_arm_P": 0,
     "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 4,
+    "n_tx": 9,
+    "producer": "AiDoLWFKzNxSXKeZ4zym2TEPkg6F4kQ3YBA8WhANVPEq",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 3,
     "n_tx": 9,
-    "producer": "FWwwP9tNttSy9dJFxwf6ebXWfc6VJXqFNMTccrMiLFTH",
-    "sent_first_first_arm_P": 3,
-    "version": "4.3.2"
+    "producer": "DbWTEseEDkBQzxbUFaTm9JsLy9FfeEGm1bsrfHSzCuEr",
+    "sent_first_first_arm_P": 2,
+    "version": null
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 9,
+    "producer": "HHLMTHR9YoyDNsWKVJBT5AKrX86iQjkiKRFRrnaFubgq",
+    "sent_first_first_arm_P": 1,
+    "version": null
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 9,
-    "producer": "GzDfKKoZ6E8ReqKfH96k5bkmA6CEWtnUrQnZjSqW4ZzG",
-    "sent_first_first_arm_P": 2,
-    "version": "4.3.2"
+    "producer": "soLStaCk5TiGCpeLKa9Fvv6f5JQGMa6S3uhLh826e9N",
+    "sent_first_first_arm_P": 0,
+    "version": "4.5.0-alpha.2"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 9,
-    "producer": "HaLanfo94ezLc3JZ55qqxr7W3qbe1PprJyv2uEtriEqN",
-    "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 1,
+    "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 8,
-    "producer": "6xWLi1TDSh65fWsSqE1zdvANTSuVDRMx4ghsGJwgunS8",
+    "producer": "6TkKqq15wXjqEjNg9zqTKADwuVATR9dW3rkNnsYme1ea",
     "sent_first_first_arm_P": 1,
-    "version": "4.4.0"
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
@@ -2283,13 +2500,31 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "Rakurai",
-    "high_fee_first_arm_P": 2,
+    "client_id": "HarmonicFiredancer",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 8,
+    "producer": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "sent_first_first_arm_P": 2,
+    "version": "26.10.5"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 8,
-    "producer": "E3mDbFMr8yZcCAZx5wPUFCRmLX31u8Nnj4jPoPc54h3F",
+    "producer": "EdFUcP2f6j9iBg5BqsgJn3WDr1JieiKCo41hZ5Zrsk6w",
     "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 8,
+    "producer": "Va1idLRtYEtVFJFsvz8vtt1uCJgea4Q1zi2Rh3eraJh",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -2311,75 +2546,75 @@
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 7,
-    "producer": "6TkKqq15wXjqEjNg9zqTKADwuVATR9dW3rkNnsYme1ea",
-    "sent_first_first_arm_P": 1,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 7,
-    "producer": "8uJiHDJ1b7UDQ4KFsQGJXK9nUCkokdKRJymg1Wy9nxvM",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 7,
-    "producer": "AEHqTB2RtJjegsR2ePjvoJSm6AA5pnYKWVbcsn6kqTBD",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 3,
-    "n_tx": 7,
-    "producer": "AiDoLWFKzNxSXKeZ4zym2TEPkg6F4kQ3YBA8WhANVPEq",
-    "sent_first_first_arm_P": 2,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "Firedancer",
     "high_fee_first_arm_P": 3,
     "n_same_slot_pairs_arm_P": 3,
     "n_tx": 7,
-    "producer": "JD549HsbJHeEKKUrKgg4Fj2iyv2RGjsV7NTZjZUrHybB",
-    "sent_first_first_arm_P": 2,
+    "producer": "58KprHKFNHgH1Cvo4QwxWkDeJNaSQVteCoAAFUWjtESn",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 7,
+    "producer": "G2TBEh2ahNGS9tGnuBNyDduNjyfUtGhMcssgRb8b6KfH",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "HarmonicAgave",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 7,
+    "producer": "Hz5aLvpKScNWoe9YZWxBLrQA3qzHJivBGtfciMekk8m5",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "FireBAM",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 7,
+    "producer": "SSmBEooM7RkmyuXxuKgAhTvhQZ36Z3G2WsmLGJKoQLY",
+    "sent_first_first_arm_P": 0,
     "version": "26.10.5"
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 7,
+    "producer": "STKEsvUSpD38eDxkAJN6cENMYfjVxieajVpmVVkgd1t",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 7,
-    "producer": "Ninja1spj6n9t5hVYgF3PdnYz2PLnkt7rvaw3firmjs",
+    "producer": "gridqZmeBcsUKT2Mv4M9YFHFN3tVLFb2TCtTcLD1cAd",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 7,
-    "producer": "soLStaCk5TiGCpeLKa9Fvv6f5JQGMa6S3uhLh826e9N",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 6,
+    "producer": "5essVpBYvocZkQnkrWsMDfRPwtp4BeihJRaweKLR4dRn",
     "sent_first_first_arm_P": 0,
-    "version": "4.5.0-alpha.2"
+    "version": "4.4.0"
    },
    {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 6,
-    "producer": "7qGNnXKW1e3DsqEaSxwxMdBTFsrK73XtWTmkGitRyMQc",
-    "sent_first_first_arm_P": 2,
-    "version": "4.4.0"
+    "producer": "8gDfqHXZ5ektqQQrLrCGtSzYRwkWQrm3ANnAvQCt2LoM",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
    },
    {
     "client_id": "Firedancer",
@@ -2391,22 +2626,31 @@
     "version": "26.10.5"
    },
    {
-    "client_id": "HarmonicFiredancer",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 6,
-    "producer": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
-    "sent_first_first_arm_P": 2,
-    "version": "26.10.5"
+    "producer": "A9mvukTd77EbRoBX4ydSCFQHdu5bsRFkNXTTRstA8FAC",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 6,
-    "producer": "GEM1N1UE3C8BB8EaaEPrcFvT3iLMVrurknjW5AYjUReR",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
+    "producer": "CLsFr1KZVbAyz16iFpwg2e4hiekR1unpwyxfNdjBMaoE",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 6,
+    "producer": "Cu9Ls6dsTL6cxFHZdStHwVSh1uy2ynXz8qPJMS5FRq86",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
@@ -2431,25 +2675,25 @@
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 6,
-    "producer": "Hz5aLvpKScNWoe9YZWxBLrQA3qzHJivBGtfciMekk8m5",
-    "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 6,
-    "producer": "Va1idLRtYEtVFJFsvz8vtt1uCJgea4Q1zi2Rh3eraJh",
+    "producer": "shftkxnsXmqAkmLgz9Mn7bNB5Fr6mKgFc58kFHfVikj",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0"
    },
    {
-    "client_id": "HarmonicAgave",
+    "client_id": "FireBAM",
+    "high_fee_first_arm_P": 3,
+    "n_same_slot_pairs_arm_P": 3,
+    "n_tx": 6,
+    "producer": "svsD6T44XJnuXQWB15sy1pBxxruzrFy8rR7gXy8Jsj3",
+    "sent_first_first_arm_P": 1,
+    "version": "26.10.5"
+   },
+   {
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
-    "n_tx": 6,
-    "producer": "shftkxnsXmqAkmLgz9Mn7bNB5Fr6mKgFc58kFHfVikj",
+    "n_tx": 5,
+    "producer": "2Eq6YD8P8QXTeoz9h6JHjgZ55t8RSxNdx4waMDCoPmQU",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0"
    },
@@ -2472,12 +2716,12 @@
     "version": null
    },
    {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 2,
-    "n_same_slot_pairs_arm_P": 2,
+    "client_id": "Agave",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 5,
-    "producer": "58KprHKFNHgH1Cvo4QwxWkDeJNaSQVteCoAAFUWjtESn",
-    "sent_first_first_arm_P": 1,
+    "producer": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+    "sent_first_first_arm_P": 0,
     "version": "4.3.2"
    },
    {
@@ -2499,20 +2743,38 @@
     "version": "4.4.0"
    },
    {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 5,
-    "producer": "B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9",
+    "producer": "9GHvMeJ4ZWuAX6sDGscFL1TBMszx2EehnrcTVUy4MZJQ",
     "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "HarmonicAgave",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 5,
+    "producer": "9UM8wQ8F5oMiRcP5YdqD6Lr4krpBWCD8LtgQYoisJd9i",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 5,
+    "producer": "9wQQnnnkk5b5GkQWTW9L4kEA3CjFv6CqsQd5gt6tRsHK",
+    "sent_first_first_arm_P": 1,
     "version": null
    },
    {
     "client_id": null,
     "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 0,
     "n_tx": 5,
-    "producer": "DbWTEseEDkBQzxbUFaTm9JsLy9FfeEGm1bsrfHSzCuEr",
+    "producer": "B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9",
     "sent_first_first_arm_P": 0,
     "version": null
    },
@@ -2526,47 +2788,47 @@
     "version": "4.4.0"
    },
    {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 5,
-    "producer": "J1to5o1Q7W7Y2Q7zpETTezv3DyzPMHKDg66X2nZPMr4X",
-    "sent_first_first_arm_P": 0,
-    "version": null
-   },
-   {
     "client_id": "FireBAM",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
     "n_tx": 5,
-    "producer": "LA1NEzryoih6CQW3gwQqJQffK2mKgnXcjSQZSRpM3wc",
-    "sent_first_first_arm_P": 0,
+    "producer": "ECZx4Dfyn2o55KTYbM9r3Dt4VZRcrdfdrst7sUbWgrdU",
+    "sent_first_first_arm_P": 1,
     "version": "26.10.5"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 5,
+    "producer": "HMV14UAuULSwqmZhsKHzaVkYAd94iWpEeURgbUegfQLc",
+    "sent_first_first_arm_P": 1,
+    "version": null
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 5,
+    "producer": "KAoSp3EudGqUBXv46tQoDwbZxSm3iXa9wM2aF4ySbJJ",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 5,
-    "producer": "STKEsvUSpD38eDxkAJN6cENMYfjVxieajVpmVVkgd1t",
+    "producer": "ciTyjzN9iyobidMycjyqRRM7vXAHXkFzH3m8vEr6cQj",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "Rakurai",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 5,
-    "producer": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 5,
-    "producer": "gridqZmeBcsUKT2Mv4M9YFHFN3tVLFb2TCtTcLD1cAd",
+    "producer": "mineL1YNwcRnxN93B2sX6q22R11WfRqxnY4NBV8KfFY",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
    },
@@ -2581,10 +2843,28 @@
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 5,
+    "producer": "radM7PKUpZwJ9bYPAJ7V8FXHeUmH1zim6iaXUKkftP9",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 4,
+    "producer": "2VKu11f8zc3huqDQUN6WJTFpX32PgHpXXjf72P6YvYMd",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "HarmonicAgave",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 4,
-    "producer": "2Eq6YD8P8QXTeoz9h6JHjgZ55t8RSxNdx4waMDCoPmQU",
+    "producer": "3psxMyr7rQzywVp1MXKd1XFmFz33NjydzCoJx9t2sMQW",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0"
    },
@@ -2593,26 +2873,44 @@
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 4,
-    "producer": "5essVpBYvocZkQnkrWsMDfRPwtp4BeihJRaweKLR4dRn",
-    "sent_first_first_arm_P": 0,
+    "producer": "4DraK9wUrMSpzbGjUbSWTHAhJimMyB49HyKhvfwe6e51",
+    "sent_first_first_arm_P": 1,
     "version": "4.4.0"
+   },
+   {
+    "client_id": "Rakurai",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 4,
+    "producer": "7PdKhpKz7T39vZHFL1UfcYNDsLvay6hp4KPQq1aUckFf",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 4,
+    "producer": "91oPXTs2oq8VvJpQ5TnvXakFGnnJSpEB6HFWDtSctwMt",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 4,
-    "producer": "9GHvMeJ4ZWuAX6sDGscFL1TBMszx2EehnrcTVUy4MZJQ",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "producer": "9ueKvL3WiLM4mNUZrfWqPTYY2Np5YwzFTYvAiPibx1Zq",
+    "sent_first_first_arm_P": 1,
+    "version": "4.3.2"
    },
    {
     "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
     "n_tx": 4,
-    "producer": "A9mvukTd77EbRoBX4ydSCFQHdu5bsRFkNXTTRstA8FAC",
-    "sent_first_first_arm_P": 0,
+    "producer": "BkoS26vBuaXnSowACdChi4WKid8UwmuPNhEJWa8KsLHd",
+    "sent_first_first_arm_P": 1,
     "version": "4.4.0"
    },
    {
@@ -2643,12 +2941,21 @@
     "version": "4.3.2"
    },
    {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 4,
-    "producer": "EdFUcP2f6j9iBg5BqsgJn3WDr1JieiKCo41hZ5Zrsk6w",
+    "producer": "DPhzpiNGU9C6576uLsNSHmdi2AxwxpjMsRdh2iVC4TPh",
     "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 2,
+    "n_same_slot_pairs_arm_P": 2,
+    "n_tx": 4,
+    "producer": "FdH9QEQBxPQfaF2JpcjgdfcMnDb7rjZkCDRCWLRjTQwj",
+    "sent_first_first_arm_P": 1,
     "version": "4.4.0"
    },
    {
@@ -2661,13 +2968,13 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 4,
-    "producer": "G2TBEh2ahNGS9tGnuBNyDduNjyfUtGhMcssgRb8b6KfH",
+    "producer": "Gv9gguvrAkgQtB5g5a3Un7trcHCxLYsk8vSojLmQMsWV",
     "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -2683,8 +2990,17 @@
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 4,
-    "producer": "HHLMTHR9YoyDNsWKVJBT5AKrX86iQjkiKRFRrnaFubgq",
+    "producer": "HeTyhZdUKswQoonJJTXqAnDN48ceyVAeFaKfYKayGPNS",
     "sent_first_first_arm_P": 1,
+    "version": null
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 4,
+    "producer": "J1to1yufRnoWn81KYg1XkTWzmKjnYSnmE2VY8DGUJ9Qv",
+    "sent_first_first_arm_P": 0,
     "version": null
    },
    {
@@ -2697,13 +3013,22 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "FireBAM",
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 2,
     "n_same_slot_pairs_arm_P": 2,
     "n_tx": 4,
-    "producer": "svsD6T44XJnuXQWB15sy1pBxxruzrFy8rR7gXy8Jsj3",
+    "producer": "PAWsME7oYbjt5TRNc11mBa33JhKnQr9AYherdr9YAZ6",
+    "sent_first_first_arm_P": 2,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 3,
+    "producer": "3cZSHGfNdaULpFAvGbWbxpVwzXB4gHdk8NFucPNR5pgA",
     "sent_first_first_arm_P": 0,
-    "version": "26.10.5"
+    "version": "4.4.0"
    },
    {
     "client_id": null,
@@ -2742,13 +3067,13 @@
     "version": null
    },
    {
-    "client_id": "Agave",
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
-    "producer": "5Us18hLZPXJTS4QVuGSsUw137Dyd2tgBaem24Xsf5nBS",
+    "producer": "5VrW7YNBccVnhnZVmooCePdLFcs2UjfxRT3hoY9mN8Ec",
     "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
+    "version": "4.4.0"
    },
    {
     "client_id": "HarmonicAgave",
@@ -2767,6 +3092,15 @@
     "producer": "6Rk694kh1QTyQkirdb1uDZmS5xqG9bNaYtxx8d311Mr7",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
+    "producer": "7EzbSahSfSjeRexHcNDLDpzHBAGBLjLKtjbmuoQnEtjE",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
@@ -2796,6 +3130,42 @@
     "version": "4.4.0-rc.1"
    },
    {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
+    "producer": "ABC1U4cf9DZMwqy8ktEr4WJj8VHmVBQibbC57gEJthwY",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
+    "producer": "ADjyeNzWd8yhEjCVyAqT87eqoyGRbimERQsNhFQcXjop",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
+    "producer": "BeSov1og3sEYyH9JY3ap7QcQDvVX8f4sugfNPf9YLkcV",
+    "sent_first_first_arm_P": 1,
+    "version": null
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
+    "producer": "Cogent51kHgGLHr7zpkpRjGYFXM57LgjHjDdqXd4ypdA",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -2809,27 +3179,18 @@
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
-    "producer": "Cu9Ls6dsTL6cxFHZdStHwVSh1uy2ynXz8qPJMS5FRq86",
-    "sent_first_first_arm_P": 1,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 3,
     "producer": "D1Vbgkrhp1TmLGhfUD1urRMx5Ntz9AqQpgdX8DR8QMC1",
     "sent_first_first_arm_P": 1,
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "FireBAM",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
     "n_tx": 3,
-    "producer": "ECZx4Dfyn2o55KTYbM9r3Dt4VZRcrdfdrst7sUbWgrdU",
-    "sent_first_first_arm_P": 1,
-    "version": "26.10.5"
+    "producer": "DTwEEF6VSrmTBYkDcj3BKAc52qhvP8CEQUEAMMT1cG3",
+    "sent_first_first_arm_P": 0,
+    "version": null
    },
    {
     "client_id": "AgaveBam",
@@ -2850,31 +3211,49 @@
     "version": "4.4.0"
    },
    {
-    "client_id": null,
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
     "n_tx": 3,
-    "producer": "HeTyhZdUKswQoonJJTXqAnDN48ceyVAeFaKfYKayGPNS",
-    "sent_first_first_arm_P": 1,
-    "version": null
+    "producer": "G9vCpJUUSpEm4zPwzSNpDmZ8MGwLEbiSLV59EBzCGvzM",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
-    "producer": "KAoSp3EudGqUBXv46tQoDwbZxSm3iXa9wM2aF4ySbJJ",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "producer": "LunaowJnt875WWoqDkhHhE93SNYHa6tfFNVn1rqc57c",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "FireBAM",
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 3,
+    "producer": "Raydiumm3w3a4nGanDBLkUtKxMFooSPmeg9qwUKMsMc",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "Rakurai",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
-    "producer": "SSmBEooM7RkmyuXxuKgAhTvhQZ36Z3G2WsmLGJKoQLY",
+    "producer": "SLAY6uN1zZpXBTfbuDDCesNmM5D288xrz8uYvfS3n41",
     "sent_first_first_arm_P": 0,
-    "version": "26.10.5"
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 3,
+    "producer": "UPSCQNqdbiaqrQou9X9y8mr43ZHzvoNpKC26Mo7GubF",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -2899,17 +3278,26 @@
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
+    "producer": "hxMhrsuGPDmkLJ4mTxEjyeMST3VGhTiwJvS9XgHwePj",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 3,
     "producer": "hy1oMaD3ViyJ8i6w1xjP79zAWBBaRd1zWdTW8zYXnwu",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
     "n_tx": 3,
-    "producer": "radM7PKUpZwJ9bYPAJ7V8FXHeUmH1zim6iaXUKkftP9",
-    "sent_first_first_arm_P": 0,
+    "producer": "tapeQbu7YwpMuJNA2oSKBJkfBdic5QJ9bCZt27Q4PVf",
+    "sent_first_first_arm_P": 1,
     "version": "4.4.0-rc.1"
    },
    {
@@ -2976,11 +3364,29 @@
     "version": null
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "2FL6757bjpBe1datbq91eKDCp7Jqpce5HC8aZ6eTYpef",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
     "producer": "2N7v8pDKDYhtBUJBQUgxvysUjgM9s4ULPCmeEiPWTf6Z",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "2X7WoaXX9KPqNrNfvguhnwo3rjFPNsfw2t75fGjWRthz",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
    },
@@ -2995,10 +3401,37 @@
    },
    {
     "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "2icWF7TvxyycF7d1NHpMZYuJJqiRy2h7wmjFSbqUij1B",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "2oHUYyW2PU9VJh4XBs5TbGgzdernunvGqyKth3kxW4ns",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
     "producer": "3CKKAoVi94EnfX8QcVxEmk8CAvZTc6nAYzXp1WkSUofX",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "3KiDz3wuZrJfsgKt5KEvRb1WPpbci1PWj78aPVF5ei3F",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
    },
@@ -3034,9 +3467,9 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "4DraK9wUrMSpzbGjUbSWTHAhJimMyB49HyKhvfwe6e51",
+    "producer": "4SsMncJdtKiUcDtukkX15mqei7WiuQ9yvRtQrQW4reWC",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": null,
@@ -3046,6 +3479,15 @@
     "producer": "563zoRdryyBBNJEefWCcY5JPs5SSDYtY8BVQkYFdEC14",
     "sent_first_first_arm_P": 0,
     "version": null
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "5AsoSeQtLoN8eLsf3wKrR3LwxHME4sTBGR6dpTCP1k3H",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -3064,15 +3506,6 @@
     "producer": "5RvfTSowms7BTYaBj8SxVjj7ELAAKdQadKsuNpmBAwCs",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 2,
-    "producer": "5VrW7YNBccVnhnZVmooCePdLFcs2UjfxRT3hoY9mN8Ec",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -3157,30 +3590,21 @@
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "71F3mXrwguQ7euZkJAuSZ8o8N4EDAVnTsjMpffXEhaPy",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
     "producer": "7CR6whiYULVf1Knj4J5PxUS37opdk8UAx2WnDzBQKiVe",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 2,
-    "producer": "7EzbSahSfSjeRexHcNDLDpzHBAGBLjLKtjbmuoQnEtjE",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "Rakurai",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
-    "n_tx": 2,
-    "producer": "7PdKhpKz7T39vZHFL1UfcYNDsLvay6hp4KPQq1aUckFf",
-    "sent_first_first_arm_P": 1,
-    "version": "4.3.2"
    },
    {
     "client_id": "AgaveBam",
@@ -3202,6 +3626,15 @@
    },
    {
     "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "8T8AJfUCXwPFwEMmjca8gCRSktPrqbUBVa6ggNyhLhFJ",
+    "sent_first_first_arm_P": 1,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
@@ -3219,15 +3652,6 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 2,
-    "producer": "8gDfqHXZ5ektqQQrLrCGtSzYRwkWQrm3ANnAvQCt2LoM",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
@@ -3237,13 +3661,13 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": "Agave",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "91oPXTs2oq8VvJpQ5TnvXakFGnnJSpEB6HFWDtSctwMt",
+    "producer": "9D3o3EYeknhTrRvXS1PnD2euGXnMFa3HwpYBq5gPZJDA",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
+    "version": "4.4.0"
    },
    {
     "client_id": "HarmonicAgave",
@@ -3264,11 +3688,11 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "9ueKvL3WiLM4mNUZrfWqPTYY2Np5YwzFTYvAiPibx1Zq",
+    "producer": "9gMjDS6WPahWXBboJVoZA5DUVU4qTUdQY6acHbpQ38t6",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
    },
@@ -3309,22 +3733,13 @@
     "version": "4.3.2"
    },
    {
-    "client_id": "JitoLabs",
+    "client_id": "HarmonicFiredancer",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
-    "producer": "BkoS26vBuaXnSowACdChi4WKid8UwmuPNhEJWa8KsLHd",
+    "producer": "CQdLgwkmmHF8DE6t4sguXMTXWDxq3oLh3xfekDTmow12",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 2,
-    "producer": "CLsFr1KZVbAyz16iFpwg2e4hiekR1unpwyxfNdjBMaoE",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "version": "26.10.5"
    },
    {
     "client_id": null,
@@ -3336,6 +3751,24 @@
     "version": null
    },
    {
+    "client_id": "HarmonicAgave",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "CW9C7HBwAMgqNdXkNgFg9Ujr3edR2Ab9ymEuQnVacd1A",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "CatzoSMUkTRidT5DwBxAC2pEtnwMBTpkCepHkFgZDiqb",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
@@ -3343,6 +3776,15 @@
     "producer": "CtzN7ysR5rX69qd168Aosbuc83mPozhi81bEHbG7ecNP",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "CwyVpfmfSiMeCexi3JgUNvaiDfYN14cLDjzT99zcBuD2",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": null,
@@ -3363,6 +3805,15 @@
     "version": "4.4.0"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "D7WodK26tETSqyWBW35vvMGfige9afLEyTsm1Pvvropd",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -3372,13 +3823,13 @@
     "version": "4.3.2"
    },
    {
-    "client_id": null,
+    "client_id": "HarmonicAgave",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
-    "producer": "DPhzpiNGU9C6576uLsNSHmdi2AxwxpjMsRdh2iVC4TPh",
+    "producer": "DcTPJqPNrTLv3te1c9ctA9H194x6DsaPA4ChuSEv7KPZ",
     "sent_first_first_arm_P": 0,
-    "version": null
+    "version": "4.4.0"
    },
    {
     "client_id": "HarmonicFiredancer",
@@ -3399,6 +3850,15 @@
     "version": "4.4.0-rc.1"
    },
    {
+    "client_id": "Rakurai",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "Ed9WjPnZfAXsPttcqxMwj94qsuXVRyBsyXnDkxFva2Zv",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "HarmonicAgave",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
@@ -3417,13 +3877,13 @@
     "version": "0.1.1"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": null,
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
-    "producer": "FdH9QEQBxPQfaF2JpcjgdfcMnDb7rjZkCDRCWLRjTQwj",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "producer": "FahWJg2PkphJaMUUCzdYhXkD5NngUuuFRFD3YCE3BSwb",
+    "sent_first_first_arm_P": 1,
+    "version": null
    },
    {
     "client_id": "AgaveBam",
@@ -3462,6 +3922,15 @@
     "version": "4.3.0"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "GLLHJtKotVDJmLSHJKYSpPFr7UbnKkepxG1tdGZHAu2X",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "JitoLabs",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
@@ -3469,6 +3938,15 @@
     "producer": "GiYSnFRrXrmkJMC54A1j3K4xT6ZMfx1NSThEe5X2WpDe",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "HLXktVmNFeELB5uL5nrpP4WL7jyi3TMyekxASVjDhZ1t",
+    "sent_first_first_arm_P": 0,
+    "version": null
    },
    {
     "client_id": "HarmonicAgave",
@@ -3480,6 +3958,15 @@
     "version": "4.3.2"
    },
    {
+    "client_id": "Firedancer",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "HW4zorvt6xDwhU36RqjcWNwU8YMj9tiqnAafBKW4cqV",
+    "sent_first_first_arm_P": 0,
+    "version": "26.10.4"
+   },
+   {
     "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -3489,22 +3976,22 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": null,
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "J1to1yufRnoWn81KYg1XkTWzmKjnYSnmE2VY8DGUJ9Qv",
+    "producer": "HwN6eoEe9N3kwHi66hpQDBMFPk6ASQGthWKPX5MZmisp",
     "sent_first_first_arm_P": 0,
-    "version": null
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 1,
-    "n_same_slot_pairs_arm_P": 1,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "LunaowJnt875WWoqDkhHhE93SNYHa6tfFNVn1rqc57c",
-    "sent_first_first_arm_P": 1,
-    "version": "4.4.0-rc.1"
+    "producer": "KAW1LjxH73tRBd1XsaqsRsgeERFkg4WpdXUSqR4QjkW",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -3534,12 +4021,12 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": "JitoLabs",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
-    "producer": "PAWsME7oYbjt5TRNc11mBa33JhKnQr9AYherdr9YAZ6",
-    "sent_first_first_arm_P": 1,
+    "producer": "NdMV1C3XMCRqSBwBtNmoUNnKctYh95Ug4xb6FSTcAWr",
+    "sent_first_first_arm_P": 0,
     "version": "4.4.0"
    },
    {
@@ -3548,15 +4035,6 @@
     "n_same_slot_pairs_arm_P": 1,
     "n_tx": 2,
     "producer": "RBFiUqjYuy4mupzZaU96ctXJBy23sRBRsL3KivDAsFM",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 2,
-    "producer": "Raydiumm3w3a4nGanDBLkUtKxMFooSPmeg9qwUKMsMc",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
    },
@@ -3579,6 +4057,15 @@
     "version": "4.4.0"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "Vau1tGK1T2XBMZkp9sWNkGvM3BE2EtFqznQudEUFf8s",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -3595,15 +4082,6 @@
     "producer": "bkpk9KVsDRfrArzzmkJ9mPEvbXfQxczzQYR3QMGiR8Z",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 2,
-    "producer": "ciTyjzN9iyobidMycjyqRRM7vXAHXkFzH3m8vEr6cQj",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
@@ -3633,13 +4111,22 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 2,
-    "producer": "mineL1YNwcRnxN93B2sX6q22R11WfRqxnY4NBV8KfFY",
+    "producer": "icex1C6pnZxznQWiHZZANjGU8nZ8kNquFnjyY7XXrXE",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "FireBAM",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "idCE5k2BtTpwXdwAC7Var1enT9reut9fWECcxQP7LY7",
+    "sent_first_first_arm_P": 0,
+    "version": "26.10.5"
    },
    {
     "client_id": "AgaveBam",
@@ -3649,6 +4136,15 @@
     "producer": "nateKhsYkrVc992UuTfAhEEFQqr2zQfpGg9RafNkxdC",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "omeg2wsojzB7tfyAxsFhp8npxHL8yxVnaf51poXCwSd",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -3669,6 +4165,24 @@
     "version": "26.10.5"
    },
    {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 1,
+    "n_same_slot_pairs_arm_P": 1,
+    "n_tx": 2,
+    "producer": "phz1CRbEsCtFCh2Ro5tjyu588VU1WPMwW9BJS9yFNn2",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 2,
+    "producer": "popscoyTKVksa4TyTXw488b3vvFxM7qQEyTBeMQopKu",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
+   },
+   {
     "client_id": "Firedancer",
     "high_fee_first_arm_P": 1,
     "n_same_slot_pairs_arm_P": 1,
@@ -3676,15 +4190,6 @@
     "producer": "puffinQSvKFriPbyE5atyx1ptfnyytovbzxybr1jsyy",
     "sent_first_first_arm_P": 0,
     "version": "26.10.5"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 2,
-    "producer": "vu1sGn2f1Xim6voHNLt4nLn38zNkYdLasU7hEr1TC2D",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
    },
    {
     "client_id": "FireBAM",
@@ -3723,13 +4228,13 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": "JitoLabs",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "2X7WoaXX9KPqNrNfvguhnwo3rjFPNsfw2t75fGjWRthz",
+    "producer": "2bpfa8JbFfZUGUsedDsemu6vQUxbhcEM8ALSH3PgXd2d",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "version": "4.3.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
@@ -3741,6 +4246,15 @@
     "version": "4.4.0"
    },
    {
+    "client_id": "Rakurai",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "3B2mGaZoFwzAnWCoZ4EAKdps4FbYbDKQ48jo8u1XWynU",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -3748,15 +4262,6 @@
     "producer": "3DaPk6TdeGnEBwTR8fEyZSLkdayk6vZXrqGZhAgYK8BV",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "3cZSHGfNdaULpFAvGbWbxpVwzXB4gHdk8NFucPNR5pgA",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -3791,6 +4296,15 @@
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
     "producer": "4uH4G6YiD5G8rU3mtPg73C2Uqamrqedy3FboTZcZrh6x",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "5aD6KB8g4MPt3xJafmMmun86hHMDnoFiGbd5gYiMFZw7",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
    },
@@ -3831,6 +4345,15 @@
     "version": "4.4.0"
    },
    {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "61QB1Evn9E3noQtpJm4auFYyHSXS5FPgqKtPgwJJfEQk",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
+   },
+   {
     "client_id": null,
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -3838,6 +4361,15 @@
     "producer": "777VtXKGPmbpN2yGDAtHuAmDt2rQ7GKLnH6K8ViVv777",
     "sent_first_first_arm_P": 0,
     "version": null
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "7VZM7YHcX73TpGoXDeBu61g4QKC86GwAEnew8dA7Y2xn",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "AgaveBam",
@@ -3856,6 +4388,15 @@
     "producer": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
     "sent_first_first_arm_P": 0,
     "version": "26.10.4"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "8pyp3vfVPRziYdAYEyqkwytdBbdVbQmHqfQAVDcRV3w",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": null,
@@ -3885,22 +4426,13 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "HarmonicAgave",
+    "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "9UM8wQ8F5oMiRcP5YdqD6Lr4krpBWCD8LtgQYoisJd9i",
+    "producer": "9XhmwxwWtoR6oD4xpSHutoTXku8hXyq76XoTKFZb7ct7",
     "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "9gMjDS6WPahWXBboJVoZA5DUVU4qTUdQY6acHbpQ38t6",
-    "sent_first_first_arm_P": 0,
-    "version": "4.3.2"
+    "version": "4.4.0"
    },
    {
     "client_id": "FireBAM",
@@ -3919,15 +4451,6 @@
     "producer": "9ppJrpsbbuGNjiMhhD52Ueco4KXUzVfrtNQ6tAcDab4f",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "9wQQnnnkk5b5GkQWTW9L4kEA3CjFv6CqsQd5gt6tRsHK",
-    "sent_first_first_arm_P": 0,
-    "version": null
    },
    {
     "client_id": "Raiku",
@@ -3957,22 +4480,13 @@
     "version": "4.3.2"
    },
    {
-    "client_id": "JitoLabs",
+    "client_id": "FireBAM",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "ABC1U4cf9DZMwqy8ktEr4WJj8VHmVBQibbC57gEJthwY",
+    "producer": "A4hyMd3FyvUJSRafDUSwtLLaQcxRP4r1BRC9w2AJ1to2",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "ADjyeNzWd8yhEjCVyAqT87eqoyGRbimERQsNhFQcXjop",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
+    "version": "26.10.6"
    },
    {
     "client_id": null,
@@ -3997,6 +4511,15 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
+    "producer": "AwcMVMvmT1aCETVYV42WE1cSMCyNp4vZqVjLsvs6dM4o",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
     "producer": "BVHwHvRNwt8eM1x7cmfrEdhrbZAdWiFe9FnEFGhGuUTR",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
@@ -4011,20 +4534,20 @@
     "version": "26.10.4"
    },
    {
+    "client_id": "HarmonicAgave",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "BtsmiEEvnSuUnKxqXj2PZRYpPJAc7C34mGz8gtJ1DAaH",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
     "producer": "By8MseMKtZQQaQjMHJiyetmc5AC8RZZv8C2ss33ktrHt",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "Cogent51kHgGLHr7zpkpRjGYFXM57LgjHjDdqXd4ypdA",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
    },
@@ -4045,15 +4568,6 @@
     "producer": "DDnAqxJVFo2GVTujibHt5cjevHMSE9bo8HJaydHoshdp",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "DTwEEF6VSrmTBYkDcj3BKAc52qhvP8CEQUEAMMT1cG3",
-    "sent_first_first_arm_P": 0,
-    "version": null
    },
    {
     "client_id": "AgaveBam",
@@ -4096,9 +4610,36 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
+    "producer": "EAW9vxqogvdPNapq7QTDpiVTHK6o7begUhPVnf854VTc",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "EdGevanA2MZsDpxDXK6b36FH7RCcTuDZZRcc6MEyE9hy",
+    "sent_first_first_arm_P": 0,
+    "version": "4.3.2"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
     "producer": "EfPYQ4BUMiKa6736qqrtnCBGkUSRDGSr1WvtyUgWHuyp",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "Ev3gPXRo6TJeQ2QhxfqWFoasdoGbmDytYvJbUabEHfLf",
+    "sent_first_first_arm_P": 0,
+    "version": null
    },
    {
     "client_id": "FireBAM",
@@ -4108,6 +4649,15 @@
     "producer": "Ey3DkEVbfBxfWmkTsG7Hqj7jshYf5Zx9H8462Zjjkykf",
     "sent_first_first_arm_P": 0,
     "version": "26.10.5"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "FCWkGAHDWK41ANjiaoPudkCZRkvTecaEkoZQugezUnpr",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "JitoLabs",
@@ -4141,18 +4691,9 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "G9vCpJUUSpEm4zPwzSNpDmZ8MGwLEbiSLV59EBzCGvzM",
+    "producer": "G4GT8z4AKWNoy3x6nuzxW83UfFXLXzrwn7DZQt4GvWdU",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "GLLHJtKotVDJmLSHJKYSpPFr7UbnKkepxG1tdGZHAu2X",
-    "sent_first_first_arm_P": 0,
-    "version": null
+    "version": "4.4.0"
    },
    {
     "client_id": null,
@@ -4177,42 +4718,6 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "Gv9gguvrAkgQtB5g5a3Un7trcHCxLYsk8vSojLmQMsWV",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "HLXktVmNFeELB5uL5nrpP4WL7jyi3TMyekxASVjDhZ1t",
-    "sent_first_first_arm_P": 0,
-    "version": null
-   },
-   {
-    "client_id": null,
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "HMV14UAuULSwqmZhsKHzaVkYAd94iWpEeURgbUegfQLc",
-    "sent_first_first_arm_P": 0,
-    "version": null
-   },
-   {
-    "client_id": "Firedancer",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "HW4zorvt6xDwhU36RqjcWNwU8YMj9tiqnAafBKW4cqV",
-    "sent_first_first_arm_P": 0,
-    "version": "26.10.4"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
     "producer": "HcZvwZ83PfjrQDiq3GLHxisTs17aGURs6bJ2LwtmL4qv",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0"
@@ -4231,27 +4736,18 @@
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "HwN6eoEe9N3kwHi66hpQDBMFPk6ASQGthWKPX5MZmisp",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "KAW1LjxH73tRBd1XsaqsRsgeERFkg4WpdXUSqR4QjkW",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
     "producer": "LiFiDJwJjW98MB8wxcnXpafKYsuz1hwpUkuszkERiX6",
     "sent_first_first_arm_P": 0,
     "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "LodeuWMHPiPj2PUHUyca2bkpFv9HyzR3gaDBmGJ9TSS",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
    },
    {
     "client_id": "AgaveBam",
@@ -4272,6 +4768,15 @@
     "version": "4.4.0-rc.1"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "Pond1QyT1sQtiru3fi9G5LGaLRGeUpJKR1a2gdbq2u4",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -4290,6 +4795,15 @@
     "version": "26.10.5"
    },
    {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "RBFvvcGPBpgkBYmJGsphoDQJD8sszSuorM7TorWm12Y",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -4299,22 +4813,22 @@
     "version": "4.4.0"
    },
    {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "UPSCQNqdbiaqrQou9X9y8mr43ZHzvoNpKC26Mo7GubF",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0"
-   },
-   {
     "client_id": null,
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "Vau1tGK1T2XBMZkp9sWNkGvM3BE2EtFqznQudEUFf8s",
+    "producer": "Ste11vRHQJyQjcTKrDbTWAYsTXkX6PCnoEw3mSH3u2k",
     "sent_first_first_arm_P": 0,
     "version": null
+   },
+   {
+    "client_id": "FireBAM",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "Tri1F8B6YtjkBztGCwBNSLEZib1EAqMUEUM7dTT7ZG3",
+    "sent_first_first_arm_P": 0,
+    "version": "26.10.5"
    },
    {
     "client_id": "AgaveBam",
@@ -4326,6 +4840,15 @@
     "version": "4.4.0-rc.1"
    },
    {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "bitHUmbKSQDTGoyoiW3BeqaGWdyV5sS3nYt5SduUHfb",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
     "client_id": "Rakurai",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -4333,24 +4856,6 @@
     "producer": "gUvo3g5LfH4Pd8qnG7T6MPEFa5bPr8LhDdxDahwYqis",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
-   },
-   {
-    "client_id": "JitoLabs",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "icex1C6pnZxznQWiHZZANjGU8nZ8kNquFnjyY7XXrXE",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
-   },
-   {
-    "client_id": "FireBAM",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "idCE5k2BtTpwXdwAC7Var1enT9reut9fWECcxQP7LY7",
-    "sent_first_first_arm_P": 0,
-    "version": "26.10.5"
    },
    {
     "client_id": "JitoLabs",
@@ -4371,6 +4876,24 @@
     "version": "4.4.0"
    },
    {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "mXv18ov8qCiQGs3ieoen981LdgZzYJjJak6reK6fpNC",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0"
+   },
+   {
+    "client_id": null,
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "masvNDXtxVVMrYSV84RMry97JyHXAFcdfTZJ5VzpSYR",
+    "sent_first_first_arm_P": 0,
+    "version": null
+   },
+   {
     "client_id": "AgaveBam",
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
@@ -4380,13 +4903,13 @@
     "version": "4.4.0-rc.1"
    },
    {
-    "client_id": "AgaveBam",
+    "client_id": null,
     "high_fee_first_arm_P": 0,
     "n_same_slot_pairs_arm_P": 0,
     "n_tx": 1,
-    "producer": "popscoyTKVksa4TyTXw488b3vvFxM7qQEyTBeMQopKu",
+    "producer": "odc2aCE7yWTcV8ApP1cHmVqQZTkLNduqaYyKE1XhpE3",
     "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
+    "version": null
    },
    {
     "client_id": "AgaveBam",
@@ -4405,6 +4928,24 @@
     "producer": "qZMH9GWnnBkx7aM1h98iKSv2Lz5N78nwNSocAxDQrbP",
     "sent_first_first_arm_P": 0,
     "version": "26.10.5"
+   },
+   {
+    "client_id": "AgaveBam",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "rapXHroUoGG3KvZ3qwjvGMdA7siWXwXpiNC1bYarvSC",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
+   },
+   {
+    "client_id": "JitoLabs",
+    "high_fee_first_arm_P": 0,
+    "n_same_slot_pairs_arm_P": 0,
+    "n_tx": 1,
+    "producer": "rsbp8zMHbGCpLoRktmsjspYv77VcjxAzH1KxPCD9BiU",
+    "sent_first_first_arm_P": 0,
+    "version": "4.4.0-rc.1"
    },
    {
     "client_id": "JitoLabs",
@@ -4432,15 +4973,6 @@
     "producer": "scs2Ra91pMbvqFAP7uitrN5U25SoyBTqZgBbhpVMJko",
     "sent_first_first_arm_P": 0,
     "version": "4.3.2"
-   },
-   {
-    "client_id": "AgaveBam",
-    "high_fee_first_arm_P": 0,
-    "n_same_slot_pairs_arm_P": 0,
-    "n_tx": 1,
-    "producer": "tapeQbu7YwpMuJNA2oSKBJkfBdic5QJ9bCZt27Q4PVf",
-    "sent_first_first_arm_P": 0,
-    "version": "4.4.0-rc.1"
    }
   ]
  },
@@ -4450,73 +4982,73 @@
    "exclusions": {
     "claim_changed_in_run": 0,
     "claim_end_unknown": 0,
-    "different_slots": 24,
-    "none_landed": 16,
-    "one_landed": 19,
-    "other_producer": 9,
+    "different_slots": 33,
+    "none_landed": 22,
+    "one_landed": 25,
+    "other_producer": 14,
     "payer_conflict": 0,
-    "primary": 20,
+    "primary": 23,
     "primary_with_execution_error": 0,
     "target_outside_window": 0
    },
    "fee": {
     "ci90": [
-     0.39358488675696957,
-     0.7829314106299258
+     0.4168451778511049,
+     0.7783641508676293
     ],
     "ci95": [
-     0.3605425873074897,
-     0.8088099392746928
+     0.3854189573888497,
+     0.8029235760309856
     ],
-    "k": 12,
-    "n": 20,
-    "p": 0.6,
+    "k": 14,
+    "n": 23,
+    "p": 0.6086956521739131,
     "p_holm": 1.0,
-    "p_value": 0.5034446716308594
+    "p_value": 0.4048728942871094
    },
    "identity": "7QQGNm3ptwinipDCyaCF7jY5katgmFUu1ieP2f7nwLpE",
    "logit": {
     "coef": {
-     "A_is_high": 0.6991077375370163,
-     "A_sent_first": 2.9389586889280026,
-     "intercept": -1.5273002077515145
+     "A_is_high": 0.6285132061833316,
+     "A_sent_first": 3.18067639981922,
+     "intercept": -1.7521505309267265
     },
     "converged": true,
-    "n": 20,
+    "n": 23,
     "se": {
-     "A_is_high": 1.2089906185435602,
-     "A_sent_first": 1.2934301449343075,
-     "intercept": 0.7927137550716199
+     "A_is_high": 1.1735569985469314,
+     "A_sent_first": 1.2838587837560114,
+     "intercept": 0.7804328068412026
     },
     "separation": false
    },
-   "n_primary": 20,
-   "n_probes_all_arms": 105,
-   "n_probes_arm_P": 88,
-   "pi": 0.19999999999999996,
+   "n_primary": 23,
+   "n_probes_all_arms": 137,
+   "n_probes_arm_P": 117,
+   "pi": 0.21739130434782616,
    "send": {
     "ci90": [
-     0.5989718826680254,
-     0.9286461156913818
+     0.6450675937806115,
+     0.9383244825789047
     ],
     "ci95": [
-     0.5633859970033317,
-     0.9426660029499672
+     0.6121881100452025,
+     0.9504923546942066
     ],
-    "k": 16,
-    "n": 20,
-    "p": 0.8,
-    "p_holm": 0.09454345703125,
-    "p_value": 0.01181793212890625
+    "k": 19,
+    "n": 23,
+    "p": 0.8260869565217391,
+    "p_holm": 0.03119373321533203,
+    "p_value": 0.002599477767944336
    },
    "table_2x2": {
-    "sent_first_landed_first": 10,
+    "sent_first_landed_first": 12,
     "sent_first_landed_second": 2,
     "sent_second_landed_first": 2,
-    "sent_second_landed_second": 6
+    "sent_second_landed_second": 7
    },
    "target_role": "Agave-1",
-   "verdict": "insufficient data (n=20)",
+   "verdict": "insufficient data (n=23)",
    "version_split": {
     "by_version": [
      {
@@ -4541,12 +5073,36 @@
        "p": 0.8
       },
       "version": "4.3.2"
+     },
+     {
+      "fee": {
+       "ci95": [
+        0.09429932405024613,
+        0.9915962413403874
+       ],
+       "k": 2,
+       "n": 3,
+       "p": 0.6666666666666666
+      },
+      "n_primary": 3,
+      "n_probes_arm_P": 29,
+      "send": {
+       "ci95": [
+        0.29240177382128674,
+        1.0
+       ],
+       "k": 3,
+       "n": 3,
+       "p": 1.0
+      },
+      "version": "4.4.0"
      }
     ],
     "label": "descriptive, no tests or verdicts"
    },
    "versions_seen": [
-    "4.3.2"
+    "4.3.2",
+    "4.4.0"
    ]
   },
   {
@@ -4575,7 +5131,7 @@
     "k": 158,
     "n": 196,
     "p": 0.8061224489795918,
-    "p_holm": 2.187517448749822e-17,
+    "p_holm": 2.5976769703904136e-17,
     "p_value": 1.3671984054686387e-18
    },
    "identity": "DRpbCBMxVnDK7maPM5tGv6MvB3v1sRMC86PZ8okm21hy",
@@ -4610,7 +5166,7 @@
     "k": 120,
     "n": 196,
     "p": 0.6122448979591837,
-    "p_holm": 0.018465909670507638,
+    "p_holm": 0.026672980635177698,
     "p_value": 0.0020517677411675153
    },
    "table_2x2": {
@@ -4620,7 +5176,7 @@
     "sent_second_landed_second": 28
    },
    "target_role": "AgaveBam-1",
-   "verdict": "mixed: fee rule partial and request-position rule partial",
+   "verdict": "fee rule holds, partial",
    "version_split": {
     "by_version": [
      {
@@ -4657,96 +5213,96 @@
    "client_id": "FireBAM",
    "exclusions": {
     "claim_changed_in_run": 0,
-    "claim_end_unknown": 1,
-    "different_slots": 41,
-    "none_landed": 21,
-    "one_landed": 21,
-    "other_producer": 17,
+    "claim_end_unknown": 2,
+    "different_slots": 54,
+    "none_landed": 24,
+    "one_landed": 32,
+    "other_producer": 30,
     "payer_conflict": 0,
-    "primary": 91,
+    "primary": 119,
     "primary_with_execution_error": 0,
     "target_outside_window": 0
    },
    "fee": {
     "ci90": [
-     0.6731110367990163,
-     0.8302974545235238
+     0.7009485107077832,
+     0.8347556414523939
     ],
     "ci95": [
-     0.6571655985479521,
-     0.8418701860640567
+     0.6873188939776418,
+     0.8448404589956129
     ],
-    "k": 69,
-    "n": 91,
-    "p": 0.7582417582417582,
-    "p_holm": 1.0643359175596774e-05,
-    "p_value": 8.187199365843673e-07
+    "k": 92,
+    "n": 119,
+    "p": 0.773109243697479,
+    "p_holm": 2.9449818821725807e-08,
+    "p_value": 1.7323422836309298e-09
    },
    "identity": "9jxgosAfHgHzwnxsHw4RAZYaLVokMbnYtmiZBreynGFP",
    "logit": {
     "coef": {
-     "A_is_high": 2.511987626904803,
-     "A_sent_first": 1.0166049530748718,
-     "intercept": -1.742294546827514
+     "A_is_high": 2.8092628969564455,
+     "A_sent_first": 1.0355768586157301,
+     "intercept": -1.9168199289562187
     },
     "converged": true,
-    "n": 91,
+    "n": 119,
     "se": {
-     "A_is_high": 0.539203157293165,
-     "A_sent_first": 0.5418577486877051,
-     "intercept": 0.5059212567794561
+     "A_is_high": 0.5082602528605202,
+     "A_sent_first": 0.5100232924199757,
+     "intercept": 0.4803353084299149
     },
     "separation": false
    },
-   "n_primary": 91,
-   "n_probes_all_arms": 227,
-   "n_probes_arm_P": 191,
-   "pi": 0.5164835164835164,
+   "n_primary": 119,
+   "n_probes_all_arms": 302,
+   "n_probes_arm_P": 259,
+   "pi": 0.546218487394958,
    "send": {
     "ci90": [
-     0.46883814281078257,
-     0.6490150528312162
+     0.4417405364557367,
+     0.5994771550527129
     ],
     "ci95": [
-     0.452452083112178,
-     0.6643826134329158
+     0.4275230136903935,
+     0.6134234586161269
     ],
-    "k": 51,
-    "n": 91,
-    "p": 0.5604395604395604,
+    "k": 62,
+    "n": 119,
+    "p": 0.5210084033613446,
     "p_holm": 1.0,
-    "p_value": 0.294469784568533
+    "p_value": 0.7140263124847863
    },
    "table_2x2": {
-    "sent_first_landed_first": 35,
+    "sent_first_landed_first": 41,
     "sent_first_landed_second": 6,
-    "sent_second_landed_first": 34,
-    "sent_second_landed_second": 16
+    "sent_second_landed_first": 51,
+    "sent_second_landed_second": 21
    },
    "target_role": "FireBAM-1",
-   "verdict": "insufficient data (n=91)",
+   "verdict": "fee rule holds, partial",
    "version_split": {
     "by_version": [
      {
       "fee": {
        "ci95": [
-        0.6571655985479521,
-        0.8418701860640567
+        0.6873188939776418,
+        0.8448404589956129
        ],
-       "k": 69,
-       "n": 91,
-       "p": 0.7582417582417582
+       "k": 92,
+       "n": 119,
+       "p": 0.773109243697479
       },
-      "n_primary": 91,
-      "n_probes_arm_P": 191,
+      "n_primary": 119,
+      "n_probes_arm_P": 259,
       "send": {
        "ci95": [
-        0.452452083112178,
-        0.6643826134329158
+        0.4275230136903935,
+        0.6134234586161269
        ],
-       "k": 51,
-       "n": 91,
-       "p": 0.5604395604395604
+       "k": 62,
+       "n": 119,
+       "p": 0.5210084033613446
       },
       "version": "26.10.5"
      }
@@ -4761,96 +5317,96 @@
    "client_id": "Firedancer",
    "exclusions": {
     "claim_changed_in_run": 0,
-    "claim_end_unknown": 2,
-    "different_slots": 23,
-    "none_landed": 113,
-    "one_landed": 52,
-    "other_producer": 81,
+    "claim_end_unknown": 3,
+    "different_slots": 34,
+    "none_landed": 139,
+    "one_landed": 72,
+    "other_producer": 130,
     "payer_conflict": 0,
-    "primary": 19,
+    "primary": 27,
     "primary_with_execution_error": 0,
     "target_outside_window": 1
    },
    "fee": {
     "ci90": [
-     0.773625750727622,
-     0.9973039936971287
+     0.784700038857546,
+     0.986677008511863
     ],
     "ci95": [
-     0.7397193458047858,
-     0.9986683711958205
+     0.7571016531543728,
+     0.9908999270576937
     ],
-    "k": 18,
-    "n": 19,
-    "p": 0.9473684210526315,
-    "p_holm": 0.0008392333984375,
-    "p_value": 7.62939453125e-05
+    "k": 25,
+    "n": 27,
+    "p": 0.9259259259259259,
+    "p_holm": 9.036064147949219e-05,
+    "p_value": 5.647540092468262e-06
    },
    "identity": "9eGrDohdNTAo61DRHyfMuqKWXqYnA3i254Wiszxe8FoY",
    "logit": {
     "coef": {
-     "A_is_high": 36.49283660553747,
-     "A_sent_first": 15.783546499653564,
-     "intercept": -17.575305987311882
+     "A_is_high": 20.9736282511482,
+     "A_sent_first": 16.83049352891381,
+     "intercept": -19.027718086024667
     },
     "converged": true,
-    "n": 19,
+    "n": 27,
     "se": {
-     "A_is_high": 6297.92261704956,
-     "A_sent_first": 3705.1860063633094,
-     "intercept": 3705.1858532616525
+     "A_is_high": 4088.215427878451,
+     "A_sent_first": 4088.2154286723976,
+     "intercept": 4088.21545646048
     },
     "separation": true
    },
-   "n_primary": 19,
-   "n_probes_all_arms": 333,
-   "n_probes_arm_P": 289,
-   "pi": 0.894736842105263,
+   "n_primary": 27,
+   "n_probes_all_arms": 469,
+   "n_probes_arm_P": 403,
+   "pi": 0.8518518518518519,
    "send": {
     "ci90": [
-     0.18750431150540045,
-     0.581935525185808
+     0.24793441755949122,
+     0.5829313488292404
     ],
     "ci95": [
-     0.16288587215509964,
-     0.6164220766855947
+     0.22389729135058145,
+     0.6120160697403181
     ],
-    "k": 7,
-    "n": 19,
-    "p": 0.3684210526315789,
+    "k": 11,
+    "n": 27,
+    "p": 0.4074074074074074,
     "p_holm": 1.0,
-    "p_value": 0.359283447265625
+    "p_value": 0.44206833839416504
    },
    "table_2x2": {
-    "sent_first_landed_first": 6,
+    "sent_first_landed_first": 9,
     "sent_first_landed_second": 0,
-    "sent_second_landed_first": 12,
-    "sent_second_landed_second": 1
+    "sent_second_landed_first": 16,
+    "sent_second_landed_second": 2
    },
    "target_role": "Firedancer-1",
-   "verdict": "insufficient data (n=19)",
+   "verdict": "insufficient data (n=27)",
    "version_split": {
     "by_version": [
      {
       "fee": {
        "ci95": [
-        0.7397193458047858,
-        0.9986683711958205
+        0.7571016531543728,
+        0.9908999270576937
        ],
-       "k": 18,
-       "n": 19,
-       "p": 0.9473684210526315
+       "k": 25,
+       "n": 27,
+       "p": 0.9259259259259259
       },
-      "n_primary": 19,
-      "n_probes_arm_P": 289,
+      "n_primary": 27,
+      "n_probes_arm_P": 403,
       "send": {
        "ci95": [
-        0.16288587215509964,
-        0.6164220766855947
+        0.22389729135058145,
+        0.6120160697403181
        ],
-       "k": 7,
-       "n": 19,
-       "p": 0.3684210526315789
+       "k": 11,
+       "n": 27,
+       "p": 0.4074074074074074
       },
       "version": "26.10.5"
      }
@@ -4865,96 +5421,96 @@
    "client_id": "HarmonicAgave",
    "exclusions": {
     "claim_changed_in_run": 0,
-    "claim_end_unknown": 5,
-    "different_slots": 44,
-    "none_landed": 145,
-    "one_landed": 75,
-    "other_producer": 107,
+    "claim_end_unknown": 14,
+    "different_slots": 79,
+    "none_landed": 202,
+    "one_landed": 106,
+    "other_producer": 178,
     "payer_conflict": 0,
-    "primary": 78,
+    "primary": 110,
     "primary_with_execution_error": 0,
-    "target_outside_window": 10
+    "target_outside_window": 14
    },
    "fee": {
     "ci90": [
-     0.8699368015793969,
-     0.9744042844390621
+     0.8837979144290673,
+     0.9697553509546615
     ],
     "ci95": [
-     0.8567124038931144,
-     0.9788602795885386
+     0.8732740734518525,
+     0.9740343856463762
     ],
-    "k": 73,
-    "n": 78,
-    "p": 0.9358974358974359,
-    "p_holm": 2.2449688111261826e-15,
-    "p_value": 1.4966458740841218e-16
+    "k": 103,
+    "n": 110,
+    "p": 0.9363636363636364,
+    "p_holm": 1.0505419059609055e-21,
+    "p_value": 5.2527095298045276e-23
    },
    "identity": "Fd7btgySsrjuo25CJCj7oE7VPMyezDhnx7pZkj2v69Nk",
    "logit": {
     "coef": {
-     "A_is_high": 22.173629712874437,
-     "A_sent_first": 18.718365114255196,
-     "intercept": -20.96965689981741
+     "A_is_high": 5.542307494699748,
+     "A_sent_first": 1.3297869336631165,
+     "intercept": -3.4204626168075247
     },
     "converged": true,
-    "n": 78,
+    "n": 110,
     "se": {
-     "A_is_high": 3926.4038902488137,
-     "A_sent_first": 3926.403885146831,
-     "intercept": 3926.4039087810165
+     "A_is_high": 0.8678702623037458,
+     "A_sent_first": 0.8605403275900583,
+     "intercept": 0.7964578369268748
     },
-    "separation": true
+    "separation": false
    },
-   "n_primary": 78,
-   "n_probes_all_arms": 550,
-   "n_probes_arm_P": 459,
-   "pi": 0.8717948717948718,
+   "n_primary": 110,
+   "n_probes_all_arms": 815,
+   "n_probes_arm_P": 689,
+   "pi": 0.8727272727272728,
    "send": {
     "ci90": [
-     0.5292166083320107,
-     0.7196629704768467
+     0.5264790747206047,
+     0.6871988424009075
     ],
     "ci95": [
-     0.5113388147427141,
-     0.7350226896879852
+     0.5114328114718006,
+     0.7007211477899381
     ],
-    "k": 49,
-    "n": 78,
-    "p": 0.6282051282051282,
-    "p_holm": 0.21550547074979956,
-    "p_value": 0.030786495821399938
+    "k": 67,
+    "n": 110,
+    "p": 0.6090909090909091,
+    "p_holm": 0.27850888125662243,
+    "p_value": 0.027850888125662245
    },
    "table_2x2": {
-    "sent_first_landed_first": 44,
-    "sent_first_landed_second": 0,
-    "sent_second_landed_first": 29,
+    "sent_first_landed_first": 62,
+    "sent_first_landed_second": 2,
+    "sent_second_landed_first": 41,
     "sent_second_landed_second": 5
    },
    "target_role": "HarmonicAgave-1",
-   "verdict": "insufficient data (n=78)",
+   "verdict": "fee rule holds, strong",
    "version_split": {
     "by_version": [
      {
       "fee": {
        "ci95": [
-        0.8567124038931144,
-        0.9788602795885386
+        0.8732740734518525,
+        0.9740343856463762
        ],
-       "k": 73,
-       "n": 78,
-       "p": 0.9358974358974359
+       "k": 103,
+       "n": 110,
+       "p": 0.9363636363636364
       },
-      "n_primary": 78,
-      "n_probes_arm_P": 459,
+      "n_primary": 110,
+      "n_probes_arm_P": 689,
       "send": {
        "ci95": [
-        0.5113388147427141,
-        0.7350226896879852
+        0.5114328114718006,
+        0.7007211477899381
        ],
-       "k": 49,
-       "n": 78,
-       "p": 0.6282051282051282
+       "k": 67,
+       "n": 110,
+       "p": 0.6090909090909091
       },
       "version": "4.4.0"
      }
@@ -4963,6 +5519,203 @@
    },
    "versions_seen": [
     "4.4.0"
+   ]
+  },
+  {
+   "client_id": "HarmonicFiredancer",
+   "exclusions": {
+    "claim_changed_in_run": 0,
+    "claim_end_unknown": 2,
+    "different_slots": 6,
+    "none_landed": 15,
+    "one_landed": 10,
+    "other_producer": 16,
+    "payer_conflict": 0,
+    "primary": 1,
+    "primary_with_execution_error": 0,
+    "target_outside_window": 0
+   },
+   "fee": {
+    "ci90": [
+     0.04999999999999999,
+     1.0
+    ],
+    "ci95": [
+     0.025000000000000022,
+     1.0
+    ],
+    "k": 1,
+    "n": 1,
+    "p": 1.0,
+    "p_holm": 1.0,
+    "p_value": 1.0
+   },
+   "identity": "87CcUxpyR72ZyfaZirj86mqkbk5uuU2EfnwTegVMLJL5",
+   "logit": {
+    "error": "design matrix is rank deficient",
+    "n": 1
+   },
+   "n_primary": 1,
+   "n_probes_all_arms": 57,
+   "n_probes_arm_P": 48,
+   "pi": 1.0,
+   "send": {
+    "ci90": [
+     0.04999999999999999,
+     1.0
+    ],
+    "ci95": [
+     0.025000000000000022,
+     1.0
+    ],
+    "k": 1,
+    "n": 1,
+    "p": 1.0,
+    "p_holm": 1.0,
+    "p_value": 1.0
+   },
+   "table_2x2": {
+    "sent_first_landed_first": 1,
+    "sent_first_landed_second": 0,
+    "sent_second_landed_first": 0,
+    "sent_second_landed_second": 0
+   },
+   "target_role": "HarmonicFiredancer-1",
+   "verdict": "insufficient data (n=1)",
+   "version_split": {
+    "by_version": [
+     {
+      "fee": {
+       "ci95": [
+        0.025000000000000022,
+        1.0
+       ],
+       "k": 1,
+       "n": 1,
+       "p": 1.0
+      },
+      "n_primary": 1,
+      "n_probes_arm_P": 48,
+      "send": {
+       "ci95": [
+        0.025000000000000022,
+        1.0
+       ],
+       "k": 1,
+       "n": 1,
+       "p": 1.0
+      },
+      "version": "26.10.5"
+     }
+    ],
+    "label": "descriptive, no tests or verdicts"
+   },
+   "versions_seen": [
+    "26.10.5"
+   ]
+  },
+  {
+   "client_id": "HarmonicFiredancer",
+   "exclusions": {
+    "claim_changed_in_run": 0,
+    "claim_end_unknown": 0,
+    "different_slots": 8,
+    "none_landed": 7,
+    "one_landed": 3,
+    "other_producer": 8,
+    "payer_conflict": 0,
+    "primary": 5,
+    "primary_with_execution_error": 0,
+    "target_outside_window": 0
+   },
+   "fee": {
+    "ci90": [
+     0.34259168199886125,
+     0.9897937816869885
+    ],
+    "ci95": [
+     0.28358206388191054,
+     0.9949492366205319
+    ],
+    "k": 4,
+    "n": 5,
+    "p": 0.8,
+    "p_holm": 1.0,
+    "p_value": 0.375
+   },
+   "identity": "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+   "logit": {
+    "coef": {
+     "A_is_high": 3.037980064178574,
+     "A_sent_first": 34.72875695818198,
+     "intercept": -17.46151683959647
+    },
+    "converged": true,
+    "n": 5,
+    "se": {
+     "A_is_high": 16266.012030802462,
+     "A_sent_first": 6875.864941854325,
+     "intercept": 4296.9389660804745
+    },
+    "separation": true
+   },
+   "n_primary": 5,
+   "n_probes_all_arms": 36,
+   "n_probes_arm_P": 31,
+   "pi": 0.6000000000000001,
+   "send": {
+    "ci90": [
+     0.5492802716530588,
+     1.0
+    ],
+    "ci95": [
+     0.47817624989501856,
+     1.0
+    ],
+    "k": 5,
+    "n": 5,
+    "p": 1.0,
+    "p_holm": 0.5625,
+    "p_value": 0.0625
+   },
+   "table_2x2": {
+    "sent_first_landed_first": 4,
+    "sent_first_landed_second": 0,
+    "sent_second_landed_first": 0,
+    "sent_second_landed_second": 1
+   },
+   "target_role": "HarmonicFiredancer-1",
+   "verdict": "insufficient data (n=5)",
+   "version_split": {
+    "by_version": [
+     {
+      "fee": {
+       "ci95": [
+        0.28358206388191054,
+        0.9949492366205319
+       ],
+       "k": 4,
+       "n": 5,
+       "p": 0.8
+      },
+      "n_primary": 5,
+      "n_probes_arm_P": 31,
+      "send": {
+       "ci95": [
+        0.47817624989501856,
+        1.0
+       ],
+       "k": 5,
+       "n": 5,
+       "p": 1.0
+      },
+      "version": "26.10.5"
+     }
+    ],
+    "label": "descriptive, no tests or verdicts"
+   },
+   "versions_seen": [
+    "26.10.5"
    ]
   },
   {
@@ -4991,7 +5744,7 @@
     "k": 24,
     "n": 27,
     "p": 0.8888888888888888,
-    "p_holm": 0.0005908012390136719,
+    "p_holm": 0.0007385015487670898,
     "p_value": 4.9233436584472656e-05
    },
    "identity": "JUPiTERrZqgf1jUyR7dSkhMx4Kn2qJyekWsg3LT1h4b",
@@ -5095,7 +5848,7 @@
     "k": 89,
     "n": 138,
     "p": 0.644927536231884,
-    "p_holm": 0.008360058024357577,
+    "p_holm": 0.011704081234100609,
     "p_value": 0.0008360058024357577
    },
    "identity": "E1r4Psq84tHfQ6aPTvvDka4U3u8zPVD7gEUrH25RdxHL",
@@ -5130,7 +5883,7 @@
     "k": 107,
     "n": 138,
     "p": 0.7753623188405797,
-    "p_holm": 7.682041177879322e-10,
+    "p_holm": 9.876910085844844e-10,
     "p_value": 5.4871722699138016e-11
    },
    "table_2x2": {
@@ -5178,73 +5931,73 @@
    "exclusions": {
     "claim_changed_in_run": 0,
     "claim_end_unknown": 0,
-    "different_slots": 27,
-    "none_landed": 25,
-    "one_landed": 17,
-    "other_producer": 17,
+    "different_slots": 34,
+    "none_landed": 31,
+    "one_landed": 23,
+    "other_producer": 20,
     "payer_conflict": 0,
-    "primary": 26,
+    "primary": 37,
     "primary_with_execution_error": 0,
     "target_outside_window": 0
    },
    "fee": {
     "ci90": [
-     0.43566269385563405,
-     0.7743001177767628
+     0.4463441121359716,
+     0.7309448129224286
     ],
     "ci95": [
-     0.40570753529859144,
-     0.7977397563449796
+     0.4209972493731196,
+     0.7524576235233262
     ],
-    "k": 16,
-    "n": 26,
-    "p": 0.6153846153846154,
+    "k": 22,
+    "n": 37,
+    "p": 0.5945945945945946,
     "p_holm": 1.0,
-    "p_value": 0.32693958282470703
+    "p_value": 0.3240086000878364
    },
    "identity": "ana2y2YvQ3ZPMwm6qhnN3nJoUSiT3qx5Pvetkq9xcfY",
    "logit": {
     "coef": {
-     "A_is_high": 1.3118719702090171,
-     "A_sent_first": 1.8878567267760944,
-     "intercept": -1.533964360134452
+     "A_is_high": 1.1791644913000066,
+     "A_sent_first": 2.0358904399052222,
+     "intercept": -1.7990744431394838
     },
     "converged": true,
-    "n": 26,
+    "n": 37,
     "se": {
-     "A_is_high": 0.9464884173897509,
-     "A_sent_first": 0.9460015162270835,
-     "intercept": 0.9218102614745247
+     "A_is_high": 0.7919877783083085,
+     "A_sent_first": 0.8130060854577159,
+     "intercept": 0.8370163740241551
     },
     "separation": false
    },
-   "n_primary": 26,
-   "n_probes_all_arms": 124,
-   "n_probes_arm_P": 112,
-   "pi": 0.23076923076923084,
+   "n_primary": 37,
+   "n_probes_all_arms": 160,
+   "n_probes_arm_P": 145,
+   "pi": 0.18918918918918926,
    "send": {
     "ci90": [
-     0.513001778768696,
-     0.8367181086205863
+     0.5562403951924966,
+     0.8234707618775541
     ],
     "ci95": [
-     0.48210356355425843,
-     0.8567400020722964
+     0.530200465005933,
+     0.8412745636203715
     ],
-    "k": 18,
-    "n": 26,
-    "p": 0.6923076923076923,
-    "p_holm": 0.4531121850013733,
-    "p_value": 0.07551869750022888
+    "k": 26,
+    "n": 37,
+    "p": 0.7027027027027027,
+    "p_holm": 0.22081237111706287,
+    "p_value": 0.020073851919732988
    },
    "table_2x2": {
-    "sent_first_landed_first": 10,
-    "sent_first_landed_second": 2,
-    "sent_second_landed_first": 6,
-    "sent_second_landed_second": 8
+    "sent_first_landed_first": 14,
+    "sent_first_landed_second": 3,
+    "sent_second_landed_first": 8,
+    "sent_second_landed_second": 12
    },
    "target_role": "Rakurai-1",
-   "verdict": "insufficient data (n=26)",
+   "verdict": "insufficient data (n=37)",
    "version_split": {
     "by_version": [
      {
@@ -5269,12 +6022,36 @@
        "p": 0.6923076923076923
       },
       "version": "4.3.2"
+     },
+     {
+      "fee": {
+       "ci95": [
+        0.23379359765934518,
+        0.8325119059362929
+       ],
+       "k": 6,
+       "n": 11,
+       "p": 0.5454545454545454
+      },
+      "n_primary": 11,
+      "n_probes_arm_P": 33,
+      "send": {
+       "ci95": [
+        0.3902574404275788,
+        0.9397822658270933
+       ],
+       "k": 8,
+       "n": 11,
+       "p": 0.7272727272727273
+      },
+      "version": "4.4.0"
      }
     ],
     "label": "descriptive, no tests or verdicts"
    },
    "versions_seen": [
-    "4.3.2"
+    "4.3.2",
+    "4.4.0"
    ]
   }
  ]

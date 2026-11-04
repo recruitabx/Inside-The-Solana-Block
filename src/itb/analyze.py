@@ -522,12 +522,16 @@ def analyze(raw_dir: str, out_dir: str, cfg: dict, final: bool = False, figure: 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="itb analyze")
     ap.add_argument("--raw", default="data/raw")
+    ap.add_argument("--alpha", type=float, default=None, help="family alpha (default 0.05; Amendment 7 uses 0.025)")
     ap.add_argument("--out", default="results")
     ap.add_argument("--final", action="store_true",
                     help="confirmatory analysis of the main-phase data (run once, after the last main run); pilot data and synthetic "
                          "data are excluded. Without it only synthetic data are analysed and every real probe is refused")
     a = ap.parse_args(argv)
-    summary = analyze(a.raw, a.out, dict(DEFAULTS), final=a.final)
+    cfg = dict(DEFAULTS)
+    if a.alpha is not None:
+        cfg["alpha"] = a.alpha  # Amendment 7: 0.025 for the pooled analysis after the extension (two looks)
+    summary = analyze(a.raw, a.out, cfg, final=a.final)
     if a.final:
         ex = summary["n_rows_excluded"]
         print(f"FINAL: main-phase data only; excluded {ex['pilot']} pilot, {ex['synthetic']} synthetic and {ex['other_phase']} other-phase probes")

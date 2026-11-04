@@ -11310,3 +11310,6 @@
 {"actual_fee": 5050, "kind": "settle", "sig": "63b9eTYdXN1wj4y1xBLtyJn8VoWU1PHaS4x8q9A8fRoQu6r6ysYtvL3WTfQJMkzpSn31GpySmeNVdRmL1Kd9pRpi", "ts": 1793781208.0322208}
 {"actual_fee": 5050, "kind": "settle", "sig": "35JPUgdCBfQb5eMydNy44dY5RUbQQ2QJaH4U2RT6Uhfn6nCP22p7qseeB9Vub39pWvb3PMqXKfUovoa3AW2CP55M", "ts": 1793781209.157179}
 {"actual_fee": 5050, "kind": "settle", "sig": "2BD9u3TkHRgdJxrC1eKCZsptDAvWGiFUVYMRNXYAbcsgdMeoF9xih6RQ2EXAyTZT5RHPPFMzwQFYaCRn1ijoQYat", "ts": 1793781209.5041387}
+{"kind": "reserve", "max_fee": 7170, "sig": "3hEVfHWkgqnyKpjv9rWNuhMJMdnXk5cn5mPAUYZjcnywW64UTu2hgsh9pvXTVdZ2mwg9AnUEc5hYsw3SXvSD7xpR", "tag": "anchor:20261104T083405Z-live-15484a", "ts": 1793781262.8358872}
+{"kind": "reserve", "max_fee": 5001, "sig": "3mBZyrNP2NywU9CNEbLQD8fTMsyJCMxZoXqybpuSZxNY4uuGbJ1zKVwuWXW6tJKHcid7VR9Gthr7eEp64cprSqxs", "tag": "20261104T083405Z-live-15484a:0", "ts": 1793781284.307394}
+{"kind": "reserve", "max_fee": 10500, "sig": "3zYBFtMA7HMzEgApQwPGtVFVS7zcWZQEaSXJNoR1JxB7nQoABYuSJfbrQVKBneghvK86JStsb74kt742NCHmSaeM", "tag": "20261104T083405Z-live-15484a:0", "ts": 1793781284.307394}

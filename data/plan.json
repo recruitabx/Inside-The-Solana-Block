@@ -37,7 +37,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 900
+   "quota_per_target": 506
   },
   {
    "role": "JitoLabs-1",
@@ -56,7 +56,7 @@
     "D": 0.05,
     "S": 0.05
    },
-   "quota_per_target": 900
+   "quota_per_target": 471
   },
   {
    "role": "HarmonicFiredancer-1",

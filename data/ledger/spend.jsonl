@@ -12684,3 +12684,4 @@
 {"kind": "release", "reason": "unknown to cluster 1253 s after send (blockhash expired)", "sig": "Ja6VJzZUNAj38Cr2GYnAvVvV1DYiwWfMdkV9bjLTnEAeDZ5kYtcczc2V6c3ftnvJTfviKw2Lby5NAmp2DjosfdV", "ts": 1793797046.7696123}
 {"kind": "release", "reason": "unknown to cluster 1253 s after send (blockhash expired)", "sig": "2rK2jYAaARtQod3VFWpdQQDXrnM22my571c44b6XujzXdLnAz538S6zYDhcFhGSnaCzfKNksFcDCUyXd8JmadqZR", "ts": 1793797046.7698298}
 {"actual_fee": 7170, "kind": "settle", "sig": "47QiK5dFAo8xGgr5K7eNWt5dcHMsYVMBpK6x1MBkBdrHFvbjb1hUL2NJpnkhL6B6MBTCEYV25zLgmb9Xawmj3JAe", "ts": 1793797047.4261835}
+{"kind": "reserve", "max_fee": 7170, "sig": "2U3AcSRjyM7NrTJFLmJmMF8CTXbzczx3xCnv7Y5vyzmgayGpJhfUs9k7vEyEA7bpDNTinMGLMSQoZPKHAhLnjMxA", "tag": "anchor:20261104T125803Z-live-9b5d4a", "ts": 1793797085.4300761}

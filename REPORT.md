@@ -1,6 +1,6 @@
 # Report: how eight Solana mainnet leaders ordered our transaction pairs
 
-**Summary.** We sent 2,649 pairs of our own transactions into the leader windows of eight mainnet validators running eight different client types (AgaveBam, JitoLabs, HarmonicAgave, HarmonicFiredancer, Firedancer, FireBAM, Rakurai, Agave) on 2026-10-31, after the Alpenglow upgrade. The two transactions of a pair conflicted (shared writable account), differed only in fee (3.2x reward per cost unit), and their fee assignment and request position were randomized independently. For every validator the higher-fee transaction came first in more than half of the usable pairs, but never strictly; request position also mattered. Two validators reached the preregistered N of 100 and both get the verdict "mixed". Fee order was strong (88%) in pairs that were likely in the leader's buffer together, and arrival order won completely when the two were sent 200 ms apart. Six validators stayed below N = 100 because many pairs did not land together in the target's own window, which is itself a finding about the delivery path.
+**Summary.** We sent 3286 pairs of our own transactions into the leader windows of eight mainnet validators running eight client types (AgaveBam, JitoLabs, HarmonicAgave, HarmonicFiredancer, Firedancer, FireBAM, Rakurai, Agave), on 2026-10-31 and 2026-11-04, after the Alpenglow upgrade. The two transactions of a pair conflicted (shared writable account), differed only in fee (3.2x reward per cost unit), and their fee assignment and request position were randomized independently. For every validator with at least 10 usable pairs, the higher-fee transaction of a conflicting pair came first in more than half of them (p from 0.59 to 0.94), but never strictly. 4 validators reached the preregistered N of 100 and got a verdict at family alpha 0.025: AgaveBam-1 (AgaveBam) fee rule holds, partial; JitoLabs-1 (JitoLabs) mixed: fee rule partial and request-position rule partial; FireBAM-1 (FireBAM) fee rule holds, partial; HarmonicAgave-1 (HarmonicAgave) fee rule holds, strong. In pairs that were sent before the leader's window and landed in its first slot, the higher fee came first in 0.85 [0.77, 0.91] (n = 124); when the two were sent 200 ms apart, the first-sent came first in 13 of 13. The main limitation: we could only send through one RPC provider (no direct QUIC), so true arrival order at the leader is not observed, and the Firedancer and HarmonicFiredancer leaders, as well as the two low-stake ones, rarely included our pairs in their own window.
 
 ## 1. Dates of every measurement and on-chain anchors
 
@@ -13,8 +13,12 @@ All times UTC. Every run (start, end, phase, probes, transactions, landed, usabl
 | 2026-10-30 17:09:26 | preregistration v1.2 anchored: memo transaction `56QwAyKWAiQxaNbM7gdpxGStjuakC6sT2hxhwgAfLEx9wzyrdWghoL5Uavxoy4dwhuUG4DZkhGR1eHL2ZuT9XBhZ` (slot 463364065) |
 | 2026-10-30 17:10 to 18:16 | pilot (58 probes) and re-pilot (89 probes), provisional targets, operational metrics only (Amendments 1 to 3) |
 | 2026-10-31 08:37:09 | targets and plan frozen, manifest anchored: `YRigBd5gKYVgZoAHVEjgkyXWKb7ZYWYBo8GSnwkrgvMsQmW8scbJYxRfFqNHXWbRUEMQC7uUfFmxtD3gRLDH7ME` (slot 463623656) |
-| 2026-10-31 08:38 to 22:31 | main measurement: 30 runs, 2,649 probes (Amendments 4 to 6) |
-| 2026-11-01 | final data manifest (`data/anchors/data_manifest.txt`) anchored: `5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA` |
+| 2026-10-31 08:38 to 22:31 | main measurement (Amendments 4 to 6) |
+| 2026-11-01 | first confirmatory analysis (archived in `results/first_analysis_2026-11-01/`) |
+| 2026-11-04 08:3x | Amendment 7 anchored before any new data: `5ZEyidzbsoWW65JVyJvXPPAU3PQNhS3Binm5uCZ4eSBTU4AhSxmKzeRAH8tquotJjXuMZ1NxHChFShxgdM1yxCdw` |
+| 2026-11-04 08:34 to 19:56 | extension of the identical protocol (Amendment 7); pooled analysis at family alpha 0.025 |
+| 2026-11-01 | data manifest after the first period anchored: `5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA` |
+| 2026-11-04 20:4x | final data manifest (`data/anchors/data_manifest.txt`) anchored: `4RkSVcG5zzQcig15ZuLicLZdRWNk9Bzk8QHKPL9vfNNZCsiWhBC5H1foUwVWvvX2HpZsPrXhayC1WDNA3ZukF6JL` |
 
 Each anchor is a Memo; `getTransaction` shows the hash, which you can compare with `sha256sum` of the file at the named commit.
 
@@ -22,32 +26,60 @@ Each anchor is a Memo; `getTransaction` shows the hash, which you can compare wi
 
 Details: [docs/DESIGN.md](docs/DESIGN.md) and [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md) (binding, with six dated amendments). Each probe is two legacy transactions (`SetComputeUnitLimit(1000)`, `SetComputeUnitPrice`, `SetLoadedAccountsDataSizeLimit(4096)`, 0-lamport transfer to a shared account W) from two different fee payers, sent in one JSON-RPC request about 270 ms before the target's window. Arms: P conflicting contrast (85%), E equal fee (placebo), D disjoint contrast, S two requests 200 ms apart in random order. Usable pair: both transactions in one block produced by the target (read from the block's `Fee` reward) inside the targeted window. Estimands: p = P(higher reward-per-cost first), q = P(first in the request first), exact Clopper-Pearson intervals, one Holm family over all tests, N of at least 100 for a verdict, equivalence margin [0.35, 0.65] for "no rule".
 
-## 3. Results per validator (arm P, preregistered)
+## 3. Results per validator (arm P, preregistered, pooled over both periods, family alpha 0.025)
 
-| Validator | Client, version | N | p [95% CI] | q [95% CI] | Verdict |
+| Validator (role, identity) | Client, version (gossip claims) | N usable | p: higher fee first [95% CI] | q: first in request first [95% CI] | Preregistered verdict (family alpha 0.025) |
 |---|---|---|---|---|---|
-| AgaveBam-1 | AgaveBam 4.4.0-rc.1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | mixed: fee rule partial, request-position rule partial |
-| JitoLabs-1 | JitoLabs 4.4.0 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial, request-position rule partial |
-| FireBAM-1 | FireBAM 26.10.5 | 91 | 0.76 [0.66, 0.84] | 0.56 [0.45, 0.66] | insufficient data |
-| HarmonicAgave-1 | HarmonicAgave 4.4.0 | 78 | 0.94 [0.86, 0.98] | 0.63 [0.51, 0.74] | insufficient data |
-| HarmonicFiredancer-1 | HarmonicFiredancer 26.10.5 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data |
-| Rakurai-1 | Rakurai 4.3.2 | 26 | 0.62 [0.41, 0.80] | 0.69 [0.48, 0.86] | insufficient data |
-| Agave-1 | Agave 4.3.2 | 20 | 0.60 [0.36, 0.81] | 0.80 [0.56, 0.94] | insufficient data |
-| Firedancer-1 | Firedancer 26.10.5 | 19 | 0.95 [0.74, 1.00] | 0.37 [0.16, 0.62] | insufficient data |
+| AgaveBam-1 `DRpbCB..` | AgaveBam 4.4.0-rc.1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | fee rule holds, partial |
+| JitoLabs-1 `E1r4Ps..` | JitoLabs 4.4.0 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial and request-position rule partial |
+| FireBAM-1 `9jxgos..` | FireBAM 26.10.5 | 119 | 0.77 [0.69, 0.84] | 0.52 [0.43, 0.61] | fee rule holds, partial |
+| HarmonicAgave-1 `Fd7btg..` | HarmonicAgave 4.4.0 | 110 | 0.94 [0.87, 0.97] | 0.61 [0.51, 0.70] | fee rule holds, strong |
+| Rakurai-1 `ana2y2..` | Rakurai 4.3.2, 4.4.0 | 37 | 0.59 [0.42, 0.75] | 0.70 [0.53, 0.84] | insufficient data (n=37) |
+| Firedancer-1 `9eGrDo..` | Firedancer 26.10.5 | 27 | 0.93 [0.76, 0.99] | 0.41 [0.22, 0.61] | insufficient data (n=27) |
+| HarmonicFiredancer-1 `JUPiTE..` | HarmonicFiredancer 26.10.5 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data (n=27) |
+| Agave-1 `7QQGNm..` | Agave 4.3.2, 4.4.0 | 23 | 0.61 [0.39, 0.80] | 0.83 [0.61, 0.95] | insufficient data (n=23) |
+| HarmonicFiredancer-1 `Awes4T..` | HarmonicFiredancer 26.10.5 | 5 | 0.80 [0.28, 0.99] | 1.00 [0.48, 1.00] | insufficient data (n=5) |
+| HarmonicFiredancer-1 `87CcUx..` | HarmonicFiredancer 26.10.5 | 1 | 1.00 [0.03, 1.00] | 1.00 [0.03, 1.00] | insufficient data (n=1) |
 
-Reading. "Partial" means the rule is real (Holm-adjusted p below 0.05) but its 95% lower bound is under 0.75. AgaveBam-1 (a BAM node orders by fee per CU in about 50 ms batches, per its operator) is fee-leaning; JitoLabs-1 (Agave greedy scheduler plus Jito changes) is request-position-leaning, consistent with arrival order dominating when the pair is not buffered together (localnet: an idle Agave node ordered by arrival 60 of 60 times). The six "insufficient data" rows are descriptive only; their point estimates all have p above one half, the Harmonic and Firedancer ones strongly, but their N is below the preregistered threshold.
+Reading. "Partial" means the rule is real (Holm-adjusted p below the family alpha) but its 95% lower bound is under 0.75; "strong" means at least 0.75. A role is one validator unless it had to switch identity because its primary changed client (HarmonicFiredancer-1); each identity is its own unit. Units with N below 100 are descriptive only.
+
+First analysis (2026-11-01, before the extension; kept unchanged for transparency):
+
+| Validator | N | p [95% CI] | q [95% CI] | Verdict (first analysis, alpha 0.05) |
+|---|---|---|---|---|
+| AgaveBam-1 | 196 | 0.81 [0.74, 0.86] | 0.61 [0.54, 0.68] | mixed: fee rule partial and request-position rule partial |
+| JitoLabs-1 | 138 | 0.64 [0.56, 0.72] | 0.78 [0.70, 0.84] | mixed: fee rule partial and request-position rule partial |
+| FireBAM-1 | 91 | 0.76 [0.66, 0.84] | 0.56 [0.45, 0.66] | insufficient data (n=91) |
+| HarmonicAgave-1 | 78 | 0.94 [0.86, 0.98] | 0.63 [0.51, 0.74] | insufficient data (n=78) |
+| HarmonicFiredancer-1 | 27 | 0.89 [0.71, 0.98] | 0.63 [0.42, 0.81] | insufficient data (n=27) |
+| Rakurai-1 | 26 | 0.62 [0.41, 0.80] | 0.69 [0.48, 0.86] | insufficient data (n=26) |
+| Agave-1 | 20 | 0.60 [0.36, 0.81] | 0.80 [0.56, 0.94] | insufficient data (n=20) |
+| Firedancer-1 | 19 | 0.95 [0.74, 1.00] | 0.37 [0.16, 0.62] | insufficient data (n=19) |
 
 ## 4. Secondary results (preregistered as secondary, pooled; `results/secondary.json`)
 
-- Equal-fee placebo (arm E, 50 pairs): the randomly labelled "pseudo-high" transaction came first in 0.46 [0.32, 0.61], so the analysis does not invent a fee effect; the first in the request came first in 0.68 [0.53, 0.80].
-- Co-presence subgroup (pairs whose send preceded the window and that landed in its first slot, 110 pairs): p = 0.88 [0.81, 0.94], "fee rule, strong"; q = 0.59 [0.49, 0.68].
-- Spaced sends (arm S, 12 usable pairs): the first-sent came first in 12 of 12 (0.74 to 1.00); arrival order is therefore not excluded for any validator.
-- Disjoint pairs (arm D, exploratory): p = 0.65 [0.50, 0.78] against 0.77 in arm P (Fisher p = 0.08), in the direction expected from execution races between worker threads.
-- Harmonic strategy memo (exploratory): FBA windows 0.89 (27 pairs), MRV windows 0.89 (45 pairs), no difference.
+- Equal-fee placebo (arm E, 53 pairs): the randomly labelled "pseudo-high" transaction came first in 0.47 [0.33, 0.61], so the analysis does not invent a fee effect; the first in the request came first in 0.68 [0.54, 0.80].
+- Co-presence subgroup (pairs sent before the window that landed in its first slot, 124 pairs): p = 0.85 [0.77, 0.91]; q = 0.58 [0.49, 0.67].
+- Spaced sends (arm S, 13 usable pairs): the first-sent came first in 13 of 13; arrival order is therefore not excluded for any validator.
+- Disjoint pairs (arm D, exploratory): p = 0.68 [0.54, 0.80] against 0.78 [0.75, 0.81] in arm P (Fisher p = 0.10).
+- Harmonic strategy memo (exploratory): FBA 0.89 [0.71, 0.98] (n = 27); MRV 0.89 [0.76, 0.96] (n = 45); no block summary 0.96 [0.88, 0.99] (n = 71).
 
 ## 5. Delivery path findings (operational)
 
-3,603 of 5,298 main-run transactions landed (68.0%), high- and low-fee alike. Usable pairs per probe differed widely by leader (`results/runs.md`, "Main phase by role"): AgaveBam-1 246 of 506 probes and FireBAM-1 104 of 227, but Firedancer-1 21 of 333 and HarmonicFiredancer-1 31 of 333. Pairs aimed at Firedancer-family and Harmonic leaders mostly landed one or more windows later, in other leaders' blocks. With sends through a public RPC provider, these leaders rarely included our transactions in their own window.
+4493 of 6572 main-run transactions landed (68.4%), high- and low-fee alike. Usable pairs (both transactions in one block of the target inside its window) per probe differed widely by leader:
+
+| role | probes | usable | cap |
+|---|---|---|---|
+| HarmonicAgave-1 | 815 | 130 | 900 |
+| AgaveBam-1 | 506 | 246 | 506 |
+| JitoLabs-1 | 471 | 157 | 471 |
+| HarmonicFiredancer-1 | 426 | 37 | 900 |
+| Firedancer-1 | 469 | 31 | 900 |
+| FireBAM-1 | 302 | 137 | 900 |
+| Rakurai-1 | 160 | 40 | 900 |
+| Agave-1 | 137 | 27 | 900 |
+
+Pairs aimed at the Firedancer and HarmonicFiredancer leaders mostly landed one or more windows later, in other leaders' blocks; low-stake leaders (Agave-1, Rakurai-1) simply have few windows. With sends through a public RPC provider, these leaders rarely included our transactions in their own window.
 
 ## 6. Noise, limitations, what we do not separate
 
@@ -67,11 +99,13 @@ Reading. "Partial" means the rule is real (Holm-adjusted p below 0.05) but its 9
 - The realized usable fraction (0.02 to 0.29 per arm-P probe) was far below the pilot's 0.41; Amendment 6 extended sampling, without looking at ordering, for the three roles that could reach 115 usable pairs. AgaveBam-1 overshot that target because the stop check did not run during the last runs.
 - 2026-10-31 22:31: the session's machine paused overnight and the remaining runs never started, so the low-window validators (Agave-1, Rakurai-1) ended far below their quotas.
 - Block enrichment (full `getBlock` per landed slot) was too slow for the final collection; the runs collected last have no block summaries, so the Harmonic strategy and supplementary block statistics cover the earlier runs only. A stuck collector process held the spend-ledger lock and delayed the payer drain; a first data-manifest anchor (`2wjEuhwT...`) was written before the last eight runs were collected and is superseded by the one in section 1.
+- 2026-11-04 12:30: the session's machine restarted during the extension and killed one run in progress; it was collected afterwards and the loop resumed at 12:58.
+- After the first analysis, six of eight units were below N = 100; Amendment 7 extended the identical protocol and moved the pooled analysis to family alpha 0.025 to account for the second look.
 - Budget for external review ran out: the planned red-team and independent reviews of the final analysis were not run; the automated checks below were.
 
 ## 8. Checks and cost accounting
 
 - `itb verify -n 30` (public RPC): 30 of 30 PASS (`results/verify_sample.txt`).
-- `itb audit`: every fee-paying transaction of our accounts is in the spend ledger; settled fees 29,490,783 lamports (0.0295 SOL) against the 0.05 SOL hard cap (`results/audit.txt`); payer balances drained back to the wallet.
+- `itb audit`: every fee-paying transaction of our accounts is in the spend ledger; settled fees 36,440,074 lamports (0.0364 SOL) against the 0.05 SOL hard cap (`results/audit.txt`); payer balances drained back to the wallet.
 - `scripts/prepublish_check.sh`: no secrets or service files in the tree or history, no broken links (`results/prepublish.txt`).
 - Tests: `docker compose run --rm test`; localnet known answers 60/60 (arrival) and 57/60 (priority) in `docs/CALIBRATION.md`.

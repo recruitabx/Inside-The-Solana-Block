@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Inside the Solana Block</title>
-<meta name="description" content="Eight Solana mainnet validators, one per client, measured with randomized conflicting transaction pairs: does the higher fee or the request position decide the order in the block?">
+<meta name="description" content="Ten Solana mainnet validators, one per client, measured with randomized conflicting transaction pairs: does the higher fee or the request position decide the order in the block?">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#07070b">
 <meta property="og:title" content="Inside the Solana Block">
-<meta property="og:description" content="Eight Solana mainnet validators, one per client, measured with randomized conflicting transaction pairs: does the higher fee or the request position decide the order in the block?">
+<meta property="og:description" content="Ten Solana mainnet validators, one per client, measured with randomized conflicting transaction pairs: does the higher fee or the request position decide the order in the block?">
 <meta property="og:url" content="https://recruitabx.github.io/Inside-The-Solana-Block/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%239945FF'/%3E%3Cstop offset='1' stop-color='%2314F195'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Crect x='6' y='11' width='9' height='9' rx='2' fill='url(%23g)'/%3E%3Crect x='17' y='11' width='9' height='9' rx='2' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -326,9 +326,9 @@ pre code{color:#e9fbf2}
 <header class="hero" id="top">
   <div class="hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow reveal"><span class="pill">Solana mainnet</span><span class="dim">measured 2026-10-31, after Alpenglow</span></p>
+      <p class="eyebrow reveal"><span class="pill">Solana mainnet</span><span class="dim">measured 2026-10-31 to 2026-11-04, after Alpenglow</span></p>
       <h1 class="reveal d1">When two transactions compete,<br><span class="grad-text">who goes first?</span></h1>
-      <p class="answer reveal d2">In all eight validators the higher-fee transaction came first in more than half of the usable pairs, p from 0.60 to 0.95, but never strictly. Two reached the preregistered N of 100 and both get the verdict &quot;mixed&quot;: fee and request position each decide part of the pairs. The other six are descriptive, N below 100.</p>
+      <p class="answer reveal d2">In all ten validators the higher-fee transaction came first in more than half of the usable pairs, p from 0.59 to 1.00, but never strictly. Four reached the preregistered N of 100: AgaveBam-1 &quot;fee rule holds, partial&quot;, JitoLabs-1 &quot;mixed&quot;, FireBAM-1 &quot;fee rule holds, partial&quot;, HarmonicAgave-1 &quot;fee rule holds, strong&quot;. The other six are descriptive, N below 100.</p>
       <div class="cta reveal d3">
         <a class="btn btn-primary" href="#verify">Verify in 60 seconds</a>
         <a class="btn btn-ghost" href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/REPORT.md" rel="noopener">Read the report</a>
@@ -339,7 +339,7 @@ pre code{color:#e9fbf2}
       <figcaption class="mono">one leader block, one of our pairs</figcaption>
     </figure>
   </div>
-  <div class="metrics reveal d4"><div class="metric"><span class="num mono" data-count="2649" data-dec="0" data-suffix="" style="min-width:5ch">2,649</span><span class="ul"></span><span class="lbl">pairs sent into leader windows</span></div><div class="metric"><span class="num mono" data-count="595" data-dec="0" data-suffix="" style="min-width:3ch">595</span><span class="ul"></span><span class="lbl">usable conflicting pairs</span></div><div class="metric"><span class="num mono" data-count="8" data-dec="0" data-suffix="" style="min-width:1ch">8</span><span class="ul"></span><span class="lbl">validators, 8 client types</span></div><div class="metric"><span class="num mono" data-count="3603" data-dec="0" data-suffix="" style="min-width:5ch">3,603</span><span class="ul"></span><span class="lbl">transactions landed (68%)</span></div></div>
+  <div class="metrics reveal d4"><div class="metric"><span class="num mono" data-count="3286" data-dec="0" data-suffix="" style="min-width:5ch">3,286</span><span class="ul"></span><span class="lbl">pairs sent into leader windows</span></div><div class="metric"><span class="num mono" data-count="683" data-dec="0" data-suffix="" style="min-width:3ch">683</span><span class="ul"></span><span class="lbl">usable conflicting pairs</span></div><div class="metric"><span class="num mono" data-count="10" data-dec="0" data-suffix="" style="min-width:2ch">10</span><span class="ul"></span><span class="lbl">validators, 8 client types</span></div><div class="metric"><span class="num mono" data-count="4493" data-dec="0" data-suffix="" style="min-width:5ch">4,493</span><span class="ul"></span><span class="lbl">transactions landed (68%)</span></div></div>
 </header>
 
 <section class="regimes" aria-labelledby="h-regimes">
@@ -352,25 +352,25 @@ pre code{color:#e9fbf2}
     <article class="regime reveal" style="--i:0">
       <svg class="glyph" viewBox="0 0 120 48" aria-hidden="true"><defs><linearGradient id="gg-co" x1="0" x2="1"><stop offset="0" stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><rect x="8" y="10" width="104" height="28" rx="8" fill="none" stroke="rgba(255,255,255,.18)" stroke-dasharray="3 4"/><rect x="38" y="17" width="18" height="14" rx="4" fill="url(#gg-co)"/><rect x="64" y="17" width="18" height="14" rx="4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/></svg>
       <h3>Buffered together<span class="sub">fee decides</span></h3>
-      <div class="regime-num"><span class="name mono">p =</span><span class="big mono" data-count="0.8818" data-dec="2" style="min-width:4ch">0.88</span></div>
-      <div class="ibar" style="--lo:80.64%;--hi:93.55%;--v:88.18%" role="img" aria-label="p = 0.88, 95% interval 0.81 to 0.94"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
-      <div class="regime-meta mono"><span>97 of 110 pairs</span><span>95% interval 0.81 to 0.94</span></div>
+      <div class="regime-num"><span class="name mono">p =</span><span class="big mono" data-count="0.8468" data-dec="2" style="min-width:4ch">0.85</span></div>
+      <div class="ibar" style="--lo:77.11%;--hi:90.52%;--v:84.68%" role="img" aria-label="p = 0.85, 95% interval 0.77 to 0.91"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
+      <div class="regime-meta mono"><span>105 of 124 pairs</span><span>95% interval 0.77 to 0.91</span></div>
       <p>Pairs sent before the window that landed in its first slot: the higher fee came first.</p>
     </article>
     <article class="regime reveal" style="--i:1">
       <svg class="glyph" viewBox="0 0 120 48" aria-hidden="true"><defs><linearGradient id="gg-spaced" x1="0" x2="1"><stop offset="0" stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><rect x="12" y="17" width="18" height="14" rx="4" fill="url(#gg-spaced)"/><rect x="90" y="17" width="18" height="14" rx="4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/><path d="M36 24 H84" stroke="rgba(255,255,255,.3)" stroke-dasharray="2 4"/><text x="60" y="13" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.6)" font-family="JetBrains Mono,monospace">200 ms</text></svg>
       <h3>Sent 200 ms apart<span class="sub">arrival decides</span></h3>
       <div class="regime-num"><span class="name mono">q =</span><span class="big mono" data-count="1.0000" data-dec="2" style="min-width:4ch">1.00</span></div>
-      <div class="ibar" style="--lo:73.54%;--hi:100.00%;--v:100.00%" role="img" aria-label="q = 1.00, 95% interval 0.74 to 1.00"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
-      <div class="regime-meta mono"><span>12 of 12 pairs</span><span>95% interval 0.74 to 1.00</span></div>
+      <div class="ibar" style="--lo:75.29%;--hi:100.00%;--v:100.00%" role="img" aria-label="q = 1.00, 95% interval 0.75 to 1.00"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
+      <div class="regime-meta mono"><span>13 of 13 pairs</span><span>95% interval 0.75 to 1.00</span></div>
       <p>Two requests in random order: the first-sent came first.</p>
     </article>
     <article class="regime reveal" style="--i:2">
       <svg class="glyph" viewBox="0 0 120 48" aria-hidden="true"><defs><linearGradient id="gg-placebo" x1="0" x2="1"><stop offset="0" stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><rect x="38" y="17" width="18" height="14" rx="4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/><rect x="64" y="17" width="18" height="14" rx="4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/><text x="60" y="28" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.7)">=</text></svg>
       <h3>Equal fees<span class="sub">coin flip</span></h3>
-      <div class="regime-num"><span class="name mono">p =</span><span class="big mono" data-count="0.4600" data-dec="2" style="min-width:4ch">0.46</span></div>
-      <div class="ibar" style="--lo:31.81%;--hi:60.68%;--v:46.00%" role="img" aria-label="p = 0.46, 95% interval 0.32 to 0.61"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
-      <div class="regime-meta mono"><span>23 of 50 pairs</span><span>95% interval 0.32 to 0.61</span></div>
+      <div class="regime-num"><span class="name mono">p =</span><span class="big mono" data-count="0.4717" data-dec="2" style="min-width:4ch">0.47</span></div>
+      <div class="ibar" style="--lo:33.30%;--hi:61.36%;--v:47.17%" role="img" aria-label="p = 0.47, 95% interval 0.33 to 0.61"><i class="half"></i><i class="seg"></i><i class="dot"></i></div>
+      <div class="regime-meta mono"><span>25 of 53 pairs</span><span>95% interval 0.33 to 0.61</span></div>
       <p>A randomly labelled pseudo-high transaction came first about half the time.</p>
     </article></div>
 </section>
@@ -378,13 +378,13 @@ pre code{color:#e9fbf2}
 <section class="results" id="results" aria-labelledby="h-results">
   <div class="sec-head">
     <p class="kicker reveal">Results by validator</p>
-    <h2 id="h-results" class="reveal d1">Eight validators, eight client types, one block at a time</h2>
+    <h2 id="h-results" class="reveal d1">Ten validators, eight client types, one block at a time</h2>
     <p class="lede reveal d2">Dots are point estimates, bars are exact 95% intervals. The reference line is 0.5, the faint band is the preregistered "no rule" zone, 0.35 to 0.65. Sorted by N. Hover a dot for the count.</p>
   </div>
   <div class="legend reveal d2" aria-hidden="true">
     <span><i class="sw sw-p"></i>p: higher fee first</span>
     <span><i class="sw sw-q"></i>q: first in request first</span>
-    <span><i class="sw sw-band"></i>no-rule band</span>
+    <span><i class="sw sw-band"></i>no-rule band</span><span><i class="sw sw-ghost"></i>first analysis</span>
   </div>
   <div class="chart">
     <div class="axis-row"><div class="who"></div><div class="axis mono"><span style="left:0%">0</span><span style="left:25%">0.25</span><span style="left:50%">0.5</span><span style="left:75%">0.75</span><span style="left:100%">1</span></div><div class="vals"></div></div>
@@ -393,11 +393,11 @@ pre code{color:#e9fbf2}
         <div class="who">
           <div class="role">AgaveBam-1</div>
           <div class="meta"><span>AgaveBam 4.4.0-rc.1</span><span class="mono">N = 196</span></div>
-          <span class="chip chip-verdict" title="mixed: fee rule partial and request-position rule partial">mixed</span><div class="vdetail">fee rule partial and request-position rule partial</div>
+          <span class="chip chip-verdict" title="fee rule holds, partial">fee rule holds, partial</span>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:74.37%;--hi:85.90%;--v:80.61%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.81 [0.74, 0.86], 158 of 196" aria-label="p = 0.81 [0.74, 0.86], 158 of 196"></button></div>
-          <div class="lane lane-q" style="--lo:54.02%;--hi:68.08%;--v:61.22%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.61 [0.54, 0.68], 120 of 196" aria-label="q = 0.61 [0.54, 0.68], 120 of 196"></button></div>
+          <div class="lane lane-p" style="--lo:74.37%;--hi:85.90%;--v:80.61%"><i class="ghost" style="--g:80.61%" title="first analysis: p = 0.81"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.81 [0.74, 0.86], 158 of 196" aria-label="p = 0.81 [0.74, 0.86], 158 of 196"></button></div>
+          <div class="lane lane-q" style="--lo:54.02%;--hi:68.08%;--v:61.22%"><i class="ghost" style="--g:61.22%" title="first analysis: q = 0.61"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.61 [0.54, 0.68], 120 of 196" aria-label="q = 0.61 [0.54, 0.68], 120 of 196"></button></div>
         </div>
         <div class="vals mono"><span class="v v-p"><b>p</b> 0.81 <em>[0.74, 0.86]</em></span><span class="v v-q"><b>q</b> 0.61 <em>[0.54, 0.68]</em></span></div>
       </div>
@@ -408,90 +408,114 @@ pre code{color:#e9fbf2}
           <span class="chip chip-verdict" title="mixed: fee rule partial and request-position rule partial">mixed</span><div class="vdetail">fee rule partial and request-position rule partial</div>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:55.90%;--hi:72.45%;--v:64.49%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.64 [0.56, 0.72], 89 of 138" aria-label="p = 0.64 [0.56, 0.72], 89 of 138"></button></div>
-          <div class="lane lane-q" style="--lo:69.66%;--hi:84.20%;--v:77.54%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.78 [0.70, 0.84], 107 of 138" aria-label="q = 0.78 [0.70, 0.84], 107 of 138"></button></div>
+          <div class="lane lane-p" style="--lo:55.90%;--hi:72.45%;--v:64.49%"><i class="ghost" style="--g:64.49%" title="first analysis: p = 0.64"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.64 [0.56, 0.72], 89 of 138" aria-label="p = 0.64 [0.56, 0.72], 89 of 138"></button></div>
+          <div class="lane lane-q" style="--lo:69.66%;--hi:84.20%;--v:77.54%"><i class="ghost" style="--g:77.54%" title="first analysis: q = 0.78"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.78 [0.70, 0.84], 107 of 138" aria-label="q = 0.78 [0.70, 0.84], 107 of 138"></button></div>
         </div>
         <div class="vals mono"><span class="v v-p"><b>p</b> 0.64 <em>[0.56, 0.72]</em></span><span class="v v-q"><b>q</b> 0.78 <em>[0.70, 0.84]</em></span></div>
       </div>
       <div class="row reveal" style="--i:2">
         <div class="who">
           <div class="role">FireBAM-1</div>
-          <div class="meta"><span>FireBAM 26.10.5</span><span class="mono">N = 91</span></div>
-          <span class="chip chip-soft" title="insufficient data (n=91)">descriptive (N &lt; 100)</span>
+          <div class="meta"><span>FireBAM 26.10.5</span><span class="mono">N = 119</span></div>
+          <span class="chip chip-verdict" title="fee rule holds, partial">fee rule holds, partial</span>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:65.72%;--hi:84.19%;--v:75.82%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.76 [0.66, 0.84], 69 of 91" aria-label="p = 0.76 [0.66, 0.84], 69 of 91"></button></div>
-          <div class="lane lane-q" style="--lo:45.25%;--hi:66.44%;--v:56.04%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.56 [0.45, 0.66], 51 of 91" aria-label="q = 0.56 [0.45, 0.66], 51 of 91"></button></div>
+          <div class="lane lane-p" style="--lo:68.73%;--hi:84.48%;--v:77.31%"><i class="ghost" style="--g:75.82%" title="first analysis: p = 0.76"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.77 [0.69, 0.84], 92 of 119" aria-label="p = 0.77 [0.69, 0.84], 92 of 119"></button></div>
+          <div class="lane lane-q" style="--lo:42.75%;--hi:61.34%;--v:52.10%"><i class="ghost" style="--g:56.04%" title="first analysis: q = 0.56"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.52 [0.43, 0.61], 62 of 119" aria-label="q = 0.52 [0.43, 0.61], 62 of 119"></button></div>
         </div>
-        <div class="vals mono"><span class="v v-p"><b>p</b> 0.76 <em>[0.66, 0.84]</em></span><span class="v v-q"><b>q</b> 0.56 <em>[0.45, 0.66]</em></span></div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.77 <em>[0.69, 0.84]</em></span><span class="v v-q"><b>q</b> 0.52 <em>[0.43, 0.61]</em></span></div>
       </div>
       <div class="row reveal" style="--i:3">
         <div class="who">
           <div class="role">HarmonicAgave-1</div>
-          <div class="meta"><span>HarmonicAgave 4.4.0</span><span class="mono">N = 78</span></div>
-          <span class="chip chip-soft" title="insufficient data (n=78)">descriptive (N &lt; 100)</span>
+          <div class="meta"><span>HarmonicAgave 4.4.0</span><span class="mono">N = 110</span></div>
+          <span class="chip chip-verdict" title="fee rule holds, strong">fee rule holds, strong</span>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:85.67%;--hi:97.89%;--v:93.59%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.94 [0.86, 0.98], 73 of 78" aria-label="p = 0.94 [0.86, 0.98], 73 of 78"></button></div>
-          <div class="lane lane-q" style="--lo:51.13%;--hi:73.50%;--v:62.82%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.63 [0.51, 0.74], 49 of 78" aria-label="q = 0.63 [0.51, 0.74], 49 of 78"></button></div>
+          <div class="lane lane-p" style="--lo:87.33%;--hi:97.40%;--v:93.64%"><i class="ghost" style="--g:93.59%" title="first analysis: p = 0.94"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.94 [0.87, 0.97], 103 of 110" aria-label="p = 0.94 [0.87, 0.97], 103 of 110"></button></div>
+          <div class="lane lane-q" style="--lo:51.14%;--hi:70.07%;--v:60.91%"><i class="ghost" style="--g:62.82%" title="first analysis: q = 0.63"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.61 [0.51, 0.70], 67 of 110" aria-label="q = 0.61 [0.51, 0.70], 67 of 110"></button></div>
         </div>
-        <div class="vals mono"><span class="v v-p"><b>p</b> 0.94 <em>[0.86, 0.98]</em></span><span class="v v-q"><b>q</b> 0.63 <em>[0.51, 0.74]</em></span></div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.94 <em>[0.87, 0.97]</em></span><span class="v v-q"><b>q</b> 0.61 <em>[0.51, 0.70]</em></span></div>
       </div>
       <div class="row reveal" style="--i:4">
+        <div class="who">
+          <div class="role">Rakurai-1</div>
+          <div class="meta"><span>Rakurai 4.3.2, 4.4.0</span><span class="mono">N = 37</span></div>
+          <span class="chip chip-soft" title="insufficient data (n=37)">descriptive (N &lt; 100)</span>
+        </div>
+        <div class="track">
+          <div class="lane lane-p" style="--lo:42.10%;--hi:75.25%;--v:59.46%"><i class="ghost" style="--g:61.54%" title="first analysis: p = 0.62"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.59 [0.42, 0.75], 22 of 37" aria-label="p = 0.59 [0.42, 0.75], 22 of 37"></button></div>
+          <div class="lane lane-q" style="--lo:53.02%;--hi:84.13%;--v:70.27%"><i class="ghost" style="--g:69.23%" title="first analysis: q = 0.69"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.70 [0.53, 0.84], 26 of 37" aria-label="q = 0.70 [0.53, 0.84], 26 of 37"></button></div>
+        </div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.59 <em>[0.42, 0.75]</em></span><span class="v v-q"><b>q</b> 0.70 <em>[0.53, 0.84]</em></span></div>
+      </div>
+      <div class="row reveal" style="--i:5">
+        <div class="who">
+          <div class="role">Firedancer-1</div>
+          <div class="meta"><span>Firedancer 26.10.5</span><span class="mono">N = 27</span></div>
+          <span class="chip chip-soft" title="insufficient data (n=27)">descriptive (N &lt; 100)</span>
+        </div>
+        <div class="track">
+          <div class="lane lane-p" style="--lo:75.71%;--hi:99.09%;--v:92.59%"><i class="ghost" style="--g:94.74%" title="first analysis: p = 0.95"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.93 [0.76, 0.99], 25 of 27" aria-label="p = 0.93 [0.76, 0.99], 25 of 27"></button></div>
+          <div class="lane lane-q" style="--lo:22.39%;--hi:61.20%;--v:40.74%"><i class="ghost" style="--g:36.84%" title="first analysis: q = 0.37"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.41 [0.22, 0.61], 11 of 27" aria-label="q = 0.41 [0.22, 0.61], 11 of 27"></button></div>
+        </div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.93 <em>[0.76, 0.99]</em></span><span class="v v-q"><b>q</b> 0.41 <em>[0.22, 0.61]</em></span></div>
+      </div>
+      <div class="row reveal" style="--i:6">
         <div class="who">
           <div class="role">HarmonicFiredancer-1</div>
           <div class="meta"><span>HarmonicFiredancer 26.10.5</span><span class="mono">N = 27</span></div>
           <span class="chip chip-soft" title="insufficient data (n=27)">descriptive (N &lt; 100)</span>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:70.84%;--hi:97.65%;--v:88.89%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.89 [0.71, 0.98], 24 of 27" aria-label="p = 0.89 [0.71, 0.98], 24 of 27"></button></div>
-          <div class="lane lane-q" style="--lo:42.37%;--hi:80.60%;--v:62.96%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.63 [0.42, 0.81], 17 of 27" aria-label="q = 0.63 [0.42, 0.81], 17 of 27"></button></div>
+          <div class="lane lane-p" style="--lo:70.84%;--hi:97.65%;--v:88.89%"><i class="ghost" style="--g:88.89%" title="first analysis: p = 0.89"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.89 [0.71, 0.98], 24 of 27" aria-label="p = 0.89 [0.71, 0.98], 24 of 27"></button></div>
+          <div class="lane lane-q" style="--lo:42.37%;--hi:80.60%;--v:62.96%"><i class="ghost" style="--g:62.96%" title="first analysis: q = 0.63"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.63 [0.42, 0.81], 17 of 27" aria-label="q = 0.63 [0.42, 0.81], 17 of 27"></button></div>
         </div>
         <div class="vals mono"><span class="v v-p"><b>p</b> 0.89 <em>[0.71, 0.98]</em></span><span class="v v-q"><b>q</b> 0.63 <em>[0.42, 0.81]</em></span></div>
       </div>
-      <div class="row reveal" style="--i:5">
-        <div class="who">
-          <div class="role">Rakurai-1</div>
-          <div class="meta"><span>Rakurai 4.3.2</span><span class="mono">N = 26</span></div>
-          <span class="chip chip-soft" title="insufficient data (n=26)">descriptive (N &lt; 100)</span>
-        </div>
-        <div class="track">
-          <div class="lane lane-p" style="--lo:40.57%;--hi:79.77%;--v:61.54%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.62 [0.41, 0.80], 16 of 26" aria-label="p = 0.62 [0.41, 0.80], 16 of 26"></button></div>
-          <div class="lane lane-q" style="--lo:48.21%;--hi:85.67%;--v:69.23%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.69 [0.48, 0.86], 18 of 26" aria-label="q = 0.69 [0.48, 0.86], 18 of 26"></button></div>
-        </div>
-        <div class="vals mono"><span class="v v-p"><b>p</b> 0.62 <em>[0.41, 0.80]</em></span><span class="v v-q"><b>q</b> 0.69 <em>[0.48, 0.86]</em></span></div>
-      </div>
-      <div class="row reveal" style="--i:6">
-        <div class="who">
-          <div class="role">Agave-1</div>
-          <div class="meta"><span>Agave 4.3.2</span><span class="mono">N = 20</span></div>
-          <span class="chip chip-soft" title="insufficient data (n=20)">descriptive (N &lt; 100)</span>
-        </div>
-        <div class="track">
-          <div class="lane lane-p" style="--lo:36.05%;--hi:80.88%;--v:60.00%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.60 [0.36, 0.81], 12 of 20" aria-label="p = 0.60 [0.36, 0.81], 12 of 20"></button></div>
-          <div class="lane lane-q" style="--lo:56.34%;--hi:94.27%;--v:80.00%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.80 [0.56, 0.94], 16 of 20" aria-label="q = 0.80 [0.56, 0.94], 16 of 20"></button></div>
-        </div>
-        <div class="vals mono"><span class="v v-p"><b>p</b> 0.60 <em>[0.36, 0.81]</em></span><span class="v v-q"><b>q</b> 0.80 <em>[0.56, 0.94]</em></span></div>
-      </div>
       <div class="row reveal" style="--i:7">
         <div class="who">
-          <div class="role">Firedancer-1</div>
-          <div class="meta"><span>Firedancer 26.10.5</span><span class="mono">N = 19</span></div>
-          <span class="chip chip-soft" title="insufficient data (n=19)">descriptive (N &lt; 100)</span>
+          <div class="role">Agave-1</div>
+          <div class="meta"><span>Agave 4.3.2, 4.4.0</span><span class="mono">N = 23</span></div>
+          <span class="chip chip-soft" title="insufficient data (n=23)">descriptive (N &lt; 100)</span>
         </div>
         <div class="track">
-          <div class="lane lane-p" style="--lo:73.97%;--hi:99.87%;--v:94.74%"><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.95 [0.74, 1.00], 18 of 19" aria-label="p = 0.95 [0.74, 1.00], 18 of 19"></button></div>
-          <div class="lane lane-q" style="--lo:16.29%;--hi:61.64%;--v:36.84%"><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.37 [0.16, 0.62], 7 of 19" aria-label="q = 0.37 [0.16, 0.62], 7 of 19"></button></div>
+          <div class="lane lane-p" style="--lo:38.54%;--hi:80.29%;--v:60.87%"><i class="ghost" style="--g:60.00%" title="first analysis: p = 0.60"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.61 [0.39, 0.80], 14 of 23" aria-label="p = 0.61 [0.39, 0.80], 14 of 23"></button></div>
+          <div class="lane lane-q" style="--lo:61.22%;--hi:95.05%;--v:82.61%"><i class="ghost" style="--g:80.00%" title="first analysis: q = 0.80"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 0.83 [0.61, 0.95], 19 of 23" aria-label="q = 0.83 [0.61, 0.95], 19 of 23"></button></div>
         </div>
-        <div class="vals mono"><span class="v v-p"><b>p</b> 0.95 <em>[0.74, 1.00]</em></span><span class="v v-q"><b>q</b> 0.37 <em>[0.16, 0.62]</em></span></div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.61 <em>[0.39, 0.80]</em></span><span class="v v-q"><b>q</b> 0.83 <em>[0.61, 0.95]</em></span></div>
+      </div>
+      <div class="row reveal" style="--i:8">
+        <div class="who">
+          <div class="role">HarmonicFiredancer-1</div>
+          <div class="meta"><span>HarmonicFiredancer 26.10.5</span><span class="mono">N = 5</span></div>
+          <span class="chip chip-soft" title="insufficient data (n=5)">descriptive (N &lt; 100)</span>
+        </div>
+        <div class="track">
+          <div class="lane lane-p" style="--lo:28.36%;--hi:99.49%;--v:80.00%"><i class="ghost" style="--g:88.89%" title="first analysis: p = 0.89"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 0.80 [0.28, 0.99], 4 of 5" aria-label="p = 0.80 [0.28, 0.99], 4 of 5"></button></div>
+          <div class="lane lane-q" style="--lo:47.82%;--hi:100.00%;--v:100.00%"><i class="ghost" style="--g:62.96%" title="first analysis: q = 0.63"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 1.00 [0.48, 1.00], 5 of 5" aria-label="q = 1.00 [0.48, 1.00], 5 of 5"></button></div>
+        </div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 0.80 <em>[0.28, 0.99]</em></span><span class="v v-q"><b>q</b> 1.00 <em>[0.48, 1.00]</em></span></div>
+      </div>
+      <div class="row reveal" style="--i:9">
+        <div class="who">
+          <div class="role">HarmonicFiredancer-1</div>
+          <div class="meta"><span>HarmonicFiredancer 26.10.5</span><span class="mono">N = 1</span></div>
+          <span class="chip chip-soft" title="insufficient data (n=1)">descriptive (N &lt; 100)</span>
+        </div>
+        <div class="track">
+          <div class="lane lane-p" style="--lo:2.50%;--hi:100.00%;--v:100.00%"><i class="ghost" style="--g:88.89%" title="first analysis: p = 0.89"></i><span class="bar"></span><button type="button" class="mark" data-tip="p = 1.00 [0.03, 1.00], 1 of 1" aria-label="p = 1.00 [0.03, 1.00], 1 of 1"></button></div>
+          <div class="lane lane-q" style="--lo:2.50%;--hi:100.00%;--v:100.00%"><i class="ghost" style="--g:62.96%" title="first analysis: q = 0.63"></i><span class="bar"></span><button type="button" class="mark" data-tip="q = 1.00 [0.03, 1.00], 1 of 1" aria-label="q = 1.00 [0.03, 1.00], 1 of 1"></button></div>
+        </div>
+        <div class="vals mono"><span class="v v-p"><b>p</b> 1.00 <em>[0.03, 1.00]</em></span><span class="v v-q"><b>q</b> 1.00 <em>[0.03, 1.00]</em></span></div>
       </div>
   </div>
-  <p class="foot reveal">Analysis: final: phase main only, real data; one Holm family of 16 tests; family alpha 0.05. The first analysis of 2026-11-01 is kept unchanged in <a href="https://github.com/recruitabx/Inside-The-Solana-Block/tree/main/results/first_analysis_2026-11-01">results/first_analysis_2026-11-01/</a>. Verdict rules (N of at least 100; strict, strong, partial, mixed, no rule) are fixed in <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/docs/PREREGISTRATION.md">docs/PREREGISTRATION.md</a>. Source: <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/results/verdicts.json">results/verdicts.json</a>.</p>
+  <p class="foot reveal">Analysis: final: phase main only, real data; one Holm family of 20 tests; family alpha 0.025. Hollow ticks mark the first analysis of 2026-11-01 (2,649 pairs), kept unchanged in <a href="https://github.com/recruitabx/Inside-The-Solana-Block/tree/main/results/first_analysis_2026-11-01">results/first_analysis_2026-11-01/</a>. Verdict rules (N of at least 100; strict, strong, partial, mixed, no rule) are fixed in <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/docs/PREREGISTRATION.md">docs/PREREGISTRATION.md</a>. Source: <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/results/verdicts.json">results/verdicts.json</a>.</p>
   <details class="tbl reveal">
     <summary>Show as table</summary>
     <div class="scroll"><table>
       <thead><tr><th>Validator</th><th>Client, version</th><th>N</th><th>p [95% CI]</th><th>q [95% CI]</th><th>Preregistered verdict</th></tr></thead>
-      <tbody><tr><td>AgaveBam-1</td><td>AgaveBam 4.4.0-rc.1</td><td class='mono'>196</td><td class='mono'>0.81 [0.74, 0.86]</td><td class='mono'>0.61 [0.54, 0.68]</td><td>mixed: fee rule partial and request-position rule partial</td></tr><tr><td>JitoLabs-1</td><td>JitoLabs 4.4.0</td><td class='mono'>138</td><td class='mono'>0.64 [0.56, 0.72]</td><td class='mono'>0.78 [0.70, 0.84]</td><td>mixed: fee rule partial and request-position rule partial</td></tr><tr><td>FireBAM-1</td><td>FireBAM 26.10.5</td><td class='mono'>91</td><td class='mono'>0.76 [0.66, 0.84]</td><td class='mono'>0.56 [0.45, 0.66]</td><td>insufficient data (n=91)</td></tr><tr><td>HarmonicAgave-1</td><td>HarmonicAgave 4.4.0</td><td class='mono'>78</td><td class='mono'>0.94 [0.86, 0.98]</td><td class='mono'>0.63 [0.51, 0.74]</td><td>insufficient data (n=78)</td></tr><tr><td>HarmonicFiredancer-1</td><td>HarmonicFiredancer 26.10.5</td><td class='mono'>27</td><td class='mono'>0.89 [0.71, 0.98]</td><td class='mono'>0.63 [0.42, 0.81]</td><td>insufficient data (n=27)</td></tr><tr><td>Rakurai-1</td><td>Rakurai 4.3.2</td><td class='mono'>26</td><td class='mono'>0.62 [0.41, 0.80]</td><td class='mono'>0.69 [0.48, 0.86]</td><td>insufficient data (n=26)</td></tr><tr><td>Agave-1</td><td>Agave 4.3.2</td><td class='mono'>20</td><td class='mono'>0.60 [0.36, 0.81]</td><td class='mono'>0.80 [0.56, 0.94]</td><td>insufficient data (n=20)</td></tr><tr><td>Firedancer-1</td><td>Firedancer 26.10.5</td><td class='mono'>19</td><td class='mono'>0.95 [0.74, 1.00]</td><td class='mono'>0.37 [0.16, 0.62]</td><td>insufficient data (n=19)</td></tr></tbody>
+      <tbody><tr><td>AgaveBam-1</td><td>AgaveBam 4.4.0-rc.1</td><td class='mono'>196</td><td class='mono'>0.81 [0.74, 0.86]</td><td class='mono'>0.61 [0.54, 0.68]</td><td>fee rule holds, partial</td></tr><tr><td>JitoLabs-1</td><td>JitoLabs 4.4.0</td><td class='mono'>138</td><td class='mono'>0.64 [0.56, 0.72]</td><td class='mono'>0.78 [0.70, 0.84]</td><td>mixed: fee rule partial and request-position rule partial</td></tr><tr><td>FireBAM-1</td><td>FireBAM 26.10.5</td><td class='mono'>119</td><td class='mono'>0.77 [0.69, 0.84]</td><td class='mono'>0.52 [0.43, 0.61]</td><td>fee rule holds, partial</td></tr><tr><td>HarmonicAgave-1</td><td>HarmonicAgave 4.4.0</td><td class='mono'>110</td><td class='mono'>0.94 [0.87, 0.97]</td><td class='mono'>0.61 [0.51, 0.70]</td><td>fee rule holds, strong</td></tr><tr><td>Rakurai-1</td><td>Rakurai 4.3.2, 4.4.0</td><td class='mono'>37</td><td class='mono'>0.59 [0.42, 0.75]</td><td class='mono'>0.70 [0.53, 0.84]</td><td>insufficient data (n=37)</td></tr><tr><td>Firedancer-1</td><td>Firedancer 26.10.5</td><td class='mono'>27</td><td class='mono'>0.93 [0.76, 0.99]</td><td class='mono'>0.41 [0.22, 0.61]</td><td>insufficient data (n=27)</td></tr><tr><td>HarmonicFiredancer-1</td><td>HarmonicFiredancer 26.10.5</td><td class='mono'>27</td><td class='mono'>0.89 [0.71, 0.98]</td><td class='mono'>0.63 [0.42, 0.81]</td><td>insufficient data (n=27)</td></tr><tr><td>Agave-1</td><td>Agave 4.3.2, 4.4.0</td><td class='mono'>23</td><td class='mono'>0.61 [0.39, 0.80]</td><td class='mono'>0.83 [0.61, 0.95]</td><td>insufficient data (n=23)</td></tr><tr><td>HarmonicFiredancer-1</td><td>HarmonicFiredancer 26.10.5</td><td class='mono'>5</td><td class='mono'>0.80 [0.28, 0.99]</td><td class='mono'>1.00 [0.48, 1.00]</td><td>insufficient data (n=5)</td></tr><tr><td>HarmonicFiredancer-1</td><td>HarmonicFiredancer 26.10.5</td><td class='mono'>1</td><td class='mono'>1.00 [0.03, 1.00]</td><td class='mono'>1.00 [0.03, 1.00]</td><td>insufficient data (n=1)</td></tr></tbody>
     </table></div>
   </details>
 </section>
@@ -500,7 +524,7 @@ pre code{color:#e9fbf2}
   <div class="sec-head">
     <p class="kicker reveal">The delivery path</p>
     <h2 id="h-delivery" class="reveal d1">Where our pairs actually landed</h2>
-    <p class="lede reveal d2">Share of probes whose pair landed together in the target's own leader window, all arms (results/runs.md). Firedancer-family and Harmonic leaders (Firedancer-1, HarmonicFiredancer-1) included our RPC-sent pair in their own window in only 6% to 9% of probes, against 17% to 49% for the others. Most of their pairs landed one or more windows later, in other leaders&#x27; blocks.</p>
+    <p class="lede reveal d2">Share of probes whose pair landed together in the target's own leader window, all arms (results/runs.md). Firedancer-family and Harmonic leaders (Firedancer-1, HarmonicFiredancer-1) included our RPC-sent pair in their own window in only 7% to 9% of probes, against 16% to 49% for the others. Most of their pairs landed one or more windows later, in other leaders&#x27; blocks.</p>
   </div>
   <div class="dchart">
     <div class="dbar reveal" style="--i:0;--w:48.6%">
@@ -508,42 +532,42 @@ pre code{color:#e9fbf2}
       <div class="dtrack"><i></i></div>
       <div class="dval mono"><b>49%</b><span>246 / 506</span></div>
     </div>
-    <div class="dbar reveal" style="--i:1;--w:45.8%">
+    <div class="dbar reveal" style="--i:1;--w:45.4%">
       <div class="dlabel"><span class="drole">FireBAM-1</span><span class="dclient">FireBAM</span></div>
       <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>46%</b><span>104 / 227</span></div>
+      <div class="dval mono"><b>45%</b><span>137 / 302</span></div>
     </div>
     <div class="dbar reveal" style="--i:2;--w:33.3%">
       <div class="dlabel"><span class="drole">JitoLabs-1</span><span class="dclient">JitoLabs</span></div>
       <div class="dtrack"><i></i></div>
       <div class="dval mono"><b>33%</b><span>157 / 471</span></div>
     </div>
-    <div class="dbar reveal" style="--i:3;--w:22.9%">
-      <div class="dlabel"><span class="drole">Agave-1</span><span class="dclient">Agave</span></div>
-      <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>23%</b><span>24 / 105</span></div>
-    </div>
-    <div class="dbar reveal" style="--i:4;--w:22.6%">
+    <div class="dbar reveal" style="--i:3;--w:25.0%">
       <div class="dlabel"><span class="drole">Rakurai-1</span><span class="dclient">Rakurai</span></div>
       <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>23%</b><span>28 / 124</span></div>
+      <div class="dval mono"><b>25%</b><span>40 / 160</span></div>
     </div>
-    <div class="dbar reveal" style="--i:5;--w:17.3%">
+    <div class="dbar reveal" style="--i:4;--w:19.7%">
+      <div class="dlabel"><span class="drole">Agave-1</span><span class="dclient">Agave</span></div>
+      <div class="dtrack"><i></i></div>
+      <div class="dval mono"><b>20%</b><span>27 / 137</span></div>
+    </div>
+    <div class="dbar reveal" style="--i:5;--w:16.0%">
       <div class="dlabel"><span class="drole">HarmonicAgave-1</span><span class="dclient">HarmonicAgave</span></div>
       <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>17%</b><span>95 / 550</span></div>
+      <div class="dval mono"><b>16%</b><span>130 / 815</span></div>
     </div>
-    <div class="dbar reveal" style="--i:6;--w:9.3%">
+    <div class="dbar reveal" style="--i:6;--w:8.7%">
       <div class="dlabel"><span class="drole">HarmonicFiredancer-1</span><span class="dclient">HarmonicFiredancer</span></div>
       <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>9%</b><span>31 / 333</span></div>
+      <div class="dval mono"><b>9%</b><span>37 / 426</span></div>
     </div>
-    <div class="dbar reveal" style="--i:7;--w:6.3%">
+    <div class="dbar reveal" style="--i:7;--w:6.6%">
       <div class="dlabel"><span class="drole">Firedancer-1</span><span class="dclient">Firedancer</span></div>
       <div class="dtrack"><i></i></div>
-      <div class="dval mono"><b>6%</b><span>21 / 333</span></div>
+      <div class="dval mono"><b>7%</b><span>31 / 469</span></div>
     </div></div>
-  <p class="foot reveal">Landing itself was not the problem: 3,603 of 5,298 main-run transactions landed (68%), high and low fee alike. Source: <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/results/runs.md">results/runs.md</a>.</p>
+  <p class="foot reveal">Landing itself was not the problem: 4,493 of 6,572 main-run transactions landed (68%), high and low fee alike. Source: <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/results/runs.md">results/runs.md</a>.</p>
 </section>
 
 <section class="depth" id="depth" aria-labelledby="h-depth">
@@ -554,12 +578,12 @@ pre code{color:#e9fbf2}
   </div>
   <div class="dgrid">
     <div class="dcell reveal" style="--i:0">
-      <span class="dnum mono">5,592</span>
+      <span class="dnum mono">6,866</span>
       <span class="dlab">mainnet transactions sent</span>
-      <span class="dcap">2,796 pairs in 35 runs, pilot included</span>
+      <span class="dcap">3,433 pairs in 44 runs, pilot included</span>
     </div>
     <div class="dcell reveal" style="--i:1">
-      <span class="dnum mono">8</span>
+      <span class="dnum mono">10</span>
       <span class="dlab">validators, one per client type</span>
       <span class="dcap">Agave, AgaveBam, FireBAM, Firedancer, HarmonicAgave, HarmonicFiredancer, JitoLabs, Rakurai</span>
     </div>
@@ -579,9 +603,9 @@ pre code{color:#e9fbf2}
       <span class="dcap">each dated, each before the data it governs</span>
     </div>
     <div class="dcell reveal" style="--i:5">
-      <span class="dnum mono">37</span>
+      <span class="dnum mono">48</span>
       <span class="dlab">on-chain anchors</span>
-      <span class="dcap">3 protocol memos, 34 per-run memos; 187 files hashed</span>
+      <span class="dcap">5 protocol memos, 43 per-run memos; 222 files hashed</span>
     </div>
     <div class="dcell reveal" style="--i:6">
       <span class="dnum mono">128</span>
@@ -594,14 +618,14 @@ pre code{color:#e9fbf2}
       <span class="dcap">and 57/60 for priority order on Agave</span>
     </div>
     <div class="dcell reveal" style="--i:8">
-      <span class="dnum mono">90</span>
+      <span class="dnum mono">94</span>
       <span class="dlab">gossip snapshots</span>
       <span class="dcap">client claims recorded at every run start and end</span>
     </div>
     <div class="dcell reveal" style="--i:9">
-      <span class="dnum mono">0.0295</span>
+      <span class="dnum mono">0.0364</span>
       <span class="dlab">SOL spent of 0.05 cap</span>
-      <span class="dcap">59% of the hard cap, enforced in code before every send</span>
+      <span class="dcap">73% of the hard cap, enforced in code before every send</span>
     </div>
     <div class="dcell reveal" style="--i:10">
       <span class="dnum mono">30/30</span>
@@ -715,17 +739,49 @@ pre code{color:#e9fbf2}
     <li class="t-item reveal" style="--i:5">
       <span class="t-when mono">2026-10-31 08:38 to 22:31 UTC</span>
       <div class="t-body">
-        <div class="t-title">Main measurement</div>
-        <div class="t-detail">30 runs, 2,649 probes (Amendments 4 to 6)</div>
+        <div class="t-title">Main measurement (Amendments 4 to 6)</div>
+        
         
       </div>
     </li>
     <li class="t-item reveal" style="--i:6">
       <span class="t-when mono">2026-11-01</span>
       <div class="t-body">
+        <div class="t-title">First confirmatory analysis (archived in results/first_analysis_2026-11-01/)</div>
+        
+        
+      </div>
+    </li>
+    <li class="t-item reveal" style="--i:7">
+      <span class="t-when mono">2026-11-04 08:3x UTC</span>
+      <div class="t-body">
+        <div class="t-title">Amendment 7 anchored before any new data</div>
+        
+        <div class="t-anchor"><a class="t-link mono" href="https://solscan.io/tx/5ZEyidzbsoWW65JVyJvXPPAU3PQNhS3Binm5uCZ4eSBTU4AhSxmKzeRAH8tquotJjXuMZ1NxHChFShxgdM1yxCdw" rel="noopener" title="5ZEyidzbsoWW65JVyJvXPPAU3PQNhS3Binm5uCZ4eSBTU4AhSxmKzeRAH8tquotJjXuMZ1NxHChFShxgdM1yxCdw"><i class="dot-g"></i>5ZEyidzb...1yxCdw on Solscan</a></div>
+      </div>
+    </li>
+    <li class="t-item reveal" style="--i:8">
+      <span class="t-when mono">2026-11-04 08:34 to 19:56 UTC</span>
+      <div class="t-body">
+        <div class="t-title">Extension of the identical protocol (Amendment 7); pooled analysis at family alpha 0.025</div>
+        
+        
+      </div>
+    </li>
+    <li class="t-item reveal" style="--i:9">
+      <span class="t-when mono">2026-11-01</span>
+      <div class="t-body">
+        <div class="t-title">Data manifest after the first period anchored</div>
+        
+        <div class="t-anchor"><a class="t-link mono" href="https://solscan.io/tx/5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA" rel="noopener" title="5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA"><i class="dot-g"></i>5v5zSKvT...UCDWaA on Solscan</a></div>
+      </div>
+    </li>
+    <li class="t-item reveal" style="--i:10">
+      <span class="t-when mono">2026-11-04 20:4x UTC</span>
+      <div class="t-body">
         <div class="t-title">Final data manifest anchored</div>
         <div class="t-detail">data/anchors/data_manifest.txt</div>
-        <div class="t-anchor"><a class="t-link mono" href="https://solscan.io/tx/5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA" rel="noopener" title="5v5zSKvTB2YwjSpfFNm916159ghUy1bMZdGAi3Yw951ATqtfKP9EGCVQpsK4geimQ4bDUqp9Du58ay5pGBUCDWaA"><i class="dot-g"></i>5v5zSKvT...UCDWaA on Solscan</a></div>
+        <div class="t-anchor"><a class="t-link mono" href="https://solscan.io/tx/4RkSVcG5zzQcig15ZuLicLZdRWNk9Bzk8QHKPL9vfNNZCsiWhBC5H1foUwVWvvX2HpZsPrXhayC1WDNA3ZukF6JL" rel="noopener" title="4RkSVcG5zzQcig15ZuLicLZdRWNk9Bzk8QHKPL9vfNNZCsiWhBC5H1foUwVWvvX2HpZsPrXhayC1WDNA3ZukF6JL"><i class="dot-g"></i>4RkSVcG5...ukF6JL on Solscan</a></div>
       </div>
     </li></ol>
 </section>
@@ -753,8 +809,8 @@ cd Inside-The-Solana-Block" aria-label="Copy command">copy</button></pre>
     </div></div>
   <p class="vsample reveal"><i class="dot-g"></i>Last sample: 30 of 30 random landed transactions PASS, <a href="https://github.com/recruitabx/Inside-The-Solana-Block/blob/main/results/verify_sample.txt">results/verify_sample.txt</a>.</p>
   <div class="spend reveal">
-    <div class="spend-head"><span>Spend</span><span class="mono">29,490,783 of 50,000,000 lamports (0.0295 of 0.05 SOL)</span></div>
-    <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="50000000" aria-valuenow="29490783" aria-label="Fees settled against the hard cap"><span style="--w:59.0%"></span></div>
+    <div class="spend-head"><span>Spend</span><span class="mono">36,440,074 of 50,000,000 lamports (0.0364 of 0.05 SOL)</span></div>
+    <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="50000000" aria-valuenow="36440074" aria-label="Fees settled against the hard cap"><span style="--w:72.9%"></span></div>
     <p class="foot">The cap is enforced in code before every send; fees settle only for transactions that land. Audit: PASS, every fee-paying transaction of our accounts is in the spend ledger.</p>
   </div>
 </section>
@@ -771,7 +827,7 @@ cd Inside-The-Solana-Block" aria-label="Copy command">copy</button></pre>
 <footer class="site-foot">
   <span><a href="https://github.com/recruitabx/Inside-The-Solana-Block">github.com/recruitabx/Inside-The-Solana-Block</a></span>
   <span>MIT license</span>
-  <span>Data: 2026-10-31, 30 runs</span>
+  <span>Data: 2026-10-31 to 2026-11-04, 39 runs</span>
   <span class="foot-note">Independent research for the Superteam Ukraine bounty</span>
 </footer>
 
